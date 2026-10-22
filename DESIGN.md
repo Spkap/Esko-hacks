@@ -64,3 +64,10 @@ User explicitly requested a much stronger visual first impression for judges. Th
 - Type: retain Manrope; larger lighter display weight, balanced line endings and generous leading for supporting copy. Navy/white is the dominant contrast; blue is action/selection, cranberry is physical packaging/brand. Lighting is limited to hero/stage, never dashboard controls.
 - Motion: one short staggered entrance and slow product drift, paused after brief intro; real hover/focus feedback. Reduced motion shows the complete layout immediately. No scroll hijacking, custom cursor or perpetual autoplay.
 - Reuse the shared brand, modal, viewer, findings and repository. Preserve sample navigation and source/correction interaction. Build directly under the existing hackathon authorization and verify rendered desktop/mobile before completion.
+
+## Full-scroll refinement — 2026-10-22
+- Preserve the approved hero markup/media/navigation, current typography, existing process illustrations and closing/footer composition. Screenshot review identified the full-width light demo as the main theme break and the text-only scope as the main loss of visual momentum.
+- Continue midnight surfaces through the demo; keep the actual flat artwork as white paper. Dark shell, soft slate separators, pale blue selected findings/source links and unchanged semantic result badges. This supersedes the earlier light demo surround only on the landing.
+- Keep the three original process illustrations, add a quiet connecting rule and purposeful links, and make copy describe the concrete journey.
+- Use a layered report artifact in the scope section, reading the same repository report as the sample. Desktop pairs context with the report; mobile places report before scope details. No invented metrics or success claims.
+- Additional references: Watermelon feature-3 paired content/artifact layout and bento-2 grouped surface hierarchy; Linear lower-page product-led storytelling. Adapt composition, not stock claims, unrelated widgets or dependencies.

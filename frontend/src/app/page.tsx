@@ -17,6 +17,7 @@ import {
 import { LandingNav } from '@/components/landing/landing-nav';
 import { LandingFooter } from '@/components/landing/landing-footer';
 import { SamplePreview } from '@/components/landing/sample-preview';
+import { ReportSnapshot } from '@/components/landing/report-snapshot';
 import { Button } from '@/components/ui/button';
 import '@/components/landing/landing.css';
 export const metadata: Metadata = {
@@ -149,8 +150,8 @@ export default function Home() {
               </div>
               <div className="wl-section-copy">
                 <p>
-                  From the first flagged detail to the source behind it. Explore a real interaction,
-                  with a clearly defined sample.
+                  Select a finding. See where it appears, read the source, and follow the suggested
+                  correction—all in one review.
                 </p>
                 <span className="wl-interactive-badge">
                   <span />
@@ -176,14 +177,15 @@ export default function Home() {
             <div>
               <span className="wl-section-index">02 / FROM FILE TO FINDING</span>
               <h2>
-                A little less back-and-forth.
-                <br />A lot more perspective.
+                From artwork
+                <br />
+                to a clear next step.
               </h2>
             </div>
             <p className="wl-process-intro">
-              One place for the artwork,
+              Three connected steps.
               <br />
-              the requirement, and the conversation.
+              One place to keep the context.
             </p>
           </div>
           <div className="wl-process-grid">
@@ -211,6 +213,10 @@ export default function Home() {
                   Bring packaging and product specifications together. Add your company policies and
                   reference documents.
                 </p>
+                <Link className="wl-process-link" href="/checks/new">
+                  Prepare your files
+                  <ArrowUpRight size={14} />
+                </Link>
               </div>
             </article>
             <article>
@@ -246,6 +252,10 @@ export default function Home() {
                   In the sample, each selected check connects an observation to the artwork and the
                   reference behind it.
                 </p>
+                <Link className="wl-process-link" href="#interactive-demo">
+                  Explore the checks
+                  <ArrowUpRight size={14} />
+                </Link>
               </div>
             </article>
             <article>
@@ -275,13 +285,17 @@ export default function Home() {
                   Review a suggested correction and record a decision. Keep the original assessment
                   and its context intact.
                 </p>
+                <Link className="wl-process-link" href="/checks/mori-strawberry/report">
+                  See the handoff
+                  <ArrowUpRight size={14} />
+                </Link>
               </div>
             </article>
           </div>
         </section>
         <section id="demo-scope" className="wl-scope">
           <div className="landing-container wl-scope-layout">
-            <div>
+            <div className="wl-scope-intro">
               <span className="wl-section-index">03 / A CLEARER PERSPECTIVE</span>
               <h2>
                 Confidence starts
@@ -294,6 +308,7 @@ export default function Home() {
                 <ArrowUpRight size={16} />
               </Link>
             </div>
+            <ReportSnapshot />
             <div className="wl-scope-list">
               <div>
                 <span className="wl-scope-number">01</span>

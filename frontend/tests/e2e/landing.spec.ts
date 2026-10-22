@@ -94,3 +94,22 @@ test('hero review callout opens the original sample finding', async ({ page }) =
   await expect(page).toHaveURL('/checks/mori-strawberry?check=mori-strawberry-declaration');
   await expect(page.getByTestId('selected-evidence')).toContainText('No juice statement appears');
 });
+
+test('report handoff preview preserves the sample findings and links to the report', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const preview = page.getByRole('region', { name: 'Sample report preview' });
+  await expect(preview.getByRole('heading', { name: 'MORI Strawberry' })).toBeVisible();
+  await expect(preview).toContainText('Issues found');
+  await expect(preview.locator('.wl-report-checks a')).toHaveCount(3);
+  await preview.getByRole('link', { name: /Fail Juice statement/ }).click();
+  await expect(page.getByTestId('selected-evidence')).toContainText('No juice statement appears');
+  await page.goto('/');
+  await page
+    .getByRole('region', { name: 'Sample report preview' })
+    .getByRole('link', { name: 'Open sample report' })
+    .click();
+  await expect(page).toHaveURL('/checks/mori-strawberry/report');
+  await expect(page.getByRole('heading', { name: 'Review report' })).toBeVisible();
+});
