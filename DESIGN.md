@@ -1,5 +1,10 @@
 # Wavelength design reference
 
+## Seed product thumbnails — 2026-10-22
+- Use local, photorealistic packshots for the fictional MORI beverage and Fieldwork granola on the light review dashboard. Cream studio backgrounds, cranberry packaging details, and consistent framing match the existing UI and MORI landing imagery.
+- Product photos identify seed records; the SVG/PDF in each review remains the inspection artifact. Shared MORI versions use the same product photo, with version/result labels providing the differences. Unknown user uploads retain a file-type fallback.
+- Reserve a 56×64px frame (44×52px on narrow layouts) so imagery fits the ledger without moving controls as it loads. No image host, runtime image-generation service, or new dependency.
+
 ## Product and composition
 Wavelength is a pre-launch packaging review desk. The reviewer compares an existing artwork with a specification and a traceable requirement. The dashboard is a scan-first review ledger; the review is an artwork-first operating surface; the upload form configures a review; the landing page introduces that same artifact and interaction.
 

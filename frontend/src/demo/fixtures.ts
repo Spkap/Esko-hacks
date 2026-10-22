@@ -50,6 +50,18 @@ export const reviews = entries.map(([id, productName, category, market, version]
   reviewSchema.parse({
     id,
     productName,
+    productImage:
+      id === 'fieldwork-granola'
+        ? {
+            src: '/demo/thumbnails/fieldwork-berry-granola.png',
+            alt: 'Illustrative Fieldwork Berry Granola carton',
+          }
+        : id.startsWith('mori-')
+          ? {
+              src: '/demo/thumbnails/mori-strawberry.png',
+              alt: 'Illustrative MORI Strawberry beverage can',
+            }
+          : undefined,
     category,
     market,
     currentArtworkVersionId: `${id}-v${version}`,

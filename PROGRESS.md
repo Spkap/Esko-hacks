@@ -1,5 +1,11 @@
 # Wavelength progress
 
+## Local seed product images — 2026-10-22
+- Pulled latest `origin/main` through `7ef4504` and continued on `main` under the current hackathon instructions. Reused the approved Design Partner substitution and read the imagegen skill plus installed Next Image documentation.
+- Replaced dashboard seed file icons with original photorealistic MORI Strawberry and Fieldwork Berry Granola packshots, generated with the built-in Image Gen tool. PNGs and generation prompts are saved in `frontend/public/demo/thumbnails/`. All MORI versions share their product identity image; SVG/PDF inspection artwork, evidence, versions, and results are preserved. Unknown uploads retain the file-type fallback.
+- Added optional product-image metadata to seed review records and fitted local images into stable desktop/mobile thumbnail frames. No new dependency, external image host, or runtime generation integration.
+- Checks: `pnpm -C frontend typecheck` passed. One quick desktop/mobile smoke confirmed five loaded thumbnails, all same-origin, no page exceptions, and no page overflow at 390px. Visually inspected `frontend/evidence/seed-images-1440.png` and `frontend/evidence/seed-images-390.png`. Full test suites/build/optimization intentionally skipped for this small MVP iteration. No demo blocker found.
+
 ## Full-scroll landing refinement — 2026-10-22
 - User asked to inspect the entire scroll, retain the approved first impression/theme and improve weaker sections. Captured and visually reviewed demo, process, scope, closing and footer at desktop/mobile. Revisited Watermelon bento-2, feature-3, CTA catalog and landing-01 plus Linear. Source hashes and focused reference lock recorded in THIRD_PARTY_NOTICES.md / DESIGN.md.
 - Unified the demo surround and interaction chrome with the midnight palette, retaining the original artwork as white paper. Preserved semantic result badges and original blue marker labels. Kept the approved hero/navigation/capability strip/closing/footer markup byte-for-byte unchanged.
