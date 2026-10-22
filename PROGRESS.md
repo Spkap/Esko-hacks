@@ -1,5 +1,10 @@
 # Wavelength progress
 
+## Dependency startup recovery — 2026-10-22
+- Fixed the local `Module not found: Can't resolve '@phosphor-icons/react/ssr'` failure by syncing the installed dependencies with the committed lockfile and restarting the stale dev server. The dependency was already correctly declared by the remote icon migration.
+- Added a frozen-lockfile dependency sync to `predev` and documented restarting after pulls that change dependencies. Retained the Phosphor UI and local seed images.
+- Checks actually run: typecheck and production build passed; startup hook completed successfully. Quick browser smoke loaded landing, dashboard, new check, artwork review, and report with HTTP 200 and no page exceptions. No extensive suite or optimization work performed.
+
 ## Local seed product images — 2026-10-22
 - Pulled latest `origin/main` through `7ef4504` and continued on `main` under the current hackathon instructions. Reused the approved Design Partner substitution and read the imagegen skill plus installed Next Image documentation.
 - Replaced dashboard seed file icons with original photorealistic MORI Strawberry and Fieldwork Berry Granola packshots, generated with the built-in Image Gen tool. PNGs and generation prompts are saved in `frontend/public/demo/thumbnails/`. All MORI versions share their product identity image; SVG/PDF inspection artwork, evidence, versions, and results are preserved. Unknown uploads retain the file-type fallback.
