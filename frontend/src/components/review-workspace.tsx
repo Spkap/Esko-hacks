@@ -39,6 +39,42 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
       (!report && a.id === detail.review.currentArtworkVersionId),
   );
   if (!artwork) return <MissingState title="Artwork not found" />;
+  if (!report)
+    return (
+      <>
+        <Link href="/dashboard" className="back-link">
+          <ArrowLeft size={14} />
+          All reviews
+        </Link>
+        <div className="page-heading">
+          <div>
+            <div className="eyebrow">Preview only</div>
+            <h1>{detail.review.productName}</h1>
+            <p>
+              {detail.review.market} · {detail.review.category}
+            </p>
+          </div>
+        </div>
+        <section className="panel report-overview">
+          <h2>No compliance checks have been run</h2>
+          <p>
+            Live analysis is not connected. Only file metadata is saved; re-select files on the
+            upload screen to preview them again.
+          </p>
+          <p className="small muted">
+            Artwork: {artwork.filename} · V{artwork.version}
+          </p>
+          <div className="button-row">
+            <Button asChild>
+              <Link href="/checks/new">Re-select files</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/checks/mori-strawberry">Explore sample findings</Link>
+            </Button>
+          </div>
+        </section>
+      </>
+    );
   const checks = report?.checks ?? [];
   const selected = checks.find((c) => c.id === params.get('check')) ?? checks[0];
   const summary = report ? summarize(report.run.status, checks) : null;

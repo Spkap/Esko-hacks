@@ -1,15 +1,13 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { ArrowRight, ArrowUpRight, FileImage, Info, Plus, Search, SearchX } from 'lucide-react';
+import { ArrowUpRight, FileImage, Info, Plus, Search, SearchX } from 'lucide-react';
 import { repository } from '@/data/repository';
 import { summarize } from '@/domain/summary';
 import { Button } from './ui/button';
 import { StatusBadge } from './status-badge';
 import { ErrorState, LoadingState } from './data-state';
 import { useRepository } from './use-repository';
-import { Modal } from './modal';
 export function Dashboard() {
   const params = useSearchParams();
   const router = useRouter();
@@ -17,7 +15,6 @@ export function Dashboard() {
   const search = params.get('q') || '';
   const market = params.get('market') || '';
   const result = params.get('result') || '';
-  const [newCheck, setNewCheck] = useState(false);
   const { data, loading, error, retry } = useRepository(
     () =>
       Promise.all([repository.listReviews({ search, market, result }), repository.listReviews()]),
@@ -44,9 +41,11 @@ export function Dashboard() {
           <h1>Packaging reviews</h1>
           <p>A clear view of what’s ready, what needs attention, and why.</p>
         </div>
-        <Button onClick={() => setNewCheck(true)}>
-          <Plus size={17} />
-          New check
+        <Button asChild>
+          <Link href="/checks/new">
+            <Plus size={17} />
+            New check
+          </Link>
         </Button>
       </div>
       {!loading && !error && (
@@ -204,20 +203,6 @@ export function Dashboard() {
         Demo data uses temporary fictional examples. Selected checks are a limited review scope and
         do not establish legal approval.
       </p>
-      {newCheck && (
-        <Modal title="Start with a sample review" onClose={() => setNewCheck(false)}>
-          <p>
-            File upload and new-check creation are planned for M3. In this M1–M2 workspace, you can
-            inspect the supplied sample artwork and its simulated findings.
-          </p>
-          <Button asChild>
-            <Link href="/checks/mori-strawberry" onClick={() => setNewCheck(false)}>
-              Open sample review
-              <ArrowRight size={16} />
-            </Link>
-          </Button>
-        </Modal>
-      )}
     </>
   );
 }

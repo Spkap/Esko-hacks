@@ -1,0 +1,36 @@
+# Third-party notices
+
+## Watermelon UI
+
+Retrieved 2026-10-22. The landing page adapts the hero/navigation composition and footer link-group structure from these editable registry sources. Stock imagery, animation dependency, auth/social placeholders and newsletter were removed. Existing shared UI primitives are preserved.
+
+- https://registry.watermelon.sh/r/hero-1.json — SHA-256 `c5933b153535092f5cd045b9ea7b1950e36e9bb25b20737113010bad40739858`
+- https://registry.watermelon.sh/r/footer-1.json — SHA-256 `4521fa2222e8cb2bd0f3dcdbf2b2d05fe87eacfb45b337b2be489ad5a29f351e`
+
+Both pinned-CLI dry runs succeeded. They proposed overwriting the existing button (and, for hero, utilities) and adding unused dependencies. Adaptations were therefore made directly in `src/components/landing/` and `src/app/page.tsx` from the reviewed source. No Watermelon runtime dependency is used.
+
+License source: https://github.com/WatermelonCorp/watermellon-registry/blob/main/LICENSE
+
+```text
+MIT License
+
+Copyright (c) 2025-present Watermelon Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

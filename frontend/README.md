@@ -1,4 +1,4 @@
-# Veriforge frontend — M1–M2
+# Veriforge frontend — M1–M4
 
 Requirements: Node.js 22.17+ and pnpm 11.25.0.
 
@@ -7,11 +7,11 @@ pnpm -C frontend install --frozen-lockfile
 pnpm -C frontend dev
 ```
 
-Open http://127.0.0.1:3000/dashboard. `/` redirects to the dashboard. The default data mode is `demo`; copy `.env.example` to `.env.local` to configure it explicitly. `live` displays a connection error because backend integration is outside M2.
+Open http://127.0.0.1:3000 for the landing page, or http://127.0.0.1:3000/dashboard for the workspace. The default data mode is `demo`; copy `.env.example` to `.env.local` to configure it explicitly. `live` displays a connection error because backend integration is outside M1–M4.
 
-The dashboard, artwork viewer, selected evidence, reviewer decisions, and report are frontend demo features. Assessment fixtures and reference documents are fictional and simulated. They are not researched rules or legal advice. Upload/new-check creation is M3; landing is M4; researched seed data is M5.
+The dashboard, artwork viewer, selected evidence, reviewer decisions, and report are frontend demo features. Assessment fixtures and reference documents are fictional and simulated. They are not researched rules or legal advice. `/checks/new` accepts PDF/PNG/JPEG artwork and references (20 MiB each) for local previews only. The sample shortcut opens the existing simulated review; arbitrary uploads never inherit its findings. The landing page embeds the same viewer and finding selection. Researched seed data remains M5.
 
-Reset acknowledgements/dismissals using **Reset demo decisions** in the sidebar or mobile navigation. Only decisions are stored in localStorage. Blocked/corrupt storage falls back to usable in-memory state.
+Reset acknowledgements/dismissals using **Reset demo decisions** in the sidebar or mobile navigation. Decisions are stored in localStorage. Product draft and small uploaded-file metadata are stored in sessionStorage (up to 20 previews); file contents are never persisted or sent to a server. Re-select files after reload. Blocked/corrupt storage falls back to usable in-memory state.
 
 ```sh
 pnpm -C frontend typecheck
@@ -22,6 +22,6 @@ pnpm -C frontend exec playwright install chromium
 pnpm -C frontend test:e2e
 ```
 
-For browser tests against a production build, set `PLAYWRIGHT_PRODUCTION=1` before `test:e2e`. Production server: `pnpm -C frontend start`.
+For browser tests against a production build, set `PLAYWRIGHT_PRODUCTION=1` before `test:e2e`. Production server: `pnpm -C frontend start`. Stop the dev server before building/running production. To use installed Chrome for browser checks, set `PLAYWRIGHT_CHANNEL=chrome`.
 
 See `../PROGRESS.md` for actual command results, screenshots, and remaining limitations.

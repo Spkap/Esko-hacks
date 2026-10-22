@@ -43,3 +43,9 @@ At 1024px collapse the sidebar to a header and provide Artwork / Findings view c
 
 ## Acceptance
 Inspect 320/768/1024/1440 renders, long names/Japanese, empty/error/selected states, keyboard, zoom/reflow, reduced motion, axe, console and assets. Save evidence in PROGRESS.md. No Figma approval or screen-reader testing claim without actual evidence.
+
+## M3–M4 implementation direction — 2026-10-22
+- Continue the established review-desk identity: Manrope, cool white canvas, blue actions, cranberry artwork detail, precise thin dividers. Required frontend skills are now available and were read.
+- Landing: large left-aligned task headline with an adjacent explanation/action, then the real interactive artwork and linked evidence. Watermelon hero-1 provides navigation/hero composition and footer-1 provides grouped footer structure; adapt source without replacing shared primitives. No stock imagery or fabricated metrics.
+- Upload: numbered product/file sections with an adjacent sample shortcut. Browser-local previews are explicitly separate from sample assessment. Narrow layouts stack form and sample; landing navigation uses the existing focus-contained native dialog.
+- Reference lock: preserve the product artifact, strong type hierarchy, sparse accent use, and source-to-correction interaction. Use existing original packaging assets. Additional catalog tools were not available; no reference screenshot matching is claimed.

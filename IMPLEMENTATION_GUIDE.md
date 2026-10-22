@@ -10,7 +10,7 @@
 
 **Tech stack:** Next.js, TypeScript, Tailwind CSS v4, shadcn/ui, Watermelon UI landing blocks, Zod, PDF.js, Vitest, Playwright. Backend: Python, FastAPI, PostgreSQL.
 
-**Product description:** [idea.md](idea.md). Keep it unchanged. Application code has not been started.
+**Product description:** [idea.md](idea.md). Keep it unchanged. M1–M4 frontend implementation is complete; see `PROGRESS.md` for actual checks and scope.
 
 ## Build order
 
@@ -121,11 +121,11 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Build:** `/dashboard` with a review table as the main content. Columns: product, market, artwork version, result, updated time. Put search, market/status filters, and “New check” above it.
 
-- [ ] Create `DESIGN.md` from the appearance and reference choices below. Include desktop/mobile layout sketches and the dashboard's loading, empty, error, and selected states. Use these as the build target.
-- [ ] Create the Next.js app in `frontend/` with Tailwind v4; initialize shadcn/ui and pin its CLI as a development dependency. Verify compatible stable versions and commit the lockfile. Use normal Next.js hosting so new review URLs work after refresh.
-- [ ] Create the shared types, summary function, and sample implementation. Include reviews with issues, incomplete checks, and passed selected checks.
-- [ ] Build the table and filters. Until M2 exists, opening a row shows its details in a drawer.
-- [ ] Add `frontend/tests/unit/summary.test.ts` and `frontend/tests/e2e/dashboard.spec.ts` with the cases below.
+- [x] Create `DESIGN.md` from the appearance and reference choices below. Include desktop/mobile layout sketches and the dashboard's loading, empty, error, and selected states. Use these as the build target.
+- [x] Create the Next.js app in `frontend/` with Tailwind v4; initialize shadcn/ui and pin its CLI as a development dependency. Verify compatible stable versions and commit the lockfile. Use normal Next.js hosting so new review URLs work after refresh.
+- [x] Create the shared types, summary function, and sample implementation. Include reviews with issues, incomplete checks, and passed selected checks.
+- [x] Build the table and filters. Until M2 exists, opening a row shows its details in a drawer.
+- [x] Add `frontend/tests/unit/summary.test.ts` and `frontend/tests/e2e/dashboard.spec.ts` with the cases below.
 
 **Verify:** Search finds the correct product; combined filters work; clearing filters restores rows; zero matches offers “Clear filters”; displayed counts agree with records. Summary tests cover every rule above, including a cancelled run containing partial passes.
 
@@ -135,10 +135,10 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Build:** Artwork on the left; findings and selected evidence on the right. One selected check controls both the artwork marker and the details.
 
-- [ ] Create the review route, image viewer, finding list, and source panel. Each finding shows observed value, expected value, source location, and suggested correction.
-- [ ] Add PDF.js with page, zoom, and fit controls. Load it only on the review screen.
-- [ ] Create the report route and acknowledge/dismiss actions. Keep the original assessment unchanged.
-- [ ] Add `frontend/tests/e2e/review.spec.ts` for marker/list selection, source access, decisions, and missing review IDs.
+- [x] Create the review route, image viewer, finding list, and source panel. Each finding shows observed value, expected value, source location, and suggested correction.
+- [x] Add PDF.js with page, zoom, and fit controls. Load it only on the review screen.
+- [x] Create the report route and acknowledge/dismiss actions. Keep the original assessment unchanged.
+- [x] Add `frontend/tests/e2e/review.spec.ts` for marker/list selection, source access, decisions, and missing review IDs.
 
 **Evidence positions:** Use 1-based page numbers and top-left `{x, y, width, height}` values between 0 and 1, tied to the artwork version and rendered page orientation. Convert them through the viewer’s zoom/rotation transform. Test zoom, resize, rotation, and high-density displays. For missing text, show inspected panels and use no marker.
 
@@ -148,10 +148,10 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Build:** `/checks/new` with visible labels for product name, category, target market, artwork, product specification, and optional company/regulatory references.
 
-- [ ] Create the form with file previews and a “Use sample” shortcut. Enable only market/category pairs with a supported check set; label other options “Planned.”
-- [ ] Reject unsupported file types and files over 20 MiB. Preserve entered values when validation fails.
-- [ ] Connect creation and preview through the shared data interface. Store small metadata only; session file previews require re-selection after reload.
-- [ ] Add `frontend/tests/e2e/new-check.spec.ts` for missing fields, invalid files, repeated submit, reset, and reload.
+- [x] Create the form with file previews and a “Use sample” shortcut. Enable only market/category pairs with a supported check set; label other options “Planned.”
+- [x] Reject unsupported file types and files over 20 MiB. Preserve entered values when validation fails.
+- [x] Connect creation and preview through the shared data interface. Store small metadata only; session file previews require re-selection after reload.
+- [x] Add `frontend/tests/e2e/new-check.spec.ts` for missing fields, invalid files, repeated submit, reset, and reload.
 
 **Demo behavior:** The supplied sample can produce sample findings. Any other upload is preview-only and says live analysis is not connected. It must never inherit another file’s report.
 
@@ -161,11 +161,11 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Build:** Use selected Watermelon UI blocks for a product explanation that leads directly into the sample. Keep the dashboard and review screens on the existing shadcn/ui components.
 
-- [ ] Preview the Watermelon imports below; adapt them in `frontend/src/components/landing/` without replacing shared dashboard components or global styles.
-- [ ] Create the first screen: Veriforge, “Check your packaging before it reaches the shelf,” one explanatory sentence, “Try sample check,” and an artwork preview. Replace the block's stock background with our packaging example and apply `DESIGN.md` colors/fonts.
-- [ ] Reuse the M2 selection behavior: clicking an issue highlights its artwork location and opens its evidence.
-- [ ] Add the three-step workflow, supported demo scope, and footer links into the app. Remove the imported sign-in/social placeholders and newsletter form. Add page title/description.
-- [ ] Add `frontend/tests/e2e/landing.spec.ts` for sample entry, interactive preview, mobile-menu keyboard controls, reduced motion, and direct reload without rendering errors.
+- [x] Preview the Watermelon imports below; adapt them in `frontend/src/components/landing/` without replacing shared dashboard components or global styles.
+- [x] Create the first screen: Veriforge, “Check your packaging before it reaches the shelf,” one explanatory sentence, “Try sample check,” and an artwork preview. Replace the block's stock background with our packaging example and apply `DESIGN.md` colors/fonts.
+- [x] Reuse the M2 selection behavior: clicking an issue highlights its artwork location and opens its evidence.
+- [x] Add the three-step workflow, supported demo scope, and footer links into the app. Remove the imported sign-in/social placeholders and newsletter form. Add page title/description.
+- [x] Add `frontend/tests/e2e/landing.spec.ts` for sample entry, interactive preview, mobile-menu keyboard controls, reduced motion, and direct reload without rendering errors.
 
 **Checkpoint: UI complete.** All four screens are connected and pass the visual completion checklist. The first landing viewport shows the product, sample action, and packaging example. Begin researched seed data only after this checkpoint.
 
@@ -313,4 +313,4 @@ Implement one unchecked task at a time using the mandatory skill sequence in [AG
 
 In `PROGRESS.md`, record task, changed files, actual commands/results, screenshot paths, remaining failures, and next task. Check a phase off only when its checkpoint passes.
 
-**Next task: M1, create the frontend app and dashboard.**
+**Next task: M5, researched seed data, when authorized. M1–M4 are complete under the hackathon verification rules; see PROGRESS.md.**

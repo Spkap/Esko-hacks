@@ -1,5 +1,5 @@
 import { artworks, checks, references, reviews, runs } from '@/demo/fixtures';
-import { decisionSchema, reviewSchema } from '@/domain/types';
+import { artworkSchema, referenceSchema, decisionSchema, reviewSchema } from '@/domain/types';
 import type {
   ArtworkVersion,
   ReferenceDocument,
@@ -17,6 +17,47 @@ export function createDemoRepository(): ReviewRepository {
   let runData = structuredClone(runs);
   let decisions: ReviewDecision[] = [];
   let loaded = false;
+  let metadataLoaded = false;
+  const loadMetadata = () => {
+    if (metadataLoaded || typeof window === 'undefined') return;
+    metadataLoaded = true;
+    try {
+      const data = JSON.parse(sessionStorage.getItem('veriforge-upload-metadata-v1') || 'null');
+      if (!data) return;
+      const uploadedReviews = reviewSchema.array().parse(data.reviews);
+      const uploadedArtwork = artworkSchema.array().parse(data.artworks);
+      const uploadedReferences = referenceSchema.array().parse(data.references);
+      reviewData.push(...uploadedReviews.filter((r) => !reviewData.some((old) => old.id === r.id)));
+      artworkData.push(
+        ...uploadedArtwork.filter((a) => !artworkData.some((old) => old.id === a.id)),
+      );
+      referenceData.push(
+        ...uploadedReferences.filter((r) => !referenceData.some((old) => old.id === r.id)),
+      );
+    } catch {
+      /* Corrupt or blocked session storage does not prevent the demo. */
+    }
+  };
+  const saveMetadata = () => {
+    try {
+      const uploaded = reviewData
+        .filter((r) => !reviews.some((seed) => seed.id === r.id))
+        .slice(-20);
+      const ids = new Set(uploaded.map((r) => r.id));
+      sessionStorage.setItem(
+        'veriforge-upload-metadata-v1',
+        JSON.stringify({
+          reviews: uploaded,
+          artworks: artworkData.filter((a) => ids.has(a.reviewId)).map((a) => ({ ...a, url: '' })),
+          references: referenceData
+            .filter((r) => ids.has(r.reviewId))
+            .map((r) => ({ ...r, url: '' })),
+        }),
+      );
+    } catch {
+      /* Preview still works without persistence. */
+    }
+  };
   const load = () => {
     if (loaded || typeof window === 'undefined') return;
     loaded = true;
@@ -38,6 +79,7 @@ export function createDemoRepository(): ReviewRepository {
     }
   };
   const findReview = (id: string) => {
+    loadMetadata();
     const review = reviewData.find((r) => r.id === id);
     if (!review) throw new Error('Review not found.');
     return review;
@@ -70,6 +112,7 @@ export function createDemoRepository(): ReviewRepository {
       };
     },
     async getReview(id) {
+      loadMetadata();
       const review = reviewData.find((r) => r.id === id);
       return review
         ? {
@@ -80,6 +123,7 @@ export function createDemoRepository(): ReviewRepository {
         : null;
     },
     async createReview(input) {
+      loadMetadata();
       const now = new Date().toISOString();
       const review = reviewSchema.parse({
         ...input,
@@ -89,6 +133,7 @@ export function createDemoRepository(): ReviewRepository {
         updatedAt: now,
       });
       reviewData.push(review);
+      saveMetadata();
       return review;
     },
     async addArtwork(reviewId, file) {
@@ -110,10 +155,17 @@ export function createDemoRepository(): ReviewRepository {
       };
       artworkData.push(artwork);
       review.currentArtworkVersionId = artwork.id;
+      saveMetadata();
       return artwork;
     },
     async addReference(reviewId, file, role, approvalStatus) {
       findReview(reviewId);
+      if (
+        !['application/pdf', 'image/png', 'image/jpeg'].includes(file.type) ||
+        !file.size ||
+        file.size > 20 * 1024 * 1024
+      )
+        throw new Error('Use a non-empty PDF, PNG, or JPEG no larger than 20 MiB.');
       const ref: ReferenceDocument = {
         id: crypto.randomUUID(),
         reviewId,
@@ -127,6 +179,7 @@ export function createDemoRepository(): ReviewRepository {
         url: URL.createObjectURL(file),
       };
       referenceData.push(ref);
+      saveMetadata();
       return ref;
     },
     async startRun(input) {
@@ -212,6 +265,7 @@ export function createDemoRepository(): ReviewRepository {
       runData = structuredClone(runs);
       decisions = [];
       loaded = true;
+      saveMetadata();
       save();
     },
   };

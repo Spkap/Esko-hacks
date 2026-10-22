@@ -17,11 +17,9 @@ test('dashboard searches and combines shareable filters', async ({ page }) => {
   await expect(page.getByTestId('review-row')).toHaveCount(5);
 });
 
-test('new check explains the M2 scope in an accessible dialog', async ({ page }) => {
+test('new check opens the upload form', async ({ page }) => {
   await page.goto('/dashboard');
-  const trigger = page.getByRole('button', { name: 'New check', exact: true });
-  await trigger.click();
-  await expect(page.getByRole('dialog', { name: 'Start with a sample review' })).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(trigger).toBeFocused();
+  await page.getByRole('link', { name: 'New check', exact: true }).last().click();
+  await expect(page).toHaveURL('/checks/new');
+  await expect(page.getByLabel('Product name')).toBeVisible();
 });

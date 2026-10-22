@@ -43,15 +43,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </Link>
       <Link
         href="/checks/mori-strawberry"
-        className={`nav-link ${pathname.startsWith('/checks/') ? 'active' : ''}`}
+        className={`nav-link ${pathname.startsWith('/checks/') && pathname !== '/checks/new' ? 'active' : ''}`}
         onClick={() => setNav(false)}
       >
         <ShieldCheck size={18} />
         Sample artwork
         <ArrowUpRight size={14} />
       </Link>
+      <Link
+        href="/checks/new"
+        className={`nav-link ${pathname === '/checks/new' ? 'active' : ''}`}
+        onClick={() => setNav(false)}
+      >
+        <ShieldCheck size={18} />
+        New check
+      </Link>
+      <Link href="/" className="nav-link" onClick={() => setNav(false)}>
+        About Veriforge
+        <ArrowUpRight size={14} />
+      </Link>
     </nav>
   );
+  if (pathname === '/') return <>{children}</>;
   return (
     <div className="app-shell">
       <a href="#main-content" className="skip-link">
@@ -83,11 +96,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/dashboard">Workspace</Link>
           <ChevronRight size={13} />
           <span>
-            {pathname.includes('/report')
-              ? 'Review report'
-              : pathname.startsWith('/checks/')
-                ? 'Artwork review'
-                : 'Packaging reviews'}
+            {pathname === '/checks/new'
+              ? 'New check'
+              : pathname.includes('/report')
+                ? 'Review report'
+                : pathname.startsWith('/checks/')
+                  ? 'Artwork review'
+                  : 'Packaging reviews'}
           </span>
         </div>
         <div className="topbar-meta">
@@ -114,7 +129,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
         <footer className="page-footer">
           <span>VERIFORGE / PACKAGING REVIEW WORKSPACE</span>
-          <span>Frontend prototype · M1–M2</span>
+          <span>Frontend prototype · Demo workspace</span>
         </footer>
       </main>
       <div role="status" className="sr-only">

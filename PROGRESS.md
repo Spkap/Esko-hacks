@@ -1,6 +1,25 @@
 # Veriforge progress
 
-## Scope and environment — 2026-10-22
+## Current delivery — M1–M4, 2026-10-22
+- User expanded scope through M4 and explicitly requested the existing checkout on `main`. No worktree, branch, PR, push, backend or M5 work.
+- Preserved M1 dashboard/shared repository and M2 artwork/evidence/report. Dashboard New check now opens `/checks/new`; shared navigation connects landing, dashboard, sample, upload and report.
+- M3: labeled product/market/category form; only Japan fruit beverage is enabled. PDF/PNG/JPEG validation (non-empty, <=20 MiB), required-file focus, retained draft, optional reference role/declared approval, reset and submission guard. Browser-local image/PDF previews use real dimensions/pages; replaced/unmounted previews release object URLs. SessionStorage holds bounded metadata, never file contents; reload explicitly requires re-selection. Uploaded files never receive fixture findings. Saved preview details survive reload.
+- M4: product-specific landing, large task headline, sample entry, shared interactive artwork/finding selection, source and correction, three-step explanation, honest demo scope and real footer/navigation. Native mobile modal supports Escape, focus containment and restoration. Local fonts/assets and reduced-motion support. Adapted reviewed Watermelon hero/footer source without overwriting shared primitives; source hashes and MIT license are in `frontend/THIRD_PARTY_NOTICES.md`.
+- Iterated from desktop render to narrow renders to production: corrected PDF preview dimensions, replaced decorative sample thumbnail with actual artwork, tightened sidebar navigation, and removed conflicting English juice-content text from the missing-statement V1 fixture (updated its hash). Added brand favicon after the production console sweep identified a favicon 404.
+- Read executing-plans, frontend-design, frontend-ui-engineering, frontend-design-review, frontend-ui-excellence, Refero and Playwright guidance; applied project deadline overrides. Refero/design catalog tools were unavailable. Playwright skill helper initially lacked a resolvable dependency; used existing project Playwright with installed Chrome, without adding infrastructure. No subagents used.
+- Kev was available without starting GPU. Its bounded landing-emphasis decision returned artifact/evidence 0.7048, broad claims 0.0572, arbitrary-upload assessment 0.2379. These are model probabilities, not measured accuracy; source evidence and actual implementation determined the final behavior.
+
+### Checks actually run for this delivery
+- `pnpm -C frontend typecheck`, `lint`: passed. Unit tests: 13/13 passed.
+- CLI dry runs for Watermelon hero-1 and footer-1: passed; both proposed shared primitive overwrites, so source was adapted directly with attribution.
+- Dev browser checks: dashboard 2/2, uploads 3/3, mobile/reflow/axe 2/2 passed. Initial landing integration test failed because its locator omitted “net”; corrected the test selector and reran that case successfully.
+- Production build: passed. Production browser run of `landing.spec.ts`, `new-check.spec.ts`, `review.spec.ts` using installed Chrome: 10/10 passed. Includes PDF/image upload preview, duplicate submit, metadata reload, sample separation, finding/marker/source links, keyboard menu, reduced motion, no serious/critical axe violations on the new screens, review decisions/report reload and missing IDs.
+- Inspected screenshots: `frontend/evidence/landing-{320,768,1440}.png`, `frontend/evidence/upload-{320,768,1440}.png`, plus initial dashboard render. Production captures replace the initial development screenshots. No general cross-browser, screen-reader or exhaustive accessibility certification claimed.
+- Final favicon rebuild passed. A fresh Chrome sweep of landing, dashboard, upload, review and report found zero console warnings/errors, page exceptions or failed page-resource responses. Icon SVG parses; `git diff --check` passed.
+- Demo blockers: no known M1–M4 flow blockers. Live analysis is not connected; fixtures remain fictional, not researched compliance rules. M5 and M6 remain unimplemented and outside this request.
+- Next task: M5 researched sample data, only when requested.
+
+## Prior M1–M2 scope and environment — 2026-10-22
 - Original request: M1–M6. User narrowed active scope to M1–M2; stop before M3. Repository initially contained plans only.
 - User authorized Design Partner as the substitute for the unavailable mandatory frontend skills. Read its SKILL.md plus foundations, mode contracts, accessibility, and verification references.
 - Read idea.md, IMPLEMENTATION_GUIDE.md, and AGENTS.md. Product brief preserved.
@@ -11,8 +30,8 @@
 ## Status
 - [x] M1 Dashboard and shared data
 - [x] M2 Artwork review and report
-- [ ] M3 Upload and market form
-- [ ] M4 Landing page
+- [x] M3 Upload and market form
+- [x] M4 Landing page
 - [ ] M5 Researched deterministic samples
 - [ ] M6 Submission and production rehearsal
 
