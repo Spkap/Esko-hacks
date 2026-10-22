@@ -1,4 +1,4 @@
-# Veriforge frontend — M1–M4
+# Wavelength frontend — M1–M4
 
 Requirements: Node.js 22.17+ and pnpm 11.25.0.
 

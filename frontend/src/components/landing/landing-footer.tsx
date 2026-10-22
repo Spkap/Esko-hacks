@@ -1,17 +1,13 @@
 import Link from 'next/link';
-import { Check, ArrowUpRight } from 'lucide-react';
+import { Brand } from '../brand';
+import { ArrowUpRight } from 'lucide-react';
 // Brand / grouped links / divided closing line adapted from Watermelon footer-1.
 export function LandingFooter() {
   return (
     <footer className="landing-footer landing-container">
       <div className="landing-footer-main">
         <div>
-          <Link href="/" className="brand">
-            <span className="brand-mark">
-              <Check size={20} strokeWidth={3} />
-            </span>
-            veriforge<span className="brand-period">.</span>
-          </Link>
+          <Brand href="/" label="Wavelength home" />
           <p>Clarity before the shelf.</p>
         </div>
         <nav aria-label="Footer navigation">
@@ -30,7 +26,7 @@ export function LandingFooter() {
         </nav>
       </div>
       <div className="landing-footer-bottom">
-        <span>© 2026 Veriforge · Hackathon prototype</span>
+        <span>© 2026 Wavelength · Hackathon prototype</span>
         <span>Limited checks. Traceable evidence. Human review.</span>
       </div>
     </footer>

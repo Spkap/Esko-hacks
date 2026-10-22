@@ -1,4 +1,4 @@
-# Veriforge Implementation Plan
+# Wavelength Implementation Plan
 
 > **For implementation agents:** Use `superpowers:executing-plans` to work task by task. Use `superpowers:subagent-driven-development` when parallel execution is requested. Track completion with the checkboxes below.
 
@@ -162,7 +162,7 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 **Build:** Use selected Watermelon UI blocks for a product explanation that leads directly into the sample. Keep the dashboard and review screens on the existing shadcn/ui components.
 
 - [x] Preview the Watermelon imports below; adapt them in `frontend/src/components/landing/` without replacing shared dashboard components or global styles.
-- [x] Create the first screen: Veriforge, “Check your packaging before it reaches the shelf,” one explanatory sentence, “Try sample check,” and an artwork preview. Replace the block's stock background with our packaging example and apply `DESIGN.md` colors/fonts.
+- [x] Create the first screen: Wavelength, “Check your packaging before it reaches the shelf,” one explanatory sentence, “Try sample check,” and an artwork preview. Replace the block's stock background with our packaging example and apply `DESIGN.md` colors/fonts.
 - [x] Reuse the M2 selection behavior: clicking an issue highlights its artwork location and opens its evidence.
 - [x] Add the three-step workflow, supported demo scope, and footer links into the app. Remove the imported sign-in/social placeholders and newsletter form. Add page title/description.
 - [x] Add `frontend/tests/e2e/landing.spec.ts` for sample entry, interactive preview, mobile-menu keyboard controls, reduced motion, and direct reload without rendering errors.

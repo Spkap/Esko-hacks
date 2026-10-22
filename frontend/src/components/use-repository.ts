@@ -30,8 +30,8 @@ export function useRepository<T>(loader: () => Promise<T>, deps: readonly unknow
   }, [...deps, attempt]);
   useEffect(() => {
     const reset = () => setAttempt((n) => n + 1);
-    window.addEventListener('veriforge-reset', reset);
-    return () => window.removeEventListener('veriforge-reset', reset);
+    window.addEventListener('wavelength-reset', reset);
+    return () => window.removeEventListener('wavelength-reset', reset);
   }, []);
   return { ...state, retry: () => setAttempt((n) => n + 1) };
 }

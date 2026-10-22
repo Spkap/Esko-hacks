@@ -35,7 +35,7 @@ test('mobile navigation supports keyboard and restores focus', async ({ page }) 
   const trigger = page.getByRole('button', { name: 'Open navigation' });
   await trigger.focus();
   await page.keyboard.press('Enter');
-  const dialog = page.getByRole('dialog', { name: 'Explore Veriforge' });
+  const dialog = page.getByRole('dialog', { name: 'Explore Wavelength' });
   await expect(dialog).toBeVisible();
   await page.keyboard.press('Shift+Tab');
   await expect(dialog.getByRole('link', { name: 'Try sample check' })).toBeFocused();

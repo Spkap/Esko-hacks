@@ -6,7 +6,7 @@ import { LandingFooter } from '@/components/landing/landing-footer';
 import { SamplePreview } from '@/components/landing/sample-preview';
 import { Button } from '@/components/ui/button';
 export const metadata: Metadata = {
-  title: 'Veriforge · Clarity before the shelf',
+  title: 'Wavelength · Clarity before the shelf',
   description:
     'Check your packaging before it reaches the shelf. Explore artwork, linked reference evidence, and suggested corrections in an interactive packaging review demo.',
 };

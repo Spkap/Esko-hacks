@@ -1,4 +1,4 @@
-# Veriforge Backend Implementation Plan
+# Wavelength Backend Implementation Plan
 
 > **For implementation agents:** Use `superpowers:executing-plans` task by task. Track completion with the checkboxes below.
 

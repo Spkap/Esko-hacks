@@ -1,9 +1,10 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Check, Menu, ArrowUpRight } from 'lucide-react';
+import { Menu, ArrowUpRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Modal } from '../modal';
+import { Brand } from '../brand';
 // Navigation structure adapted from Watermelon hero-1; native modal replaces its overlay.
 export function LandingNav() {
   const [open, setOpen] = useState(false);
@@ -23,12 +24,7 @@ export function LandingNav() {
   );
   return (
     <header className="landing-nav landing-container">
-      <Link href="/" className="brand" aria-label="Veriforge home">
-        <span className="brand-mark">
-          <Check size={20} strokeWidth={3} />
-        </span>
-        veriforge<span className="brand-period">.</span>
-      </Link>
+      <Brand href="/" label="Wavelength home" />
       <nav className="landing-desktop-nav" aria-label="Main navigation">
         {links}
       </nav>
@@ -51,7 +47,7 @@ export function LandingNav() {
         </Button>
       </div>
       {open && (
-        <Modal title="Explore Veriforge" variant="drawer" onClose={() => setOpen(false)}>
+        <Modal title="Explore Wavelength" variant="drawer" onClose={() => setOpen(false)}>
           <nav className="landing-drawer-links" aria-label="Mobile navigation">
             {links}
             <Link href="/checks/mori-strawberry" onClick={() => setOpen(false)}>

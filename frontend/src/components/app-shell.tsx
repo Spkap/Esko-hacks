@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
-  Check,
   LayoutDashboard,
   PanelLeft,
   ChevronRight,
@@ -14,17 +13,8 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Modal } from './modal';
+import { Brand } from './brand';
 import { repository, dataMode } from '@/data/repository';
-export function Brand() {
-  return (
-    <Link href="/dashboard" className="brand" aria-label="Veriforge dashboard">
-      <span className="brand-mark">
-        <Check size={20} strokeWidth={3} />
-      </span>
-      veriforge<span style={{ color: 'var(--brand)' }}>.</span>
-    </Link>
-  );
-}
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -59,7 +49,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         New check
       </Link>
       <Link href="/" className="nav-link" onClick={() => setNav(false)}>
-        About Veriforge
+        About Wavelength
         <ArrowUpRight size={14} />
       </Link>
     </nav>
@@ -128,7 +118,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main id="main-content" className="main-content" tabIndex={-1}>
         {children}
         <footer className="page-footer">
-          <span>VERIFORGE / PACKAGING REVIEW WORKSPACE</span>
+          <span>WAVELENGTH / PACKAGING REVIEW WORKSPACE</span>
           <span>Frontend prototype · Demo workspace</span>
         </footer>
       </main>
@@ -164,7 +154,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   setReset(false);
                   setMessage('Demo decisions reset.');
                   router.refresh();
-                  window.dispatchEvent(new Event('veriforge-reset'));
+                  window.dispatchEvent(new Event('wavelength-reset'));
                 } catch (e) {
                   setMessage((e as Error).message);
                   setReset(false);

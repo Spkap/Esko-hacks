@@ -1,7 +1,7 @@
-# Veriforge design reference
+# Wavelength design reference
 
 ## Product and composition
-Veriforge is a pre-launch packaging review desk. The reviewer compares an existing artwork with a specification and a traceable requirement. The dashboard is a scan-first review ledger; the review is an artwork-first operating surface; the upload form configures a review; the landing page introduces that same artifact and interaction.
+Wavelength is a pre-launch packaging review desk. The reviewer compares an existing artwork with a specification and a traceable requirement. The dashboard is a scan-first review ledger; the review is an artwork-first operating surface; the upload form configures a review; the landing page introduces that same artifact and interaction.
 
 Use Design Partner (`design`, create/interaction/responsive/finish contracts), authorized by the user as the replacement for the unavailable frontend skills on 2026-10-22. Context7, Refero, Exa, and Firecrawl are unavailable; consult official documentation directly and record verification honestly.
 
@@ -49,3 +49,8 @@ Inspect 320/768/1024/1440 renders, long names/Japanese, empty/error/selected sta
 - Landing: large left-aligned task headline with an adjacent explanation/action, then the real interactive artwork and linked evidence. Watermelon hero-1 provides navigation/hero composition and footer-1 provides grouped footer structure; adapt source without replacing shared primitives. No stock imagery or fabricated metrics.
 - Upload: numbered product/file sections with an adjacent sample shortcut. Browser-local previews are explicitly separate from sample assessment. Narrow layouts stack form and sample; landing navigation uses the existing focus-contained native dialog.
 - Reference lock: preserve the product artifact, strong type hierarchy, sparse accent use, and source-to-correction interaction. Use existing original packaging assets. Additional catalog tools were not available; no reference screenshot matching is claimed.
+
+## Wavelength brand identity
+- Product name is **Wavelength**, one word with a capital W. Use that spelling in navigation, page titles, reports, source documents, and ordinary copy. Uppercase is reserved for small utility labels.
+- Shared `Brand` component supplies the wordmark and a simple two-cycle wave symbol, including the matching favicon. No decorative trailing period or shield/check logo.
+- Keep local Manrope and Noto Sans JP; the wordmark uses Manrope at a slightly lighter weight and more open tracking than the previous mark. Desktop/sidebar/mobile sizes fit without wrapping. Preserve the established blue action and cranberry brand roles.

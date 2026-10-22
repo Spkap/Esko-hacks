@@ -184,17 +184,19 @@ svg {
   gap: 10px;
   align-items: center;
   font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.055em;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
 }
 .brand-mark {
   display: grid;
   place-items: center;
   width: 32px;
-  height: 36px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 7px;
   background: var(--brand);
   color: white;
-  clip-path: polygon(0 0, 100% 0, 100% 74%, 50% 100%, 0 74%);
 }
 .workspace-label {
   margin: 40px 12px 12px;
@@ -1522,9 +1524,6 @@ select {
   gap: 24px;
   border-bottom: 1px solid var(--border);
 }
-.brand-period {
-  color: var(--brand);
-}
 .landing-desktop-nav {
   display: flex;
   gap: 36px;
@@ -2250,4 +2249,28 @@ select {
     }
   }
 }
-.sample-artwork-thumb{width:100%;height:auto;display:block;margin:24px 0;border:1px solid var(--border);border-radius:4px}.nav-link{gap:10px}.sidebar .nav-link{font-size:12px}.sidebar .nav-link svg{flex-shrink:0}
+.sample-artwork-thumb {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.nav-link {
+  gap: 10px;
+}
+.sidebar .nav-link {
+  font-size: 12px;
+}
+.sidebar .nav-link svg {
+  flex-shrink: 0;
+}
+
+.sidebar .brand {
+  font-size: 21px;
+  gap: 8px;
+}
+.brand-wordmark {
+  line-height: 1.2;
+}

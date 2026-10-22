@@ -1,6 +1,14 @@
-# Veriforge progress
+# Wavelength progress
 
-## Current delivery — M1–M4, 2026-10-22
+## Product rename — Wavelength, 2026-10-22
+- Renamed product copy, metadata, page titles, navigation, footer, package name and project documentation to Wavelength. Introduced one shared capitalized wordmark with wave symbol and matching favicon; removed the old shield/check mark and decorative period. Kept local Manrope/Noto Sans JP and the established palette, refined wordmark weight/spacing and sidebar fit.
+- Updated the standalone sample-reference document branding, favicon links and corresponding asset hashes. Internal storage keys intentionally remain stable so existing decisions/drafts/preview metadata are retained; the reset event was renamed consistently across listeners.
+- Typecheck, lint, production build passed. Production landing browser tests: 3/3 passed (selection/sample entry, keyboard modal, responsive/reduced-motion/targeted axe). Name/title smoke checked all five app routes and both reference documents; brand fit verified at 320 and 1440px. Visual review: `frontend/evidence/wavelength-{landing,dashboard}-{320,1440}.png`; refreshed standard landing/upload captures as well.
+- Initial seven-route console sweep found missing favicon on standalone HTML references; added their favicon links. Final rebuilt seven-route console/name/title smoke passed with no console errors; favicon returned HTTP 200. Desktop/mobile wordmarks fit, and `git diff --check` passed.
+- Kev typography decision supported retaining the current typeface with fit refinements: retain 0.9628, replace entire scheme 0.0155, literal rename without fit review 0.0217. Model probabilities are decision support, not measured accuracy.
+- No backend or phase expansion. Next task remains M5 when requested.
+
+## Prior delivery — M1–M4, 2026-10-22
 - User expanded scope through M4 and explicitly requested the existing checkout on `main`. No worktree, branch, PR, push, backend or M5 work.
 - Preserved M1 dashboard/shared repository and M2 artwork/evidence/report. Dashboard New check now opens `/checks/new`; shared navigation connects landing, dashboard, sample, upload and report.
 - M3: labeled product/market/category form; only Japan fruit beverage is enabled. PDF/PNG/JPEG validation (non-empty, <=20 MiB), required-file focus, retained draft, optional reference role/declared approval, reset and submission guard. Browser-local image/PDF previews use real dimensions/pages; replaced/unmounted previews release object URLs. SessionStorage holds bounded metadata, never file contents; reload explicitly requires re-selection. Uploaded files never receive fixture findings. Saved preview details survive reload.

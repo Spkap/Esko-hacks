@@ -19,8 +19,8 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
   const [updates, setUpdates] = useState<Record<string, ReviewDecision>>({});
   useEffect(() => {
     const clear = () => setUpdates({});
-    window.addEventListener('veriforge-reset', clear);
-    return () => window.removeEventListener('veriforge-reset', clear);
+    window.addEventListener('wavelength-reset', clear);
+    return () => window.removeEventListener('wavelength-reset', clear);
   }, []);
   const { data, loading, error, retry } = useRepository(async () => {
     const detail = await repository.getReview(reviewId);

@@ -1,4 +1,4 @@
-# Veriforge agent instructions
+# Wavelength agent instructions
 
 Read `idea.md` for product intent and `IMPLEMENTATION_GUIDE.md` for tasks. For UI work, read `DESIGN.md` when it exists. Preserve the dashboard-first order and the M6 frontend stopping point.
 

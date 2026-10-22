@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AppShell } from '@/components/app-shell';
 export const metadata: Metadata = {
-  title: { default: 'Veriforge · Packaging reviews', template: '%s · Veriforge' },
+  title: { default: 'Wavelength · Packaging reviews', template: '%s · Wavelength' },
   description:
     'Inspect packaging artwork, compare selected requirements, and review linked evidence. Frontend demo with simulated findings.',
 };
