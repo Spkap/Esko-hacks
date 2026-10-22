@@ -58,8 +58,8 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
         <section className="panel report-overview">
           <h2>No compliance checks have been run</h2>
           <p>
-            Live analysis is not connected. Only file metadata is saved; re-select files on the
-            upload screen to preview them again.
+            Live analysis is not connected. Only file details are saved. Re-select your files to
+            preview them again.
           </p>
           <p className="small muted">
             Artwork: {artwork.filename} · V{artwork.version}
@@ -129,8 +129,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
         <div className="execution-notice" role="status">
           <Info size={18} />
           <p>
-            <strong>{summary?.label}.</strong> Any partial results below are incomplete and cannot
-            establish a passed review.
+            <strong>{summary?.label}.</strong> Partial results do not mean the review has passed.
           </p>
         </div>
       )}
@@ -166,9 +165,9 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
           <div className="artwork-context">
             <span className="eyebrow">Version context</span>
             <p className="small muted">
-              Assessment tied to artwork V{artwork.version} and checklist{' '}
-              {report?.run.ruleSetVersion ?? 'not selected'}. A correction requires a new artwork
-              version and run.
+              Results apply to artwork V{artwork.version} and checklist{' '}
+              {report?.run.ruleSetVersion ?? 'not selected'}. Recheck a new artwork version after
+              making corrections.
             </p>
             {reviewId === 'mori-strawberry' && (
               <Link className="source-link" href="/checks/mori-corrected">
@@ -206,8 +205,8 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
       </div>
       <p className="scope-note">
         <Info size={15} />
-        Temporary fictional demo. These simulated comparisons are not verified market regulations.
-        Review coverage is limited to the supplied panels and selected checks.
+        Fictional demo with simulated findings, not verified market regulations. Only the supplied
+        panels and selected checks are covered.
       </p>
     </>
   );

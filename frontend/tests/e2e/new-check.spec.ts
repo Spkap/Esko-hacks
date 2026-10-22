@@ -20,7 +20,7 @@ test('validates files and required fields without losing product details; reset 
   ).toBeVisible();
   await page.reload();
   await expect(page.getByLabel('Product name')).toHaveValue('My beverage');
-  await expect(page.getByText(/Re-select files to preview them/)).toBeVisible();
+  await expect(page.getByText(/Product name restored. Re-select your files/)).toBeVisible();
   await page.getByRole('button', { name: 'Reset', exact: true }).click();
   await expect(page.getByLabel('Product name')).toHaveValue('');
   await page.reload();
@@ -36,7 +36,7 @@ test('PDF upload has readable multipage preview, no sample findings, and reload-
   await page.getByLabel('Product specification', { exact: true }).setInputFiles(samplePdf);
   await page.getByRole('button', { name: 'Create file preview' }).dblclick();
   await expect(
-    page.getByText('Live analysis is not connected. No compliance checks have been run.'),
+    page.getByText('No compliance checks have been run.'),
   ).toBeVisible();
   await expect(page.locator('canvas[data-rendered="true"]')).toBeVisible();
   await page.getByLabel('Artwork page', { exact: true }).selectOption('2');
@@ -75,7 +75,7 @@ test('image preview uses natural image dimensions and sample remains a separate 
   await page.getByLabel('Product specification', { exact: true }).setInputFiles(samplePdf);
   await page.getByRole('button', { name: 'Create file preview' }).click();
   await expect(
-    page.getByText('Live analysis is not connected. No compliance checks have been run.'),
+    page.getByText('No compliance checks have been run.'),
   ).toBeVisible();
   await expect(page.getByTestId('artwork-page')).toHaveAttribute('data-page', '1');
   await page.getByRole('link', { name: 'Use sample', exact: true }).click();

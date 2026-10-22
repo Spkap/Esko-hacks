@@ -26,7 +26,7 @@ export function EvidencePanel({
   async function save(action: ReviewDecision['action']) {
     if (busy) return;
     if (action === 'dismissed' && !reason.trim()) {
-      setError('Enter a reason so other reviewers understand the decision.');
+      setError('Enter a reason for dismissing this finding.');
       reasonRef.current?.focus();
       return;
     }
@@ -73,7 +73,7 @@ export function EvidencePanel({
       )}
       {check.applicability === 'uncertain' && (
         <p className="small" style={{ color: 'var(--warning)', marginBottom: 16 }}>
-          Applicability: uncertain · reviewer confirmation required
+          Confirm whether this requirement applies.
         </p>
       )}
       <div className="source-panel">
@@ -139,9 +139,7 @@ export function EvidencePanel({
             </Button>
           )}
         </div>
-        <p className="decision-note">
-          Decisions record your review. They do not change the original assessment.
-        </p>
+        <p className="decision-note">Your decision does not change the original result.</p>
         {error && !dismiss && (
           <p role="alert" className="form-error">
             {error}
@@ -156,8 +154,8 @@ export function EvidencePanel({
           }}
         >
           <p>
-            The check result stays {resultLabels[check.result].toLowerCase()}. Record why you are
-            dismissing the finding.
+            The check result stays {resultLabels[check.result].toLowerCase()}. Explain why you are
+            dismissing it.
           </p>
           <div className="field">
             <label htmlFor="dismiss-reason">Reason for dismissal</label>

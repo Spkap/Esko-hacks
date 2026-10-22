@@ -225,7 +225,7 @@ export function createDemoRepository(): ReviewRepository {
             run,
             checks: checks.filter((c) => c.runId === runId),
             reviewedScope:
-              'Temporary fictional fixture · supplied artwork panels and selected comparisons only. Results are simulated.',
+              'Simulated results for the supplied artwork panels and selected checks only.',
             uncheckedRequirements: [
               'Full market regulatory review',
               'Nutrition verification',

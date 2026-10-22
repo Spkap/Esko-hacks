@@ -25,7 +25,7 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
     return (
       <div className="panel state-panel">
         <h1>No report yet</h1>
-        <p>This review has no analysis run.</p>
+        <p>No checks have been run for this review.</p>
         <Link className="link" href={`/checks/${reviewId}`}>
           Return to artwork
         </Link>
@@ -42,7 +42,7 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
       <div className="page-heading">
         <div>
           <div className="eyebrow" style={{ marginBottom: 8 }}>
-            Selected-scope assessment
+            Selected checks only
           </div>
           <h1>Review report</h1>
           <p>
@@ -59,8 +59,8 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
         <p className="muted">{report.reviewedScope}</p>
         {report.run.status !== 'completed' && (
           <p className="execution-notice">
-            <strong>{summary.label}.</strong> This run is incomplete; partial passes do not
-            establish a passed assessment.
+            <strong>{summary.label}.</strong> This run is incomplete. Passed checks do not mean the
+            review has passed.
           </p>
         )}
         <dl className="report-counts">
@@ -103,7 +103,7 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
       <section className="report-checks" aria-label="Check results">
         <div className="section-heading">
           <h2>Selected check results</h2>
-          <span className="muted small">{report.checks.length} check records</span>
+          <span className="muted small">{report.checks.length} checks</span>
         </div>
         {report.checks.length ? (
           report.checks.map((check, index) => {
@@ -176,7 +176,7 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
         ) : (
           <div className="panel state-panel">
             <h3>No check results</h3>
-            <p className="muted">This run contains no selected check records.</p>
+            <p className="muted">No check results are available for this run.</p>
           </div>
         )}
       </section>
@@ -188,8 +188,9 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
           ))}
         </ul>
         <p className="scope-note">
-          <Info size={15} />A limited set of simulated checks does not mean the package is legally
-          approved. Acknowledging or dismissing a finding preserves its original result.
+          <Info size={15} />
+          Simulated checks do not establish legal approval. Reviewer decisions do not change the
+          original results.
         </p>
       </section>
     </>

@@ -188,7 +188,7 @@ export function NewCheck() {
             <span className="step-index">01</span>
             <div>
               <h2>Product & market</h2>
-              <p className="small muted">A focused scope makes a useful review.</p>
+              <p className="small muted">Choose the product category and target market.</p>
             </div>
           </div>
           <div className="field">
@@ -237,8 +237,7 @@ export function NewCheck() {
           </div>
           {restored && (
             <p className="upload-notice" role="status">
-              Product details restored. Re-select files to preview them; files are not saved after
-              reload.
+              Product name restored. Re-select your files; they are not saved after reload.
             </p>
           )}
           {slots.map((slot) => (
@@ -261,7 +260,7 @@ export function NewCheck() {
                   (files[slot]
                     ? `${files[slot]!.name} · ${(files[slot]!.size / 1024).toFixed(1)} KiB · ready to preview`
                     : slot === 'specification'
-                      ? 'Uploaded specifications retain unknown approval status.'
+                      ? 'Specification approval status is unknown.'
                       : slot === 'reference'
                         ? 'Add a company policy or regulatory reference.'
                         : 'A complete label or packaging layout works best.')}
@@ -343,10 +342,7 @@ export function NewCheck() {
           </div>
           <div className="upload-boundary">
             <Info size={18} />
-            <p>
-              Only the supplied sample has findings. Your own uploads are preview-only and never
-              receive a sample assessment.
-            </p>
+            <p>Uploads are preview-only. Explore the sample to see simulated findings.</p>
           </div>
           {dataMode !== 'demo' && (
             <p className="form-error">
@@ -361,9 +357,7 @@ export function NewCheck() {
             <div>
               <div className="eyebrow">Preview only · no assessment</div>
               <h2>{name}</h2>
-              <p className="small muted">
-                Live analysis is not connected. No compliance checks have been run.
-              </p>
+              <p className="small muted">No compliance checks have been run.</p>
             </div>
             <Button asChild variant="outline">
               <Link href={`/checks/${reviewId}`}>
