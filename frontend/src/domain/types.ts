@@ -21,6 +21,7 @@ export const regionSchema = z
 export const reviewSchema = z.object({
   id: z.string().min(1),
   productName: z.string().min(1),
+  productImage: z.object({ src: z.string(), alt: z.string() }).optional(),
   category: z.string().min(1),
   market: z.string().min(1),
   currentArtworkVersionId: z.string(),

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowRightIcon as ArrowRight,
   FileImageIcon as FileImage,
@@ -35,8 +36,27 @@ export function ReviewTable({ reviews }: { reviews: ReviewListItem[] }) {
             <tr key={review.id} data-testid="review-row">
               <td>
                 <div className="product-cell">
-                  <span className={`art-thumb ${isPdf ? 'granola' : ''}`} aria-hidden="true">
-                    <FileIcon weight="duotone" aria-hidden="true" size={20} />
+                  <span
+                    className={`art-thumb ${isPdf ? 'granola' : ''}`}
+                    aria-hidden="true"
+                    title={
+                      review.productImage
+                        ? 'Illustrative product photo. Open the review to inspect the source artwork.'
+                        : undefined
+                    }
+                  >
+                    {review.productImage ? (
+                      <Image
+                        src={review.productImage.src}
+                        alt={review.productImage.alt}
+                        width={56}
+                        height={64}
+                        sizes="(max-width: 767px) 44px, 56px"
+                        className="product-thumbnail"
+                      />
+                    ) : (
+                      <FileIcon weight="duotone" aria-hidden="true" size={20} />
+                    )}
                   </span>
                   <div>
                     <Link className="product-name" href={`/checks/${review.id}`}>

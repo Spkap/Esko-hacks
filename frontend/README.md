@@ -7,6 +7,8 @@ pnpm -C frontend install --frozen-lockfile
 pnpm -C frontend dev
 ```
 
+After pulling repository changes, stop any running development server and run `pnpm -C frontend dev` again. Startup syncs dependencies from the committed lockfile before compiling, so newly added packages (such as the Phosphor icons) are installed locally. Restarting is required when dependencies change; an already-running server does not install new packages through hot reload.
+
 Open http://127.0.0.1:3000 for the landing page, or http://127.0.0.1:3000/dashboard for the workspace. The default data mode is `demo`; copy `.env.example` to `.env.local` to configure it explicitly. `live` displays a connection error because backend integration is outside M1–M4.
 
 The dashboard, artwork viewer, selected evidence, reviewer decisions, and report are frontend demo features. Assessment fixtures and reference documents are fictional and simulated. They are not researched rules or legal advice. `/checks/new` accepts PDF/PNG/JPEG artwork and references (20 MiB each) for local previews only. The sample shortcut opens the existing simulated review; arbitrary uploads never inherit its findings. The landing page embeds the same viewer and finding selection. The separate Dancing Fish scenario uses the organizer’s actual proof and draft workbook.
