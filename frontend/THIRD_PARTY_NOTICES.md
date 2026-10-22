@@ -34,3 +34,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Additional visual references — 2026-10-22
+
+- https://registry.watermelon.sh/r/hero-16.json — SHA-256 `95518fae06d0bbf961c96ca986b086cea9f1bfc06b77d556060104ad4d36e028`. Reviewed source; selected atmosphere, navigation/action hierarchy and section composition adapted to the existing components. No extra dependencies or stock content imported.
+- https://registry.watermelon.sh/r/landing-01.json — SHA-256 `fc8df2fd3c2c3c4fd6ffc06e9052155c49cf7e3359c6490ce87ec6ceb4b6e295`. Reviewed source; selected atmosphere, navigation/action hierarchy and section composition adapted to the existing components. No extra dependencies or stock content imported.
+
+Visual research: https://linear.app/ (dark product framing), https://www.apple.com/airpods-pro/ (physical-product presentation), https://stripe.com/payments (inspected; colorful diagonal treatment not adopted). No third-party imagery copied. The existing Watermelon MIT notice above applies to adapted source.

@@ -1,176 +1,355 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, FileUp, ScanLine, ListChecks, Check, Minus } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  FileUp,
+  ScanLine,
+  ListChecks,
+  Check,
+  Minus,
+  MoveUpRight,
+  Layers,
+  CircleDot,
+} from 'lucide-react';
 import { LandingNav } from '@/components/landing/landing-nav';
 import { LandingFooter } from '@/components/landing/landing-footer';
 import { SamplePreview } from '@/components/landing/sample-preview';
 import { Button } from '@/components/ui/button';
+import '@/components/landing/landing.css';
 export const metadata: Metadata = {
   title: 'Wavelength · Clarity before the shelf',
   description:
     'Check your packaging before it reaches the shelf. Explore artwork, linked reference evidence, and suggested corrections in an interactive packaging review demo.',
 };
-// Hero composition adapted from Watermelon hero-1. Local product evidence replaces stock media.
+// Atmospheric hero / paired-action structure adapted from reviewed Watermelon hero-16 source.
 export default function Home() {
   return (
-    <div className="landing">
+    <div className="landing wl-page">
       <a href="#landing-main" className="skip-link">
         Skip to content
       </a>
       <LandingNav />
       <main id="landing-main">
-        <section className="landing-hero landing-container">
-          <div className="hero-eyebrow">
-            <span className="hero-crosshair" aria-hidden="true" />
-            <span>THE PACKAGING REVIEW DESK</span>
-            <span className="hero-demo-tag">Interactive prototype</span>
-          </div>
-          <div className="hero-copy">
-            <h1>
-              Check your packaging
-              <br className="hero-break" /> before it reaches
-              <br className="hero-break" /> the shelf.
+        <section className="wl-hero landing-container" aria-labelledby="hero-title">
+          <div className="wl-hero-copy">
+            <div className="wl-kicker">
+              <span className="wl-signal" />
+              PACKAGING REVIEW, IN FOCUS
+              <span className="wl-kicker-line" />
+            </div>
+            <h1 id="hero-title">
+              <span>Check your </span>
+              <span>packaging before </span>
+              <span>it reaches the shelf.</span>
             </h1>
-            <div className="hero-intro">
-              <p>
-                Bring artwork, requirements, and evidence into one clear review. Find what needs
-                attention. Know what to fix next.
-              </p>
-              <Button asChild className="hero-cta">
+            <p className="wl-hero-description">
+              Beautiful packaging deserves a closer look. Bring artwork, requirements, and evidence
+              onto the same wavelength.
+            </p>
+            <div className="wl-hero-actions">
+              <Button asChild className="wl-primary">
                 <Link href="/checks/mori-strawberry">
                   Try sample check
-                  <ArrowUpRight size={19} />
+                  <ArrowUpRight size={18} />
                 </Link>
               </Button>
-              <span className="hero-caption">
-                No sign-up · Fictional sample · Simulated findings
-              </span>
+              <a className="wl-text-link" href="#interactive-demo">
+                Explore the review
+                <ArrowDown size={15} />
+              </a>
+            </div>
+            <div className="wl-hero-disclosure">
+              <span />
+              No sign-up. Fictional sample. Simulated findings.
             </div>
           </div>
-          <div className="hero-preview-caption">
-            <span>
-              <span className="live-dot" />A closer look, before the final print.
-            </span>
-            <span>01 / EXPLORE THE SAMPLE BELOW</span>
-          </div>
-          <SamplePreview />
-        </section>
-        <section id="how-it-works" className="workflow-section landing-container">
-          <div className="landing-section-head">
-            <div className="eyebrow">FROM FILE TO FINDING</div>
-            <h2>
-              A clear path through
-              <br />
-              every packaging review.
-            </h2>
-            <p>
-              Less jumping between documents.
-              <br />
-              More context for the next decision.
-            </p>
-          </div>
-          <div className="workflow-steps">
-            {[
-              {
-                number: '01',
-                Icon: FileUp,
-                title: 'Bring the artwork.',
-                copy: 'Start with the packaging layout and product specification. Add company policies or regulatory references for context.',
-              },
-              {
-                number: '02',
-                Icon: ScanLine,
-                title: 'Look closer.',
-                copy: 'Choose the market and review scope. In the sample, each finding connects directly to the artwork and its reference.',
-              },
-              {
-                number: '03',
-                Icon: ListChecks,
-                title: 'Move forward, informed.',
-                copy: 'Inspect the evidence, review a suggested correction, and record a decision without changing the original assessment.',
-              },
-            ].map(({ number, Icon, title, copy }) => (
-              <article key={number}>
-                <div className="workflow-step-top">
-                  <span>{number}</span>
-                  <Icon size={24} strokeWidth={1.5} />
-                </div>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-        <section id="demo-scope" className="scope-section">
-          <div className="landing-container scope-layout">
-            <div>
-              <div className="eyebrow">DESIGNED FOR CAREFUL DECISIONS</div>
-              <h2>
-                Useful evidence.
+          <figure className="wl-hero-media">
+            <Image
+              className="wl-product-image"
+              src="/brand/mori-studio.png"
+              width={1536}
+              height={1024}
+              alt="Illustrative studio render of a MORI Strawberry beverage can with soft blue rim lighting"
+              preload
+              sizes="(max-width: 767px) 700px, 950px"
+            />
+            <div className="wl-product-coordinate wl-coordinate-top" aria-hidden="true">
+              <span>+</span>ARTWORK / IN CONTEXT
+            </div>
+            <div className="wl-product-coordinate wl-coordinate-bottom" aria-hidden="true">
+              <span>+</span>35° 40′ N / 139° 45′ E
+            </div>
+            <Link
+              className="wl-review-callout"
+              href="/checks/mori-strawberry?check=mori-strawberry-declaration"
+            >
+              <span className="wl-callout-label">
+                <span />A DETAIL WORTH REVIEWING
+                <MoveUpRight size={13} />
+              </span>
+              <strong>
+                What’s missing
                 <br />
-                An honest scope.
-              </h2>
-              <p>Good review starts with knowing what was checked—and what still needs a person.</p>
-              <Link className="scope-link" href="/checks/mori-strawberry/report">
-                See the sample report
-                <ArrowRight size={17} />
+                from the label?
+              </strong>
+              <span className="wl-callout-bottom">
+                Explore the sample finding
+                <ArrowRight size={15} />
+              </span>
+            </Link>
+            <figcaption>
+              Illustrative product render<span>Sample review uses the original flat artwork.</span>
+            </figcaption>
+          </figure>
+          <div className="wl-hero-baseline">
+            <span>
+              <span className="wl-tiny-wave" aria-hidden="true">
+                ∿
+              </span>
+              Clarity before the shelf.
+            </span>
+            <a href="#interactive-demo">
+              SCROLL TO LOOK CLOSER
+              <ArrowDown size={13} />
+            </a>
+          </div>
+        </section>
+        <div className="wl-capability-strip">
+          <div className="landing-container">
+            <span>
+              <Layers size={17} />
+              Artwork & specifications
+            </span>
+            <span>
+              <CircleDot size={17} />A defined review scope
+            </span>
+            <span>
+              <ListChecks size={17} />
+              Evidence behind every finding
+            </span>
+            <span>
+              <Check size={17} />
+              Human judgment, connected
+            </span>
+          </div>
+        </div>
+        <section className="wl-demo-section" id="interactive-demo">
+          <div className="landing-container">
+            <div className="wl-section-intro">
+              <div>
+                <span className="wl-section-index">01 / THE REVIEW DESK</span>
+                <h2>
+                  Look closer.
+                  <br />
+                  It’s all connected.
+                </h2>
+              </div>
+              <div className="wl-section-copy">
+                <p>
+                  From the first flagged detail to the source behind it. Explore a real interaction,
+                  with a clearly defined sample.
+                </p>
+                <span className="wl-interactive-badge">
+                  <span />
+                  INTERACTIVE SAMPLE
+                </span>
+              </div>
+            </div>
+            <SamplePreview />
+            <div className="wl-demo-footnote">
+              <span>
+                <ScanLine size={15} />
+                Select a finding. Follow the evidence. See the next step.
+              </span>
+              <Link href="/dashboard">
+                Open review workspace
+                <ArrowUpRight size={15} />
               </Link>
             </div>
-            <div className="scope-ledger">
+          </div>
+        </section>
+        <section id="how-it-works" className="wl-process landing-container">
+          <div className="wl-section-intro">
+            <div>
+              <span className="wl-section-index">02 / FROM FILE TO FINDING</span>
+              <h2>
+                A little less back-and-forth.
+                <br />A lot more perspective.
+              </h2>
+            </div>
+            <p className="wl-process-intro">
+              One place for the artwork,
+              <br />
+              the requirement, and the conversation.
+            </p>
+          </div>
+          <div className="wl-process-grid">
+            <article>
+              <div className="wl-process-visual wl-file-visual" aria-hidden="true">
+                <div className="wl-file-card wl-file-back">
+                  <FileUp size={21} />
+                  <span>PRODUCT SPECIFICATION</span>
+                  <i />
+                  <i />
+                  <i />
+                </div>
+                <div className="wl-file-card wl-file-front">
+                  <ScanLine size={21} />
+                  <strong>MORI</strong>
+                  <span>ARTWORK / V1</span>
+                  <div className="wl-file-swatch" />
+                </div>
+                <span className="wl-visual-caption">01 — BRING THE CONTEXT</span>
+              </div>
+              <div className="wl-process-text">
+                <span>01</span>
+                <h3>Start with the artwork.</h3>
+                <p>
+                  Bring packaging and product specifications together. Add your company policies and
+                  reference documents.
+                </p>
+              </div>
+            </article>
+            <article>
+              <div className="wl-process-visual wl-evidence-visual" aria-hidden="true">
+                <div className="wl-evidence-line">
+                  <span />
+                  <i />
+                  <i />
+                </div>
+                <div className="wl-evidence-node">
+                  <span className="wl-node-dot" />
+                  <div>
+                    <small>SELECTED COMPARISON</small>
+                    <strong>Declared net quantity</strong>
+                    <span>
+                      Artwork 250 mL <ArrowRight size={12} />
+                      Specification 250 mL
+                    </span>
+                  </div>
+                  <Check size={16} />
+                </div>
+                <div className="wl-evidence-line wl-evidence-line-bottom">
+                  <span />
+                  <i />
+                  <i />
+                </div>
+                <span className="wl-visual-caption">02 — CONNECT THE DETAILS</span>
+              </div>
+              <div className="wl-process-text">
+                <span>02</span>
+                <h3>See what needs attention.</h3>
+                <p>
+                  In the sample, each selected check connects an observation to the artwork and the
+                  reference behind it.
+                </p>
+              </div>
+            </article>
+            <article>
+              <div className="wl-process-visual wl-next-visual" aria-hidden="true">
+                <div className="wl-next-card">
+                  <span>
+                    <span />
+                    SUGGESTED NEXT STEP
+                  </span>
+                  <strong>
+                    Clarity on
+                    <br />
+                    what comes next.
+                  </strong>
+                  <div>
+                    <Check size={14} />
+                    Evidence reviewed
+                    <ArrowUpRight size={15} />
+                  </div>
+                </div>
+                <span className="wl-visual-caption">03 — MOVE THE REVIEW FORWARD</span>
+              </div>
+              <div className="wl-process-text">
+                <span>03</span>
+                <h3>Make the next move.</h3>
+                <p>
+                  Review a suggested correction and record a decision. Keep the original assessment
+                  and its context intact.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section id="demo-scope" className="wl-scope">
+          <div className="landing-container wl-scope-layout">
+            <div>
+              <span className="wl-section-index">03 / A CLEARER PERSPECTIVE</span>
+              <h2>
+                Confidence starts
+                <br />
+                with context.
+              </h2>
+              <p>A good review makes its boundaries as clear as its findings.</p>
+              <Link href="/checks/mori-strawberry/report" className="wl-text-link">
+                See the sample report
+                <ArrowUpRight size={16} />
+              </Link>
+            </div>
+            <div className="wl-scope-list">
               <div>
-                <span className="scope-icon supported">
-                  <Check size={19} />
-                </span>
+                <span className="wl-scope-number">01</span>
                 <div>
-                  <h3>Explore today</h3>
+                  <h3>A focused sample</h3>
                   <p>
-                    Japan fruit-beverage sample. Artwork inspection, an illustrative company
-                    checklist, a product-data comparison, and an unresolved measurement.
+                    Japan fruit beverage. An illustrative checklist, a product-data comparison, and
+                    a measurement that still needs review.
                   </p>
                 </div>
+                <ScanLine size={20} />
               </div>
               <div>
-                <span className="scope-icon">
-                  <FileUp size={19} />
-                </span>
+                <span className="wl-scope-number">02</span>
                 <div>
-                  <h3>Preview your files</h3>
+                  <h3>Room for your own artwork</h3>
                   <p>
-                    PDF, PNG, and JPEG artwork with product references. Files remain in your browser
-                    session; live analysis is not connected.
+                    Preview PDF, PNG, or JPEG files with product references. Live analysis is not
+                    connected; your uploads stay preview-only.
                   </p>
                 </div>
+                <FileUp size={20} />
               </div>
               <div>
-                <span className="scope-icon">
-                  <Minus size={19} />
-                </span>
+                <span className="wl-scope-number">03</span>
                 <div>
-                  <h3>A limited review, with a human in the loop</h3>
+                  <h3>Judgment stays human</h3>
                   <p>
-                    Simulated findings are not legal approval. Additional markets, authoritative
-                    rule research, and live AI analysis are planned.
+                    Sample findings are simulated, and selected checks are not legal approval.
+                    Authoritative rules and more markets are planned.
                   </p>
                 </div>
+                <Minus size={20} />
               </div>
             </div>
           </div>
         </section>
-        <section className="landing-closing landing-container">
-          <div>
-            <span className="eyebrow">YOUR NEXT REVIEW STARTS HERE</span>
-            <h2>
-              See the detail.
-              <br />
-              Make the next move.
-            </h2>
-          </div>
-          <Button asChild>
+        <section className="wl-closing landing-container">
+          <span className="wl-section-index">SEE IT FOR YOURSELF</span>
+          <h2>
+            The next detail
+            <br />
+            changes everything.
+          </h2>
+          <p>Take a closer look at the sample packaging review.</p>
+          <Button asChild className="wl-primary">
             <Link href="/checks/mori-strawberry">
               Try sample check
               <ArrowUpRight size={18} />
             </Link>
           </Button>
+          <div className="wl-closing-waves" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </div>
         </section>
       </main>
       <LandingFooter />

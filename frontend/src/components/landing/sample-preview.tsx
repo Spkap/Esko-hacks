@@ -64,7 +64,7 @@ export function SamplePreview() {
         <div className="preview-findings">
           <div className="preview-findings-heading">
             <h2>Selected checks</h2>
-            <span>3 checks</span>
+            <span>{report.checks.length} checks</span>
           </div>
           <FindingList checks={report.checks} selectedId={selected.id} onSelect={setSelectedId} />
           <div className="preview-evidence" aria-live="polite" data-testid="landing-evidence">

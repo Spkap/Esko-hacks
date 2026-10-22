@@ -11,6 +11,12 @@ test('landing sample interaction connects finding, marker, evidence and full rev
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Check your packaging before it reaches the shelf.',
   );
+  const productImage = page.getByRole('img', { name: /Illustrative studio render/ });
+  await expect(productImage).toBeVisible();
+  await expect
+    .poll(() => productImage.evaluate((image) => (image as HTMLImageElement).naturalWidth))
+    .toBeGreaterThan(0);
+  await expect(page.getByText('Sample review uses the original flat artwork.')).toBeVisible();
   await page.getByRole('button', { name: /Juice statement missing/ }).click();
   await expect(page.getByTestId('landing-evidence')).toContainText('No juice statement appears');
   await expect(page.getByTestId('selected-marker')).toHaveCount(0);
@@ -59,6 +65,17 @@ test('new screens reflow, respect reduced motion and have no serious axe finding
       await expect
         .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
         .toBe(true);
+      if (route === '/') {
+        await page
+          .getByRole('img', { name: /Illustrative studio render/ })
+          .evaluate((image) => (image as HTMLImageElement).decode());
+        await page.evaluate(
+          () =>
+            new Promise<void>((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+            ),
+        );
+      }
       await page.screenshot({
         path: `evidence/${route === '/' ? 'landing' : 'upload'}-${width}.png`,
         fullPage: true,
@@ -69,4 +86,11 @@ test('new screens reflow, respect reduced motion and have no serious axe finding
       results.violations.filter((v) => ['serious', 'critical'].includes(v.impact || '')),
     ).toEqual([]);
   }
+});
+
+test('hero review callout opens the original sample finding', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /A detail worth reviewing/i }).click();
+  await expect(page).toHaveURL('/checks/mori-strawberry?check=mori-strawberry-declaration');
+  await expect(page.getByTestId('selected-evidence')).toContainText('No juice statement appears');
 });

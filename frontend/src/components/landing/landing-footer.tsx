@@ -25,6 +25,9 @@ export function LandingFooter() {
           </Link>
         </nav>
       </div>
+      <span className="wl-footer-display" aria-hidden="true">
+        Wavelength
+      </span>
       <div className="landing-footer-bottom">
         <span>© 2026 Wavelength · Hackathon prototype</span>
         <span>Limited checks. Traceable evidence. Human review.</span>
