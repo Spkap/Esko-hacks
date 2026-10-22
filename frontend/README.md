@@ -1,39 +1,105 @@
-# Wavelength frontend — seeded M1–M6 demo
+# Wavelength · Frontend
 
-Requirements: Node.js 22.17+ and pnpm 11.25.0.
+The interactive packaging-review prototype: dashboard, artwork viewer, evidence panels, reviewer decisions, prepared sample runs, and reports.
+
+[Product overview](../README.md) · [Watch the demo](https://youtu.be/ASl5XMgqJk4) · [Sample provenance](../reference-data/README.md)
+
+## Start development
+
+**Requirements:** Node.js 22.17+ and pnpm 11.25.0. Commands below run from the repository root.
 
 ```sh
 pnpm -C frontend install --frozen-lockfile
 pnpm -C frontend dev
 ```
 
-After pulling repository changes, stop any running development server and run `pnpm -C frontend dev` again. Startup syncs dependencies from the committed lockfile before compiling, so newly added packages (such as the Phosphor icons) are installed locally. Restarting is required when dependencies change; an already-running server does not install new packages through hot reload.
+| Route | Screen |
+| :--- | :--- |
+| `http://127.0.0.1:3000` | Product landing page and interactive preview. |
+| `http://127.0.0.1:3000/dashboard` | Review library, search, and filters. |
+| `http://127.0.0.1:3000/checks/new` | Own-file previews or prepared sample setup. |
+| `http://127.0.0.1:3000/checks/mori-strawberry` | Existing MORI V1 artwork review. |
 
-Open http://127.0.0.1:3000 for the landing page, or http://127.0.0.1:3000/dashboard for the workspace. The default data mode is `demo`; copy `.env.example` to `.env.local` to configure it explicitly. `live` displays a connection error because backend integration is outside M1–M4.
+The `predev` script syncs dependencies from the lockfile and prepares the PDF.js worker. After pulling dependency changes, stop the running development server and restart it.
 
-The dashboard, artwork viewer, selected evidence, reviewer decisions, and report are frontend demo features. Assessment fixtures and reference documents are fictional and simulated. They are not researched rules or legal advice. `/checks/new` accepts PDF/PNG/JPEG artwork and references (20 MiB each) for local previews only. The sample shortcut opens the existing simulated review; arbitrary uploads never inherit its findings. The landing page embeds the same viewer and finding selection. The separate Dancing Fish scenario uses the organizer’s actual proof and draft workbook.
+## Configuration
 
-Reset the local demo using **Reset demo** in the sidebar or mobile navigation. Decisions are stored in localStorage. Product draft and small uploaded-file metadata are stored in sessionStorage (up to 20 previews); file contents are never persisted or sent to a server. Re-select files after reload. Blocked/corrupt storage falls back to usable in-memory state.
+Demo mode is the default. To set it explicitly, copy `frontend/.env.example` to `frontend/.env.local`:
+
+```dotenv
+NEXT_PUBLIC_DATA_MODE=demo
+```
+
+| Mode | Behavior |
+| :--- | :--- |
+| `demo` | Bundled sample data and interactive local review actions. No account or AI key required. |
+| `live` | Explicit connection error. A live backend is not implemented. |
+
+## Exercise the main flow
+
+1. Choose **New check → Start with sample files**.
+2. Select MORI V1, corrected V2, or Dancing Fish, then **Run simulated check**.
+3. Inspect a finding, read its reference, and record a reviewer decision.
+4. From MORI V1, choose **Compare the corrected sample** to prepare V2.
+5. Open **View report** for findings, decisions, and scope exclusions.
+6. Select **Reset demo → Reset workspace** to return to the six baseline examples.
+
+Sample runs use predetermined findings after a labeled simulation. A new run ID and its results remain available for the browser session. Acknowledging or dismissing a finding preserves its original result.
+
+Own-file inputs accept PDF, PNG, and JPEG files up to 20 MiB each for local previews. Arbitrary uploads do not produce compliance findings. OCR, AI inference, and live regulatory checks are not connected.
+
+## Browser storage and reset
+
+| Data | Storage | Lifetime |
+| :--- | :--- | :--- |
+| Reviewer decisions | `localStorage` | Across reloads and browser sessions, until cleared/reset. |
+| Started sample runs | `sessionStorage` | Current browser tab session; reload recovery supported. |
+| Product draft and small upload metadata | `sessionStorage` | Current session, with up to 20 upload previews. |
+| Uploaded file contents | In-memory browser objects | Re-select after reload; never sent to a server. |
+
+Blocked or corrupt storage falls back to usable in-memory state. **Reset workspace** clears started runs, decisions, upload metadata, and draft product name; immutable sample fixtures remain.
+
+## Production preview
+
+Stop the development server first, then run:
 
 ```sh
+pnpm -C frontend build
+pnpm -C frontend start
+```
+
+## Development checks
+
+```sh
+pnpm -C frontend exec tsx scripts/validate-sources.ts
+pnpm -C frontend exec tsx scripts/validate-demo.ts
 pnpm -C frontend typecheck
 pnpm -C frontend lint
 pnpm -C frontend test:unit
-pnpm -C frontend build
+```
+
+Install a Playwright browser once, then run browser checks:
+
+```sh
 pnpm -C frontend exec playwright install chromium
 pnpm -C frontend test:e2e
 ```
 
-For browser tests against a production build, set `PLAYWRIGHT_PRODUCTION=1` before `test:e2e`. Production server: `pnpm -C frontend start`. Stop the dev server before building/running production. To use installed Chrome for browser checks, set `PLAYWRIGHT_CHANNEL=chrome`.
+To check the production build using installed Chrome:
 
-Local progress notes, screenshots, and remaining limitations are described in `../docs/PROGRESS.md` when available. The `docs/` folder is intentionally ignored by Git.
+```sh
+pnpm -C frontend build
+PLAYWRIGHT_PRODUCTION=1 PLAYWRIGHT_CHANNEL=chrome pnpm -C frontend test:e2e
+```
 
-## Complete seeded journey
+Playwright starts the selected server automatically or reuses an existing one. Stop an existing development server before the production check so it cannot be reused accidentally.
 
-From **New check**, choose **Start with sample files**, select MORI V1, corrected V2, or the organizer’s Dancing Fish carton, then **Run simulated check**. Prepared sample inputs produce predetermined findings after a short labeled simulation. A new run ID and matching findings are saved for the browser session; reload preserves decisions and the selected sample run. Arbitrary uploads remain previews and never inherit sample results.
+## Source material and boundaries
 
-**Reset demo → Reset workspace** restores the six baseline examples, clearing started sample runs, decisions, upload metadata and draft product name. It returns to the dashboard.
+MORI is fictional packaging compared with sample company documents. Dancing Fish uses the organizer's carton proof and draft/reconstructed workbook; uncertain allergen wording and vegan claims remain review questions. The older Fieldwork fixture is a separate fictional multipage example.
 
-Research provenance and expected results are in `../reference-data/`. The organizer’s original PDF/workbook are bundled locally; CAA references remain externally linked with authored source notes. Direct CAA downloads were unavailable. English legal interpretations are unreviewed and sample findings are not legal approval.
+Source records, artifact hashes, rule assumptions, and expected results are in [`reference-data/`](../reference-data/). Original organizer files are bundled under [`public/demo/`](public/demo/). Japan CAA references are externally linked with authored source notes; original CAA downloads were unavailable and English interpretations are unreviewed.
 
-The optional local recording script and capability list are in `../docs/submission/DEMO.md`. M7–M10 backend work is intentionally not started.
+A sample pass covers only its selected checks. It does not establish full market compliance or legal approval.
+
+Local planning and progress notes may exist under the Git-ignored `docs/` folder. They are optional and are not required to install or run the frontend.

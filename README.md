@@ -7,13 +7,13 @@
 <p align="center"><strong>Clarity before the shelf.</strong></p>
 
 <p align="center">
-  Bring packaging artwork, requirements, and evidence into one review workspace.<br>
-  Find the detail. Understand the source. Make the next decision clear.
+  Review packaging before it reaches the shelf.<br>
+  Artwork, reference evidence, and reviewer decisions—connected in one workspace.
 </p>
 
 <p align="center">
   <a href="https://youtu.be/ASl5XMgqJk4"><strong>Watch the demo ↗</strong></a> ·
-  <a href="#a-review-in-practice">See the workflow</a> ·
+  <a href="#a-review-in-practice">Follow a review</a> ·
   <a href="#run-locally">Run locally</a> ·
   <a href="#what-works-today">Explore the scope</a>
 </p>
@@ -31,19 +31,29 @@
 
 **[Watch the 2:17 demo on YouTube →](https://youtu.be/ASl5XMgqJk4)**
 
-Follow a review from prepared artwork to a flagged finding, reference evidence, a reviewer decision, corrected artwork, and a report. The walkthrough also includes the organizer's Dancing Fish carton.
+See the complete path from a missing statement to corrected artwork, then inspect the organizer's actual carton proof.
+
+| Jump to | What you will see |
+| :--- | :--- |
+| [0:24 · Prepare a review](https://youtu.be/ASl5XMgqJk4?t=24) | Artwork, market, specification, and reference files. |
+| [0:47 · Inspect the evidence](https://youtu.be/ASl5XMgqJk4?t=47) | A finding connected to the artwork, its source, and a correction. |
+| [1:25 · Compare corrected V2](https://youtu.be/ASl5XMgqJk4?t=85) | The missing statement is added; selected checks pass. |
+| [1:39 · Read the report](https://youtu.be/ASl5XMgqJk4?t=99) | Results, version context, and requirements outside scope. |
+| [1:54 · Review organizer material](https://youtu.be/ASl5XMgqJk4?t=114) | Dancing Fish carton proof and draft-source review questions. |
 
 > **Prototype scope:** the review interface is interactive; sample assessments are predetermined. Live OCR, AI inference, and regulatory verification are future work. No account, backend, or AI key is required to try the samples.
 
 ## Why we built it
 
-A packaging design can look finished while important questions remain unanswered.
+A finished design still has to agree with the product specification, the intended market, and the brand's requirements. A missing statement or an unsupported claim can be easy to overlook when the evidence lives in another document.
 
-Does the label match the product sheet? Is a required statement present? Is the claim supported by an approved reference? Can anyone establish the printed size from this file?
+Wavelength gives packaging designers, brand teams, and quality reviewers a shared review desk: the artwork on one side, the finding and its evidence on the other. Each concern has a source and a next step; each report says what was actually reviewed.
 
-Those questions span artwork, specifications, market requirements, and company guidelines. Each finding needs someone to locate the relevant panel, find the supporting document, explain the discrepancy, and carry the correction into the next version.
-
-Wavelength brings those steps together. Packaging designers, brand teams, and quality reviewers can work from the same artwork and see the evidence behind each concern.
+| Review principle | How it appears in the product |
+| :--- | :--- |
+| **Evidence before a decision** | Observed/expected values, source excerpts, and reference locations beside the artwork. |
+| **Uncertainty stays visible** | Distinct **Pass**, **Fail**, **Needs review**, and **Not checked** results. |
+| **Corrections stay traceable** | Reviewer decisions preserve the original result; corrected artwork receives a separate review. |
 
 ## A review in practice
 
@@ -117,17 +127,15 @@ The report identifies the artwork version, reference revisions, selected checks,
 
 ## What works today
 
-| Capability | Current behavior |
+| Interactive today | What you can do |
 | :--- | :--- |
-| **Review library** | Search, market/result filters, assessment counts, and artwork-version navigation. |
-| **Artwork inspection** | Image/PDF preview, page navigation, zoom, rotation, and finding-linked markers. |
-| **Evidence inspection** | Observed/expected values, reference excerpts, source links, and suggested next steps. |
-| **Reviewer decisions** | Acknowledge, dismiss with a required reason, or reopen; original results remain unchanged. |
-| **Sample runs** | Prepared inputs, labeled simulated progress, cancellation, distinct run IDs, and session reload recovery. |
-| **Version comparison** | Separate MORI V1 and corrected V2 reviews with explicit passing scope. |
-| **Review reports** | Findings, sources, decisions, version context, and unchecked requirements. |
-| **Own-file previews** | PDF, PNG, and JPEG inputs up to 20 MiB per file; arbitrary uploads do not receive sample findings. |
-| **Reset** | Restore the six baseline examples and clear local demo activity. |
+| **Find the right review** | Search six baseline examples, filter by market/result, and inspect artwork versions. |
+| **Inspect artwork and evidence** | Navigate PDF pages, zoom/rotate, select findings and markers, and open linked references. |
+| **Record a review decision** | Acknowledge, dismiss with a reason, or reopen a finding without changing its assessment. |
+| **Recheck and hand off** | Run prepared scenarios, compare corrected V2, recover a run after reload, and read scoped reports. |
+| **Explore your own files** | Preview PDF, PNG, or JPEG files up to 20 MiB each; uploaded files never inherit sample findings. |
+
+**Still to build:** OCR and semantic extraction, AI inference, live rule evaluation, server-side file storage, and accounts. The progress sequence is explicitly simulated.
 
 ### Three runnable scenarios
 
@@ -138,24 +146,6 @@ The report identifies the artwork version, reference revisions, selected checks,
 | **Dancing Fish Berry Crunch** | Organizer-supplied carton proof and draft/reconstructed workbook | Allergen advisory wording, vegan claim, and quantity comparison with draft-source uncertainty. |
 
 Sample findings demonstrate the workflow. They do not establish legal approval. Source status and interpretation limits are documented in the [reference-data notes](reference-data/README.md).
-
-## How it is built
-
-The screens use a shared repository interface. The current implementation reads bundled sample records and stores demo activity in the browser.
-
-```mermaid
-flowchart TD
-    UI["Next.js + React interface<br/>Dashboard · Viewer · Evidence · Reports"]
-    UI --> R["Shared review repository"]
-    R --> S["Bundled sample scenarios<br/>Artwork · Specifications · Findings"]
-    R --> L["localStorage<br/>Reviewer decisions"]
-    R --> T["sessionStorage<br/>Sample runs · Drafts · Upload metadata"]
-    UI --> P["PDF.js<br/>Browser PDF rendering"]
-```
-
-**Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Phosphor icons, and local Manrope/Noto Sans JP fonts. **Data validation:** Zod. **Checks:** Vitest and Playwright.
-
-Your uploaded file contents are not persisted or uploaded to a server. Re-select your own files after a reload. The default `NEXT_PUBLIC_DATA_MODE=demo` uses the sample workspace; `live` displays an explicit connection error because a live backend is not connected.
 
 ## Run locally
 
@@ -189,6 +179,24 @@ pnpm -C frontend start
 
 Stop the development server before building. After pulling dependency changes, restart development; the `predev` script syncs packages from the committed lockfile.
 
+## How it is built
+
+The screens use a shared repository interface. The current implementation reads bundled sample records and stores demo activity in the browser.
+
+```mermaid
+flowchart TD
+    UI["Next.js + React interface<br/>Dashboard · Viewer · Evidence · Reports"]
+    UI --> R["Shared review repository"]
+    R --> S["Bundled sample scenarios<br/>Artwork · Specifications · Findings"]
+    R --> L["localStorage<br/>Reviewer decisions"]
+    R --> T["sessionStorage<br/>Sample runs · Drafts · Upload metadata"]
+    UI --> P["PDF.js<br/>Browser PDF rendering"]
+```
+
+**Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Phosphor icons, and local Manrope/Noto Sans JP fonts. **Data validation:** Zod. **Checks:** Vitest and Playwright.
+
+Your uploaded file contents are not persisted or uploaded to a server. Re-select your own files after a reload. The default `NEXT_PUBLIC_DATA_MODE=demo` uses the sample workspace; `live` displays an explicit connection error because a live backend is not connected.
+
 <details>
 <summary><strong>Development checks and repository map</strong></summary>
 
@@ -217,7 +225,7 @@ For browser checks against a production build, use `PLAYWRIGHT_PRODUCTION=1`; us
 
 </details>
 
-## Where we go next
+## What comes next
 
 The product vision is AI-assisted packaging review across market requirements, product accuracy, and brand guidelines. The next step is to connect the working review experience to dependable extraction and traceable checks.
 
