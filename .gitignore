@@ -10,3 +10,7 @@ frontend/public/pdf.worker.min.mjs
 
 # Local planning, research, and submission documents
 /docs/
+
+# Local agent instructions
+AGENTS.md
+agents.md
