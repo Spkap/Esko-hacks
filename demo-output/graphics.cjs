@@ -1,0 +1,26 @@
+// Render editable title cards and caption overlays with the product's own font.
+const {chromium}=require('../frontend/node_modules/@playwright/test');
+const fs=require('fs'),path=require('path');
+const ROOT=__dirname,scenes=JSON.parse(fs.readFileSync(path.join(ROOT,'scenes.json')));
+const esc=s=>s.replaceAll('&','&amp;').replaceAll('<','&lt;');
+const font='../../frontend/node_modules/@fontsource/manrope/files/manrope-latin-400-normal.woff2';
+const bold='../../frontend/node_modules/@fontsource/manrope/files/manrope-latin-600-normal.woff2';
+const css=`@font-face{font-family:Manrope;src:url('${font}')}@font-face{font-family:Manrope;src:url('${bold}');font-weight:600}*{box-sizing:border-box}html,body{overflow:hidden}body{margin:0;width:1920px;height:1080px;font-family:Manrope,sans-serif;color:#f4f7ff}.wave{display:inline-block;color:#a9c5ff;margin-right:18px;font-size:44px;vertical-align:-3px}.brand{font-size:30px;letter-spacing:-1.5px;font-weight:600}.tag{font-size:15px;letter-spacing:3px;text-transform:uppercase;color:#9aaac4}.fine{font-size:19px;color:#a2aec3}`;
+const brand=`<span class="brand"><span class="wave">∿</span>Wavelength</span>`;
+const shell=(style,content)=>`<!doctype html><html><head><meta charset="utf-8"><style>${css}${style}</style></head><body>${content}</body></html>`;
+(async()=>{const browser=await chromium.launch({channel:'chrome',headless:false});const p=await browser.newPage({viewport:{width:1920,height:1080}});
+async function render(name,html,transparent=false){let f=path.join(ROOT,'scenes',name+'.html');fs.writeFileSync(f,html);await p.goto('file://'+f);await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:path.join(ROOT,'frames',name+'.png'),omitBackground:transparent});}
+for(let i=0;i<scenes.length;i++){
+ const s=scenes[i];let words=s.narration.split(' '), chunks=[],buf=[];
+ for(const w of words){buf.push(w);if(buf.join(' ').length>76&&/[.,;:]$/.test(w)){chunks.push(buf.join(' '));buf=[]}else if(buf.join(' ').length>113){chunks.push(buf.join(' '));buf=[]}}
+ if(buf.length)chunks.push(buf.join(' '));s.captions=chunks;
+ for(let j=0;j<chunks.length;j++){
+ const header=(i===0||i===scenes.length-1)?'':`<header><div><span class="tag">${String(i).padStart(2,'0')} / THE WALKTHROUGH</span><strong>${esc(s.title)}</strong></div>${brand}</header><div class="frame"></div>`;
+ await render(`${s.id}-overlay-${j}`,shell(`body{background:transparent}header{position:absolute;left:96px;right:96px;top:27px;display:flex;align-items:center;justify-content:space-between}header strong{display:inline-block;font-size:29px;font-weight:600;margin-left:28px;letter-spacing:-.7px}header .tag{font-size:12px;letter-spacing:2px}.frame{position:absolute;left:95px;top:105px;width:1730px;height:866px;border:1px solid #34405a;border-radius:12px;box-shadow:0 15px 48px #0005}.caption{position:absolute;left:200px;right:200px;top:993px;min-height:68px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:25px;line-height:1.45;color:#e6ecf7}.progress{position:absolute;left:96px;bottom:0;height:3px;width:${(i+1)/scenes.length*1728}px;background:#a7c5ff}`,`${header}<div class="caption">${esc(chunks[j])}</div><div class="progress"></div>`),true);
+ }
+}
+for(const ending of [false,true]){
+ const id=ending?'12-close':'01-opening';
+ await render(id+'-card',shell(`body{background:#080d15}.top{position:absolute;top:70px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center}.copy{position:absolute;left:110px;top:280px;z-index:2;width:950px}h1{font-size:${ending?112:96}px;line-height:1.06;letter-spacing:-6px;font-weight:600;margin:28px 0 40px}.accent{color:#c5d8ff}.hero{position:absolute;right:-90px;top:130px;width:1240px;height:830px;object-fit:cover;opacity:${ending?.5:.9};mask-image:linear-gradient(to right,transparent,#000 28%)}.copy p{font-size:27px;color:#aab9d2;line-height:1.6;max-width:730px}.rule{width:68px;height:3px;background:#bc4560;margin-bottom:26px}.bottom{position:absolute;bottom:140px;left:110px;right:110px;display:flex;gap:70px;align-items:center}.bottom span{font-size:19px;color:#a2b4d2}.bottom strong{font-size:24px;color:#edf3ff;margin-right:20px}.chip{border:1px solid #33435d;border-radius:30px;padding:13px 22px;font-size:15px;color:#b8cae6}`,`<img class="hero" src="../../frontend/public/brand/mori-studio.png"><div class="top">${brand}<span class="chip">HACKATHON DEMO · SEEDED FINDINGS</span></div><div class="copy"><div class="rule"></div><span class="tag">${ending?'Packaging review, connected.':'Beautiful packaging deserves a closer look.'}</span><h1>${ending?'Clarity before<br><span class="accent">the shelf.</span>':'Looks ready.<br><span class="accent">Look closer.</span>'}</h1><p>${ending?'Connect the artwork. Inspect the evidence.<br>Make the next review decision clear.':'Bring artwork, requirements, and the next<br>review decision onto the same wavelength.'}</p></div><div class="bottom">${ending?'<strong>Try the sample review →</strong><span>localhost:3000</span>':'<span>ARTWORK</span><span>→</span><span>EVIDENCE</span><span>→</span><span>NEXT STEP</span>'}</div>`));
+}
+fs.writeFileSync(path.join(ROOT,'scenes.json'),JSON.stringify(scenes,null,2)+'\n');await browser.close()})().catch(e=>{console.error(e);process.exit(1)});

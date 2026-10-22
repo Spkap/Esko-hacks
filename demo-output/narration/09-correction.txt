@@ -1,0 +1,1 @@
+Now compare the corrected sample. Version two includes the missing statement. Run it again: the selected text and quantity checks pass. Printed size and placement remain unverified.

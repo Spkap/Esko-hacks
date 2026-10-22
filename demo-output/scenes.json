@@ -1,0 +1,132 @@
+[
+  {
+    "id": "01-opening",
+    "title": "Clarity before the shelf.",
+    "narration": "Packaging can look ready. One missing detail can tell a different story.",
+    "duration": 6,
+    "audioDuration": 4.056,
+    "captions": [
+      "Packaging can look ready. One missing detail can tell a different story."
+    ]
+  },
+  {
+    "id": "02-landing",
+    "title": "Meet Wavelength.",
+    "narration": "Meet Wavelength. A packaging review workspace that brings artwork, requirements, and evidence together, before a product reaches the shelf.",
+    "duration": 9.38,
+    "audioDuration": 8.376,
+    "captions": [
+      "Meet Wavelength. A packaging review workspace that brings artwork, requirements,",
+      "and evidence together, before a product reaches the shelf."
+    ]
+  },
+  {
+    "id": "03-dashboard",
+    "title": "One workspace. Every review.",
+    "narration": "Start with the review library. Search by product, track artwork versions, and focus on the reviews that need attention.",
+    "duration": 9,
+    "audioDuration": 7.056,
+    "captions": [
+      "Start with the review library. Search by product, track artwork versions, and focus on the reviews that need attention."
+    ]
+  },
+  {
+    "id": "04-setup",
+    "title": "The right inputs. A clear scope.",
+    "narration": "Prepare the artwork, product details, target market, and reference documents. For this walkthrough, we choose the prepared MORI Strawberry sample for Japan.",
+    "duration": 11,
+    "audioDuration": 9.12,
+    "captions": [
+      "Prepare the artwork, product details, target market, and reference documents.",
+      "For this walkthrough, we choose the prepared MORI Strawberry sample for Japan."
+    ]
+  },
+  {
+    "id": "05-run",
+    "title": "A repeatable sample workflow.",
+    "narration": "Run the simulated check. This prototype prepares predetermined findings, so the review experience is repeatable. Live extraction and AI analysis are future work.",
+    "duration": 11.68,
+    "audioDuration": 10.68,
+    "captions": [
+      "Run the simulated check. This prototype prepares predetermined findings, so the review experience is repeatable.",
+      "Live extraction and AI analysis are future work."
+    ]
+  },
+  {
+    "id": "06-evidence",
+    "title": "From a finding to the evidence.",
+    "narration": "The first finding flags a missing juice statement against a sample company checklist. Read what was observed, compare what was expected, and follow the reference to a concrete next step.",
+    "duration": 15,
+    "audioDuration": 10.416,
+    "captions": [
+      "The first finding flags a missing juice statement against a sample company checklist.",
+      "Read what was observed, compare what was expected, and follow the reference to a concrete next step."
+    ]
+  },
+  {
+    "id": "07-nuance",
+    "title": "Show what still needs judgment.",
+    "narration": "The quantity matches the specification. Printed type size stays open for review, because a digital file alone cannot establish its physical scale.",
+    "duration": 11,
+    "audioDuration": 9.072,
+    "captions": [
+      "The quantity matches the specification. Printed type size stays open for review,",
+      "because a digital file alone cannot establish its physical scale."
+    ]
+  },
+  {
+    "id": "08-decision",
+    "title": "Human judgment stays in the loop.",
+    "narration": "Acknowledge the finding and keep the decision with the evidence. The original result stays intact. A reviewer action never turns a failed check into a pass.",
+    "duration": 12,
+    "audioDuration": 9.792,
+    "captions": [
+      "Acknowledge the finding and keep the decision with the evidence. The original result stays intact.",
+      "A reviewer action never turns a failed check into a pass."
+    ]
+  },
+  {
+    "id": "09-correction",
+    "title": "A new version. A fresh review.",
+    "narration": "Now compare the corrected sample. Version two includes the missing statement. Run it again: the selected text and quantity checks pass. Printed size and placement remain unverified.",
+    "duration": 14,
+    "audioDuration": 11.448,
+    "captions": [
+      "Now compare the corrected sample. Version two includes the missing statement.",
+      "Run it again: the selected text and quantity checks pass. Printed size and placement remain unverified."
+    ]
+  },
+  {
+    "id": "10-report",
+    "title": "A handoff with context.",
+    "narration": "Open the report to carry forward the artwork version, reference revisions, findings, and review boundaries. The report makes clear exactly what was checked, and what was left outside the scope.",
+    "duration": 15,
+    "audioDuration": 11.16,
+    "captions": [
+      "Open the report to carry forward the artwork version, reference revisions, findings,",
+      "and review boundaries. The report makes clear exactly what was checked, and what was left outside the scope."
+    ]
+  },
+  {
+    "id": "11-organizer",
+    "title": "Built around real review material.",
+    "narration": "A second scenario uses the organizer's actual Dancing Fish carton and a draft workbook. Allergen wording and the vegan claim become evidence-linked review questions, with the draft source status kept visible.",
+    "duration": 16,
+    "audioDuration": 12.576,
+    "captions": [
+      "A second scenario uses the organizer's actual Dancing Fish carton and a draft workbook.",
+      "Allergen wording and the vegan claim become evidence-linked review questions,",
+      "with the draft source status kept visible."
+    ]
+  },
+  {
+    "id": "12-close",
+    "title": "Clarity before the shelf.",
+    "narration": "Wavelength. Connect the artwork. Inspect the evidence. Make the next review decision clear.",
+    "duration": 7.12,
+    "audioDuration": 6.12,
+    "captions": [
+      "Wavelength. Connect the artwork. Inspect the evidence. Make the next review decision clear."
+    ]
+  }
+]

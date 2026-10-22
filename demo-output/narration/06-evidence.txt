@@ -1,0 +1,1 @@
+The first finding flags a missing juice statement against a sample company checklist. Read what was observed, compare what was expected, and follow the reference to a concrete next step.

@@ -1,0 +1,11 @@
+audio/
+raw/
+frames/
+renders/
+*.mp4
+*.jpg
+*.png
+verification.json
+capture-log.json
+*.srt
+__pycache__/

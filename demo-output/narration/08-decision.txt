@@ -1,0 +1,1 @@
+Acknowledge the finding and keep the decision with the evidence. The original result stays intact. A reviewer action never turns a failed check into a pass.
