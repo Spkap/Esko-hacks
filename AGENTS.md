@@ -1,6 +1,6 @@
 # Wavelength agent instructions
 
-Read `idea.md` for product intent and `IMPLEMENTATION_GUIDE.md` for tasks. For UI work, read `DESIGN.md` when it exists. Preserve the dashboard-first order and the M6 frontend stopping point.
+Local planning documents are kept in the ignored `docs/` folder and may be absent in a fresh checkout. When available, read `docs/idea.md` for product intent, `docs/IMPLEMENTATION_GUIDE.md` for tasks, and `docs/DESIGN.md` for UI work. Use `frontend/README.md` for tracked setup and demo behavior. Preserve the dashboard-first order and the M6 frontend stopping point.
 
 ## Hackathon deadline: build and iterate fast
 
@@ -15,7 +15,7 @@ This is a small hackathon demo with about three hours remaining when this instru
 - Keep basic input handling, secrets protection, and honest sample/live labels. Speed does not justify fabricated compliance claims or claiming checks passed when they were not run.
 - Keep planning, research, skill use, and progress notes short and directly useful. Do not turn reference research, scorecards, screenshots at every breakpoint, or detailed evidence logs into delivery gates.
 
-These deadline rules override conflicting process requirements in `IMPLEMENTATION_GUIDE.md`, other project instructions, and generic skill workflows, including mandatory full test matrices, test-first steps, and exhaustive visual checklists. Use the implementation guide as a task map, not a requirement to finish every planned test or production feature. Keep the dashboard-first order and stop at M6 when time is short.
+These deadline rules override conflicting process requirements in `docs/IMPLEMENTATION_GUIDE.md`, other project instructions, and generic skill workflows, including mandatory full test matrices, test-first steps, and exhaustive visual checklists. Use the implementation guide as a task map, not a requirement to finish every planned test or production feature. Keep the dashboard-first order and stop at M6 when time is short.
 
 ## Required frontend skills
 
@@ -23,12 +23,12 @@ For frontend tasks in M1–M6 and UI changes in M10, read the relevant skills be
 
 | When | Skill file | Required result |
 |---|---|---|
-| Before visual decisions | `/Users/sourabhkapure/.agents/skills/frontend-design/SKILL.md` | A product-specific composition using the references and choices in `DESIGN.md`. |
+| Before visual decisions | `/Users/sourabhkapure/.agents/skills/frontend-design/SKILL.md` | A product-specific composition using the references and choices in `docs/DESIGN.md`. |
 | Before component/layout/state changes | `/Users/sourabhkapure/.agents/skills/frontend-ui-engineering/SKILL.md` | Focused components, shared data access, semantic controls, responsive layouts, and specified states. |
 | After the screen works | `/Users/sourabhkapure/.agents/skills/frontend-design-review/SKILL.md` | Briefly review the demo flow and fix visible blockers. |
 | Before claiming the task complete | `/Users/sourabhkapure/.agents/skills/frontend-ui-excellence/SKILL.md` | Inspect the affected screen and run only the relevant lightweight checks; no scorecard or full matrix required. |
 
-Use `DESIGN.md` and existing screens first. For new layouts or major redesigns that actually need additional references, read `/Users/sourabhkapure/.agents/skills/refero-design/SKILL.md` and keep research brief. If reference tools are unavailable, continue with the existing design direction. Keep one coherent design rather than combining conflicting skill defaults.
+Use `docs/DESIGN.md` and existing screens first. For new layouts or major redesigns that actually need additional references, read `/Users/sourabhkapure/.agents/skills/refero-design/SKILL.md` and keep research brief. If reference tools are unavailable, continue with the existing design direction. Keep one coherent design rather than combining conflicting skill defaults.
 
 For browser checks, use `/Users/sourabhkapure/.agents/skills/playwright-skill/SKILL.md`. Keep any useful reusable tests in `frontend/tests/`; exploratory scripts belong in `/tmp`. Address obvious keyboard or readability blockers directly; use `/Users/sourabhkapure/.agents/skills/alireza-a11y-audit/SKILL.md` only when a concrete issue needs it, without starting a broad audit.
 
@@ -36,6 +36,6 @@ Use current Context7 docs for unfamiliar or changed library APIs when needed to 
 
 ## Completion evidence
 
-Use the visual checklist in `IMPLEMENTATION_GUIDE.md` as a reference, not a mandatory exhaustive gate. Add a short note to `PROGRESS.md` for implementation work: what changed, checks actually run, demo blockers, and the next task. Include screenshot paths only when screenshots were useful and captured. Clearly distinguish skipped or unavailable checks from passing checks; do not block a small iteration on unrelated checks.
+Use the visual checklist in `docs/IMPLEMENTATION_GUIDE.md` as a reference, not a mandatory exhaustive gate. Add a short note to `docs/PROGRESS.md` for implementation work: what changed, checks actually run, demo blockers, and the next task. Include screenshot paths only when screenshots were useful and captured. Clearly distinguish skipped or unavailable checks from passing checks; do not block a small iteration on unrelated checks.
 
-Project decisions and the user's instructions take precedence over generic skill examples. Use `DESIGN.md` as the design reference when no Figma file is supplied; do not invent Figma approval or add Storybook as a prerequisite.
+Project decisions and the user's instructions take precedence over generic skill examples. Use `docs/DESIGN.md` as the design reference when no Figma file is supplied; do not invent Figma approval or add Storybook as a prerequisite.

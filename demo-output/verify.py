@@ -19,7 +19,7 @@ level=subprocess.run(['ffmpeg','-hide_banner','-i',str(film),'-af','volumedetect
 levels=[line for line in level.stderr.splitlines() if 'mean_volume:' in line or 'max_volume:' in line]
 captures=json.loads((ROOT/'capture-log.json').read_text())
 assert not captures['errors'],captures['errors']
-result=dict(width=video['width'],height=video['height'],fps=video['avg_frame_rate'],durationSeconds=float(probe['format']['duration']),sizeBytes=int(probe['format']['size']),videoCodec=video['codec_name'],audioCodec=audio['codec_name'],audioChannels=audio['channels'],subtitleTrack=True,fullDecode='passed',blackFrameEvents=black_events,capturedPageErrors=captures['errors'],audioLevels=levels,visualReview='See PROGRESS.md for frames actually inspected; no claim of continuous human playback.')
+result=dict(width=video['width'],height=video['height'],fps=video['avg_frame_rate'],durationSeconds=float(probe['format']['duration']),sizeBytes=int(probe['format']['size']),videoCodec=video['codec_name'],audioCodec=audio['codec_name'],audioChannels=audio['channels'],subtitleTrack=True,fullDecode='passed',blackFrameEvents=black_events,capturedPageErrors=captures['errors'],audioLevels=levels,visualReview='See local docs/PROGRESS.md for frames actually inspected; no claim of continuous human playback.')
 (ROOT/'verification.json').write_text(json.dumps(result,indent=2)+'\n')
 subprocess.run(['ffmpeg','-hide_banner','-loglevel','error','-y','-i',str(film),'-vf','fps=1/12,scale=480:270,tile=4x3','-frames:v','1',str(ROOT/'contact-sheet.jpg')],check=True)
 print(json.dumps(result,indent=2))

@@ -24,7 +24,7 @@ pnpm -C frontend test:e2e
 
 For browser tests against a production build, set `PLAYWRIGHT_PRODUCTION=1` before `test:e2e`. Production server: `pnpm -C frontend start`. Stop the dev server before building/running production. To use installed Chrome for browser checks, set `PLAYWRIGHT_CHANNEL=chrome`.
 
-See `../PROGRESS.md` for actual command results, screenshots, and remaining limitations.
+Local progress notes, screenshots, and remaining limitations are described in `../docs/PROGRESS.md` when available. The `docs/` folder is intentionally ignored by Git.
 
 ## Complete seeded journey
 
@@ -34,4 +34,4 @@ From **New check**, choose **Start with sample files**, select MORI V1, correcte
 
 Research provenance and expected results are in `../reference-data/`. The organizer’s original PDF/workbook are bundled locally; CAA references remain externally linked with authored source notes. Direct CAA downloads were unavailable. English legal interpretations are unreviewed and sample findings are not legal approval.
 
-See [the recording script and capability list](../docs/submission/DEMO.md). M7–M10 backend work is intentionally not started.
+The optional local recording script and capability list are in `../docs/submission/DEMO.md`. M7–M10 backend work is intentionally not started.
