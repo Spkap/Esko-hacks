@@ -2,6 +2,8 @@
 
 > **For implementation agents:** Use `superpowers:executing-plans` to work task by task. Use `superpowers:subagent-driven-development` when parallel execution is requested. Track completion with the checkboxes below.
 
+**Frontend execution:** Follow [AGENTS.md](AGENTS.md). It requires `frontend-design` before visual decisions, `frontend-ui-engineering` during implementation, `frontend-design-review` after implementation, and `frontend-ui-excellence` before completion.
+
 **Goal:** Let users upload packaging, choose a market, and see issues with evidence and suggested corrections.
 
 **Architecture:** Build the frontend with local sample data. Put data access behind one shared interface so a backend can replace the samples without rewriting screens. Build that backend only after the frontend demo is ready.
@@ -119,6 +121,7 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Build:** `/dashboard` with a review table as the main content. Columns: product, market, artwork version, result, updated time. Put search, market/status filters, and “New check” above it.
 
+- [ ] Create `DESIGN.md` from the appearance and reference choices below. Include desktop/mobile layout sketches and the dashboard's loading, empty, error, and selected states. Use these as the build target.
 - [ ] Create the Next.js app in `frontend/` with Tailwind v4; initialize shadcn/ui and pin its CLI as a development dependency. Verify compatible stable versions and commit the lockfile. Use normal Next.js hosting so new review URLs work after refresh.
 - [ ] Create the shared types, summary function, and sample implementation. Include reviews with issues, incomplete checks, and passed selected checks.
 - [ ] Build the table and filters. Until M2 exists, opening a row shows its details in a drawer.
@@ -126,7 +129,7 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Verify:** Search finds the correct product; combined filters work; clearing filters restores rows; zero matches offers “Clear filters”; displayed counts agree with records. Summary tests cover every rule above, including a cancelled run containing partial passes.
 
-**Checkpoint:** The frontend checks pass. The dashboard works after reload with no backend.
+**Checkpoint:** The frontend checks and visual completion checklist pass. The dashboard works after reload with no backend. Review its rendered layout before extending the same components to M2–M4.
 
 ## M2: Artwork review
 
@@ -139,7 +142,7 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Evidence positions:** Use 1-based page numbers and top-left `{x, y, width, height}` values between 0 and 1, tied to the artwork version and rendered page orientation. Convert them through the viewer’s zoom/rotation transform. Test zoom, resize, rotation, and high-density displays. For missing text, show inspected panels and use no marker.
 
-**Checkpoint:** Clicking a finding opens the right page, region, and source. Passes, failures, uncertainty, and unchecked requirements remain distinguishable. Back navigation and direct reload work.
+**Checkpoint:** Clicking a finding opens the right page, region, and source without another navigation step. Passes, failures, uncertainty, and unchecked requirements remain distinguishable. Back navigation, direct reload, and the visual completion checklist pass.
 
 ## M3: Upload and market selection
 
@@ -152,7 +155,7 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 
 **Demo behavior:** The supplied sample can produce sample findings. Any other upload is preview-only and says live analysis is not connected. It must never inherit another file’s report.
 
-**Checkpoint:** A keyboard user can complete the form. A repeated click creates one review/run. File replacement releases the previous preview URL.
+**Checkpoint:** A keyboard user can complete the form; invalid submission focuses the first error and retains entered values. A repeated click creates one review/run. File replacement releases the previous preview URL. The visual completion checklist passes.
 
 ## M4: Landing page
 
@@ -164,7 +167,7 @@ Count each result from the actual check records. Exclude not-applicable rules fr
 - [ ] Add the three-step workflow, supported demo scope, and footer links into the app. Remove the imported sign-in/social placeholders and newsletter form. Add page title/description.
 - [ ] Add `frontend/tests/e2e/landing.spec.ts` for sample entry, interactive preview, mobile-menu keyboard controls, reduced motion, and direct reload without rendering errors.
 
-**Checkpoint: UI complete.** All four screens are connected. Every visible action works or clearly explains its unavailable state. Begin researched seed data only after this checkpoint.
+**Checkpoint: UI complete.** All four screens are connected and pass the visual completion checklist. The first landing viewport shows the product, sample action, and packaging example. Begin researched seed data only after this checkpoint.
 
 ### Watermelon setup
 
@@ -244,17 +247,39 @@ The [official brief](https://www.hackerearth.com/community/challenges/hackathon/
 
 ### Appearance
 
-Write these starting choices into `DESIGN.md` in M1; review the rendered dashboard before extending them:
+**Direction:** A bright packaging inspection desk. Reviewers need to read colorful artwork and precise findings on a laptop or desktop. Keep the surrounding interface quiet; let the packaging and selected evidence carry attention.
 
-- White panels on `#F4F6FA`; main text `#162138`; secondary text `#536078`; actions `#1159C2`. Use `#B32642` sparingly for branding, not as a status shortcut.
-- Manrope for Latin text, Noto Sans JP for Japanese. Body text 16px; page headings 32px. Use 8/16/24/32px spacing and 6–10px corner radii.
-- Keep the artwork and review table prominent. Use charts only when they answer a review question. Use real product copy and sample artwork, without invented customers or savings.
-- At 1440px, show artwork/findings side by side. At 768px, use a narrow navigation rail or drawer. At 320px, use Artwork/Findings tabs and a full-width evidence panel; preserve the selected check.
-- Provide visible focus, labeled fields, text/icon status labels, 44px touch targets, readable contrast, and reduced-motion support. Keep artwork panning inside its viewer.
+Write these decisions into `DESIGN.md` in M1:
+
+- **Hierarchy:** One main action per screen. Dashboard: review rows first, counts second. Review: artwork and selected finding first, other tools second. Landing: product promise, sample action, and interactive packaging preview.
+- **Color:** White panels on `#F4F6FA`; text `#162138`; secondary text `#536078`; actions/selection `#1159C2`. Use `#B32642` for small brand details. Define reusable CSS variables; components use named tokens. Secondary text on white measures 6.34:1 contrast; white on the action blue measures 6.50:1. Check every additional text/status pair.
+- **Type and spacing:** Manrope plus Noto Sans JP; 16px body, 20px section headings, 32px page headings, 48–64px landing headline. Keep prose under 75 characters per line. Use 8/12/16/24/32px spacing, 6px controls, and 10px panels. Align table columns and use tabular numerals for counts.
+- **Layout:** At 1440px, use a 224px navigation column and side-by-side artwork/findings. At 1024px, collapse navigation and switch to Artwork/Findings tabs when either pane becomes unreadable. At 768px and below, use a navigation drawer. At 320px, show labeled review rows and a full-width evidence panel. Preserve selection across layouts; keep artwork panning inside its viewer.
+- **Signature interaction:** Selecting an issue highlights its real artwork region and opens the source beside it. Keep page/zoom controls stable. The dashboard row hover and selected state must not move content.
+- **Motion:** Use 120–200ms feedback for selection and expansion. One short landing entrance is enough. Animate opacity/transform rather than layout sizes; reduced-motion mode keeps all content and actions immediately available.
+- **Restraint:** Use local packaging artwork, thin dividers, and clear section spacing. Cards must group something meaningful. Keep decorative gradients, nested cards, stock feature grids, fake metrics, and unrelated animation out of the review workspace.
+
+### Reference choices
+
+| Reference | Adapt | Keep out of scope |
+|---|---|---|
+| [Esko WebCenter Go](https://www.esko.com/en/products/webcenter-go), including its published proofing and task-list screenshots | Artwork-first canvas, visible file/version context, readable review rows. | Its full proofing toolbar, brand assets, and approval workflow. |
+| [Adobe Acrobat annotation guidance](https://helpx.adobe.com/acrobat/using/commenting-pdfs.html) | Comments beside the document and a clear relationship between selection and detail. | A general-purpose annotation editor. |
+| Watermelon `hero-1` and `footer-1`, linked in M4 | Editable landing structure and responsive navigation. | Stock background, demo forms/links, and a second visual system. |
+
+Use these references as bounded inputs, not screen clones. Add a short reason beside any new design decision in `DESIGN.md`. The current direction can be built directly; ask for another visual direction only when the user requests one or a concrete conflict remains.
 
 ### Required states
 
 Every data-driven screen needs loading, empty, error/retry, success, and partial-result states. Keep entered form values after errors. Show the reason when a check was skipped or needs review. Unknown review IDs provide a route back to the dashboard.
+
+### Visual completion checklist
+
+- [ ] Inspect screenshots at 320, 768, 1024, and 1440px, including long product names, Japanese text, empty results, errors, and selected findings. Text, menus, and controls neither overlap nor clip; ordinary page content reflows at zoom.
+- [ ] Complete the task by keyboard. Native links/buttons have visible focus. Modal drawers contain focus, close with Escape, and return focus to their trigger; the source remains reachable without canvas interaction. Follow [W3C's dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) and [reflow guidance](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html).
+- [ ] Run axe checks on each route and open dialog, then manually inspect labels, reading order, contrast, and touch controls. Fix critical/serious findings; automated scans alone do not establish accessibility compliance.
+- [ ] Compare the render with `DESIGN.md`: consistent type, spacing, icon sizes, colors, and row alignment. Reserve image dimensions so loading does not shift controls. Keep the primary action visible and each finding understandable from its title and first detail line.
+- [ ] Verify reduced motion, loading/error recovery, no browser exceptions, and no broken assets. Save screenshots and review findings in `PROGRESS.md`; fix blocking/major issues before marking the phase complete. An aesthetic score never replaces these checks.
 
 ### Commands
 
@@ -276,7 +301,7 @@ pnpm -C frontend validate:demo
 pnpm -C frontend test:e2e --grep demo
 ```
 
-Expected: exit code 0 for each command. Browser tests wait for visible results rather than fixed delays. Inspect screenshots at 320, 768, and 1440px, keyboard navigation, Japanese text, console errors, and failed asset requests.
+Expected: exit code 0 for each command. Browser tests wait for visible results rather than fixed delays. Install `@axe-core/playwright` during M1 and add route/state accessibility checks in `frontend/tests/e2e/accessibility.spec.ts`. Use the visual completion checklist for manual review.
 
 ## Backend work: M7–M10
 
@@ -284,7 +309,7 @@ Expected: exit code 0 for each command. Browser tests wait for visible results r
 
 ## Agent handoff
 
-Implement one unchecked task at a time. For behavior changes, write the failing test, confirm the failure, implement the change, and rerun it. Keep the working frontend available throughout. Commit finished, passing task changes when authorized by the active workflow.
+Implement one unchecked task at a time using the mandatory skill sequence in [AGENTS.md](AGENTS.md). Keep route files thin; colocate component-specific hooks/tests, and separate data loading from presentation. Use component state for local controls and URL parameters for shareable filters/selection. For behavior changes, write the failing test, confirm the failure, implement the change, and rerun it. Keep the working frontend available throughout. Commit finished, passing task changes when authorized by the active workflow.
 
 In `PROGRESS.md`, record task, changed files, actual commands/results, screenshot paths, remaining failures, and next task. Check a phase off only when its checkpoint passes.
 
