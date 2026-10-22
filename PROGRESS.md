@@ -1,5 +1,9 @@
 # Wavelength progress
 
+## Product README — 2026-10-22
+- Added root `README.md` with the product vision, packaging-review problem, evidence workflow, Mermaid diagram, existing workspace screenshot, concrete sample scenarios, and clear prototype boundaries. Frontend stack and local setup are kept in a compact expandable section.
+- Reviewed tone and claims against the product brief, implemented screens, and demo capability list. Checked local documentation/image links and Markdown diff; no app code, dependencies, or tests changed. No build or browser suite needed for this documentation-only change.
+
 ## Dependency startup recovery — 2026-10-22
 - Fixed the local `Module not found: Can't resolve '@phosphor-icons/react/ssr'` failure by syncing the installed dependencies with the committed lockfile and restarting the stale dev server. The dependency was already correctly declared by the remote icon migration.
 - Added a frozen-lockfile dependency sync to `predev` and documented restarting after pulls that change dependencies. Retained the Phosphor UI and local seed images.
