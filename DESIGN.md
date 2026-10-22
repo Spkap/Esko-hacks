@@ -82,3 +82,8 @@ User explicitly requested a much stronger visual first impression for judges. Th
 ## Iconography — 2026-10-22
 - Phosphor replaces Lucide throughout the app. Regular weight for compact controls and semantic status; restrained duotone for navigation, document thumbnails and summary icons. Preserve the custom Wavelength waveform. Use server-safe SSR exports and explicit sizes; decorative SVGs are hidden from assistive technology while controls keep their accessible labels.
 - API checked through Context7 against the official Phosphor React README. MIT notice retained in frontend/THIRD_PARTY_NOTICES.md.
+
+## Seeded setup and correction journey — 2026-10-22
+- Reuse the upload two-column composition, light panels, Phosphor icons and existing controls. Prepared samples expose read-only product details and linked source files. Own uploads keep their original preview-only flow.
+- A restrained blue sample-mode banner stays visible. Three short progress stages are explicitly simulated; cancellation and errors retain the prepared inputs. No artificial accuracy score or fabricated AI activity.
+- Corrected V2 opens through sample setup and preserves an explicit narrow passing scope. A separate source-backed organizer scenario keeps uncertain draft findings as review questions.

@@ -10,11 +10,13 @@ import {
   StackIcon as Layers,
   ListChecksIcon as ListChecks,
 } from '@phosphor-icons/react/ssr';
+import { isSampleScenario } from '@/demo/scenarios';
 import { repository } from '@/data/repository';
 import { summarize } from '@/domain/summary';
 import type { ReviewDecision } from '@/domain/types';
 import { useRepository } from './use-repository';
 import { ErrorState, LoadingState, MissingState } from './data-state';
+import './sample-setup.css';
 import { Button } from './ui/button';
 import { StatusBadge } from './status-badge';
 import { ArtworkViewer } from './artwork-viewer';
@@ -118,6 +120,18 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
           </Link>
         </Button>
       </div>
+      {isSampleScenario(reviewId) && (
+        <div className="sample-mode-bar">
+          <span>
+            <Info size={16} aria-hidden="true" />
+            Seeded demo · predetermined findings
+            {report.run.id.startsWith('sample-') ? ' · simulated check complete' : ''}
+          </span>
+          <Link className="source-link" href={`/checks/new?sample=${reviewId}`}>
+            Run this sample again <ArrowRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
+      )}
       <div className="review-summary" data-testid="assessment-summary">
         {summary && (
           <>
@@ -177,10 +191,22 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
               making corrections.
             </p>
             {reviewId === 'mori-strawberry' && (
-              <Link className="source-link" href="/checks/mori-corrected">
+              <Link className="source-link" href="/checks/new?sample=mori-corrected">
                 Compare the corrected sample
                 <ArrowRight aria-hidden="true" size={14} />
               </Link>
+            )}
+            {reviewId === 'mori-corrected' && (
+              <>
+                <p className="small muted">
+                  V1’s missing statement is present in V2. This pass covers text presence and
+                  quantity only; printed size and placement are still unverified.
+                </p>
+                <Link className="source-link" href="/checks/mori-strawberry">
+                  Compare original V1
+                  <ArrowLeft size={14} aria-hidden="true" />
+                </Link>
+              </>
             )}
           </div>
         </div>

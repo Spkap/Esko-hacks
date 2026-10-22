@@ -74,7 +74,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="sidebar-bottom">
           <Button variant="ghost" onClick={() => setReset(true)}>
             <RotateCcw aria-hidden="true" size={16} />
-            Reset demo decisions
+            Reset demo
           </Button>
           <div className="demo-note">
             <div className="eyebrow" style={{ marginBottom: 8 }}>
@@ -146,15 +146,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             }}
           >
             <RotateCcw aria-hidden="true" size={16} />
-            Reset demo decisions
+            Reset demo
           </Button>
         </Modal>
       )}
       {reset && (
-        <Modal title="Reset demo decisions?" onClose={() => setReset(false)}>
+        <Modal title="Reset demo workspace?" onClose={() => setReset(false)}>
           <p>
-            This clears your acknowledgements and dismissal reasons. The original sample assessments
-            stay the same.
+            This clears reviewer decisions, started sample runs, and local upload drafts. Original
+            sample files and findings are restored.
           </p>
           <div className="button-row">
             <Button
@@ -162,7 +162,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 try {
                   await repository.reset();
                   setReset(false);
-                  setMessage('Demo decisions reset.');
+                  setMessage('Demo workspace reset.');
+                  router.push('/dashboard');
                   router.refresh();
                   window.dispatchEvent(new Event('wavelength-reset'));
                 } catch (e) {
@@ -171,10 +172,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 }
               }}
             >
-              Reset decisions
+              Reset workspace
             </Button>
             <Button variant="outline" onClick={() => setReset(false)}>
-              Keep decisions
+              Keep workspace
             </Button>
           </div>
         </Modal>

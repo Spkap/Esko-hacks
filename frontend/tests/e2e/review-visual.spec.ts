@@ -32,7 +32,7 @@ test('reduced motion and 200% equivalent reflow retain content', async ({ page }
   await page.goto('/checks/mori-raster');
   await expect(page.getByTestId('assessment-summary')).toContainText('Review incomplete');
   await page.getByRole('button', { name: /Printed type size/ }).click();
-  await expect(page.getByTestId('selected-evidence')).toContainText('Applicability: uncertain');
+  await expect(page.getByTestId('selected-evidence')).toContainText('Confirm whether this requirement applies.');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'evidence/review-reflow-720-reduced-motion.png', fullPage: true });
 });

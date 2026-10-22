@@ -14,6 +14,7 @@ import {
 import { repository, dataMode } from '@/data/repository';
 import type { ArtworkVersion, ReferenceDocument } from '@/domain/types';
 import { Button } from './ui/button';
+import { SampleSetup } from './sample-setup';
 import { ArtworkViewer } from './artwork-viewer';
 
 type Slot = 'artwork' | 'specification' | 'reference';
@@ -25,7 +26,8 @@ const titles = {
 };
 const accepted = ['application/pdf', 'image/png', 'image/jpeg'];
 const draftKey = 'veriforge-upload-draft-v1';
-export function NewCheck() {
+export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
+  const [sampleId, setSampleId] = useState(initialSample);
   const [name, setName] = useState('');
   const [files, setFiles] = useState<Partial<Record<Slot, File>>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -89,6 +91,10 @@ export function NewCheck() {
       /* Optional storage. */
     }
   }
+  useEffect(() => {
+    window.addEventListener('wavelength-reset', reset);
+    return () => window.removeEventListener('wavelength-reset', reset);
+  }, []);
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (submitting.current) return;
@@ -169,6 +175,23 @@ export function NewCheck() {
       setBusy(false);
     }
   }
+  if (sampleId)
+    return (
+      <>
+        <Link href="/dashboard" className="back-link">
+          <ArrowLeft size={14} aria-hidden="true" />
+          All reviews
+        </Link>
+        <div className="page-heading">
+          <div>
+            <div className="eyebrow">Sample workspace</div>
+            <h1>Start with sample files.</h1>
+            <p>Follow a complete review with prepared artwork and references.</p>
+          </div>
+        </div>
+        <SampleSetup initialId={sampleId} onExit={() => setSampleId('')} />
+      </>
+    );
   return (
     <>
       <Link href="/dashboard" className="back-link">
@@ -317,7 +340,7 @@ export function NewCheck() {
           <div className="sample-invite">
             <span className="eyebrow">
               <FlaskConical weight="duotone" aria-hidden="true" size={15} />
-              No files? No problem.
+              Ready-to-run examples
             </span>
             <h2>Meet MORI Strawberry.</h2>
             <p>
@@ -332,7 +355,11 @@ export function NewCheck() {
               height={620}
               alt="MORI Strawberry sample packaging, front and back label"
             />
-            <Button asChild>
+            <Button onClick={() => setSampleId('mori-strawberry')} disabled={busy}>
+              Start with sample files
+              <ArrowRight size={16} aria-hidden="true" />
+            </Button>
+            <Button asChild variant="outline">
               <Link href="/checks/mori-strawberry">
                 Use sample
                 <ArrowRight aria-hidden="true" size={16} />

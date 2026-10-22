@@ -75,3 +75,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Organizer sample files — 2026-10-22
+
+Dancing Fish US carton PDF and draft content workbook were downloaded from the organizer-provided HackerEarth sample URLs recorded in `../reference-data/sources.json`. Used only to demonstrate the hackathon review workflow. No separate redistribution license was found; ownership remains with the respective rights holders. The preview PNG is a rasterized rendering of the supplied PDF. Source notes identify draft/reconstructed content; findings do not imply certification or legal approval.
+
+CAA documents are linked as research references through `/demo/japan-source-notes.html`. The original Japanese wording examples are attributed there; the English interpretation is unreviewed. Direct source-file downloads were unavailable, so no original CAA PDF is claimed to be bundled.

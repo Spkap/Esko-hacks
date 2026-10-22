@@ -40,12 +40,25 @@ test('markers preserve normalized alignment through zoom, rotation, and resize a
             : { x: 0.79, y: 0.407, w: 0.055, h: 0.186 };
     for (const zoom of ['Zoom in', 'Zoom out', 'Fit page']) {
       await page.getByRole('button', { name: zoom, exact: true }).click();
-      const a = (await page.getByTestId('artwork-page').boundingBox())!;
-      const b = (await page.getByTestId('selected-marker').boundingBox())!;
-      expect((b.x - a.x) / a.width).toBeCloseTo(expected.x, 2);
-      expect((b.y - a.y) / a.height).toBeCloseTo(expected.y, 2);
-      expect(b.width / a.width).toBeCloseTo(expected.w, 2);
-      expect(b.height / a.height).toBeCloseTo(expected.h, 2);
+      // Read both rectangles in one frame: fit/scroll effects can settle between protocol calls.
+      await expect(async () => {
+        const actual = await page.evaluate(() => {
+          const a = document.querySelector('[data-testid="artwork-page"]')!.getBoundingClientRect();
+          const b = document
+            .querySelector('[data-testid="selected-marker"]')!
+            .getBoundingClientRect();
+          return {
+            x: (b.x - a.x) / a.width,
+            y: (b.y - a.y) / a.height,
+            w: b.width / a.width,
+            h: b.height / a.height,
+          };
+        });
+        expect(actual.x).toBeCloseTo(expected.x, 2);
+        expect(actual.y).toBeCloseTo(expected.y, 2);
+        expect(actual.w).toBeCloseTo(expected.w, 2);
+        expect(actual.h).toBeCloseTo(expected.h, 2);
+      }).toPass({ timeout: 3000 });
     }
   }
   await page.setViewportSize({ width: 1024, height: 900 });

@@ -36,9 +36,9 @@ test('keyboard opens a finding, reaches its source, and contains navigation focu
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
   await page.keyboard.press('Enter');
   await page.keyboard.press('Tab');
-  await expect(page.getByRole('button', { name: 'New check', exact: true })).toBeFocused();
+  await expect(page.getByRole('link', { name: 'New check', exact: true })).toBeFocused();
   await page.keyboard.press('Enter');
-  await page.getByRole('link', { name: 'Open sample review' }).focus();
+  await page.getByRole('link', { name: 'Use sample', exact: true }).focus();
   await page.keyboard.press('Enter');
   await page.getByRole('button', { name: /^2 Declared net quantity/ }).focus();
   await page.keyboard.press('Enter');

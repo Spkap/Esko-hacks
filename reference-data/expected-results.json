@@ -1,0 +1,8 @@
+{
+  "mori-strawberry":{"label":"Issues found","results":["fail","pass","needs_review"]},
+  "mori-corrected":{"label":"Selected checks passed","results":["pass","pass"]},
+  "mori-raster":{"label":"Review incomplete","results":["pass","pass","needs_review"]},
+  "fieldwork-granola":{"label":"Review incomplete","results":["needs_review","not_checked"]},
+  "mori-cancelled":{"label":"Cancelled","results":["pass"]},
+  "dancingfish-granola":{"label":"Review incomplete","results":["needs_review","needs_review","pass","not_checked"]}
+}

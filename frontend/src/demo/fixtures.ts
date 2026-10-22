@@ -8,9 +8,17 @@ import {
 import type { CheckResult } from '@/domain/types';
 import assetHashes from './asset-hashes.json';
 
-// Temporary, fictional M1–M2 interface fixtures. These are not researched M5 rules.
+// Deterministic demo results. Research context does not constitute live regulatory analysis.
 const date = '2026-10-22T05:30:00.000Z';
 const entries = [
+  [
+    'dancingfish-granola',
+    'Dancing Fish Berry Crunch',
+    'Breakfast cereal',
+    'United States',
+    1,
+    'incomplete',
+  ],
   ['mori-strawberry', 'MORI Strawberry', 'Fruit beverage', 'Japan', 1, 'issues'],
   ['mori-corrected', 'MORI Strawberry · revised artwork', 'Fruit beverage', 'Japan', 2, 'pass'],
   [
@@ -55,24 +63,49 @@ export const artworks = entries.map(([id, , , , version]) =>
     id: `${id}-v${version}`,
     reviewId: id,
     version,
-    filename: id === 'fieldwork-granola' ? 'fieldwork-carton.pdf' : `mori-label-v${version}.svg`,
+    filename:
+      id === 'mori-raster'
+        ? 'mori-v2-raster.png'
+        : id === 'dancingfish-granola'
+          ? 'dancingfish-carton.pdf'
+          : id === 'fieldwork-granola'
+            ? 'fieldwork-carton.pdf'
+            : `mori-label-v${version}.svg`,
     fileHash:
       assetHashes[
-        id === 'fieldwork-granola'
-          ? 'fieldwork-carton.pdf'
-          : version === 1
-            ? 'mori-v1.svg'
-            : 'mori-v2.svg'
+        id === 'mori-raster'
+          ? 'mori-v2-raster.png'
+          : id === 'dancingfish-granola'
+            ? 'dancingfish-carton.pdf'
+            : id === 'fieldwork-granola'
+              ? 'fieldwork-carton.pdf'
+              : version === 1
+                ? 'mori-v1.svg'
+                : 'mori-v2.svg'
       ],
-    fileType: id === 'fieldwork-granola' ? 'application/pdf' : 'image/svg+xml',
-    url: id === 'fieldwork-granola' ? '/demo/fieldwork-carton.pdf' : `/demo/mori-v${version}.svg`,
+    fileType:
+      id === 'mori-raster'
+        ? 'image/png'
+        : ['fieldwork-granola', 'dancingfish-granola'].includes(id)
+          ? 'application/pdf'
+          : 'image/svg+xml',
+    url:
+      id === 'mori-raster'
+        ? '/demo/mori-v2-raster.png'
+        : id === 'dancingfish-granola'
+          ? '/demo/dancingfish-carton.pdf'
+          : id === 'fieldwork-granola'
+            ? '/demo/fieldwork-carton.pdf'
+            : `/demo/mori-v${version}.svg`,
     pages:
-      id === 'fieldwork-granola'
-        ? [
-            { width: 600, height: 800, rotation: 0 },
-            { width: 600, height: 800, rotation: 0 },
-          ]
-        : [{ width: 900, height: 620, rotation: 0 }],
+      id === 'dancingfish-granola'
+        ? [{ width: 1292.18, height: 1081.39, rotation: 0 }]
+        : id === 'fieldwork-granola'
+          ? [
+              { width: 600, height: 800, rotation: 0 },
+              { width: 600, height: 800, rotation: 0 },
+            ]
+          : [{ width: 900, height: 620, rotation: 0 }],
   }),
 );
 export const references = entries.flatMap(([id]) => [
@@ -80,23 +113,41 @@ export const references = entries.flatMap(([id]) => [
     id: `${id}-spec`,
     reviewId: id,
     revision: 1,
-    title: 'Fictional product specification',
-    fileHash: assetHashes['sample-specification.html'],
+    title:
+      id === 'dancingfish-granola'
+        ? 'Organizer content sheet · draft'
+        : 'Fictional product specification',
+    fileHash:
+      assetHashes[
+        id === 'dancingfish-granola' ? 'dancingfish-reference.html' : 'sample-specification.html'
+      ],
     role: 'product_specification',
-    approvalStatus: id === 'fieldwork-granola' ? 'draft' : 'approved',
+    approvalStatus: ['fieldwork-granola', 'dancingfish-granola'].includes(id)
+      ? 'draft'
+      : 'approved',
     readingStatus: 'read',
-    url: '/demo/sample-specification.html',
+    url:
+      id === 'dancingfish-granola'
+        ? '/demo/dancingfish-reference.html'
+        : '/demo/sample-specification.html',
   }),
   referenceSchema.parse({
     id: `${id}-policy`,
     reviewId: id,
     revision: 1,
-    title: 'Illustrative review checklist',
-    fileHash: assetHashes['sample-checklist.html'],
+    title:
+      id === 'dancingfish-granola' ? 'Organizer review scope' : 'Illustrative review checklist',
+    fileHash:
+      assetHashes[
+        id === 'dancingfish-granola' ? 'dancingfish-reference.html' : 'sample-checklist.html'
+      ],
     role: 'company_policy',
     approvalStatus: 'draft',
     readingStatus: 'read',
-    url: '/demo/sample-checklist.html',
+    url:
+      id === 'dancingfish-granola'
+        ? '/demo/dancingfish-reference.html'
+        : '/demo/sample-checklist.html',
   }),
 ]);
 export const runs = entries.map(([id, , , , version, mode]) =>
@@ -107,11 +158,13 @@ export const runs = entries.map(([id, , , , version, mode]) =>
     referenceIds: [`${id}-spec`, `${id}-policy`],
     ruleSetVersion: 'illustrative-0.1',
     selectedRuleIds:
-      id === 'fieldwork-granola'
-        ? ['allergens']
-        : mode === 'pass'
-          ? ['declaration', 'quantity']
-          : ['declaration', 'quantity', 'type-size'],
+      id === 'dancingfish-granola'
+        ? ['allergens', 'claims', 'quantity']
+        : id === 'fieldwork-granola'
+          ? ['allergens']
+          : mode === 'pass'
+            ? ['declaration', 'quantity']
+            : ['declaration', 'quantity', 'type-size'],
     mode: 'demo',
     status: mode === 'cancelled' ? 'cancelled' : 'completed',
     requestKey: `fixture-${id}`,
@@ -146,6 +199,79 @@ function check(id: string, key: string, overrides: Partial<CheckResult>): CheckR
   });
 }
 export const checks = entries.flatMap(([id, , , , , state]) => {
+  if (id === 'dancingfish-granola') {
+    const evidence = {
+      artworkVersionId: `${id}-v1`,
+      page: 1,
+      inspectedPanels: 'Organizer carton proof · page 1, back panel',
+      sourceId: `${id}-spec`,
+      sourceLocation: 'Label Information · B24 / C24 / B26 / C26',
+      excerpt:
+        'Draft / In Review. Allergen advisory wording and reconstructed ingredient copy require confirmation.',
+    };
+    return [
+      check(id, 'allergens', {
+        title: 'Confirm allergen advisory wording',
+        result: 'needs_review',
+        applicability: 'uncertain',
+        observed:
+          'The back-panel proof uses “May Contain” for nuts also present in its ingredient list.',
+        expected: 'Approved ingredient and allergen copy confirmed by the product owner.',
+        reason: 'The workbook is draft and explicitly requests confirmation of advisory wording.',
+        suggestedCorrection:
+          'Confirm the allergen statement against the approved native artwork and ingredient specification.',
+        evidence: { ...evidence, region: { x: 0.1, y: 0.63, width: 0.12, height: 0.045 } },
+      }),
+      check(id, 'claims', {
+        title: 'Confirm vegan claim against draft ingredients',
+        result: 'needs_review',
+        applicability: 'uncertain',
+        observed:
+          'The proof carries a vegan mark; the reconstructed ingredient list includes honey.',
+        expected: 'Consistent, approved claim and ingredient information.',
+        reason:
+          'Ingredient reconstruction and certification status are unverified. This is a review question, not a legal failure.',
+        suggestedCorrection:
+          'Ask the product owner to reconcile the claim and ingredient list before release.',
+        evidence: {
+          ...evidence,
+          sourceLocation: 'Label Information · B26 / C26 / B29',
+          excerpt:
+            'The draft content sheet lists honey and a vegan mark; ingredient copy must be verified against native artwork.',
+          inspectedPanels: 'Organizer carton proof · front claim and back ingredient panel',
+        },
+      }),
+      check(id, 'quantity', {
+        title: 'Net weight matches draft content sheet',
+        result: 'pass',
+        observed: 'The back-panel proof displays 480g.',
+        expected: 'Draft content sheet package size: 480g.',
+        reason: 'Text comparison only. The reference remains draft and cannot authorize release.',
+        suggestedCorrection: 'Confirm the draft specification is approved before release.',
+        evidence: {
+          ...evidence,
+          sourceLocation: 'Label Information · B35',
+          excerpt: 'Package Size / Net Weight: 480g. Status: Draft / In Review.',
+          region: { x: 0.135, y: 0.722, width: 0.03, height: 0.02 },
+        },
+      }),
+      check(id, 'nutrition', {
+        title: 'Nutrition verification not selected',
+        result: 'not_checked',
+        observed: 'No nutrition calculations have been verified.',
+        expected: 'A separate nutrition review using approved data.',
+        reason: 'The workbook flags uncertain serving-size extraction.',
+        suggestedCorrection: 'Confirm serving size and commission a dedicated nutrition review.',
+        evidence: {
+          ...evidence,
+          sourceLocation: 'Label Information · B36 / C36',
+          excerpt: 'Serving-size extraction is uncertain; confirm directly from the artwork.',
+          inspectedPanels:
+            'Organizer carton proof · left nutrition panel; no nutrition assessment performed',
+        },
+      }),
+    ];
+  }
   if (id === 'fieldwork-granola')
     return [
       check(id, 'allergens', {

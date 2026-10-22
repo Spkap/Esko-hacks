@@ -1,5 +1,11 @@
 import { artworks, checks, references, reviews, runs } from '@/demo/fixtures';
-import { artworkSchema, referenceSchema, decisionSchema, reviewSchema } from '@/domain/types';
+import {
+  artworkSchema,
+  referenceSchema,
+  decisionSchema,
+  reviewSchema,
+  runSchema,
+} from '@/domain/types';
 import type {
   ArtworkVersion,
   ReferenceDocument,
@@ -7,6 +13,7 @@ import type {
   ReviewRepository,
   Run,
 } from '@/domain/types';
+import { isSampleScenario } from '@/demo/scenarios';
 import { summarize } from '@/domain/summary';
 
 const storageKey = 'veriforge-decisions-v1';
@@ -15,6 +22,57 @@ export function createDemoRepository(): ReviewRepository {
   let artworkData = structuredClone(artworks);
   let referenceData = structuredClone(references);
   let runData = structuredClone(runs);
+  let checkData = structuredClone(checks);
+  let samplesLoaded = false;
+  const sampleStorageKey = 'wavelength-sample-runs-v1';
+  const attachSampleRun = (run: Run) => {
+    const seed = runs.find((r) => r.reviewId === run.reviewId);
+    if (
+      !seed ||
+      !isSampleScenario(run.reviewId) ||
+      !run.id.startsWith('sample-') ||
+      run.mode !== 'demo' ||
+      run.status !== 'completed' ||
+      run.artworkVersionId !== seed.artworkVersionId ||
+      run.ruleSetVersion !== seed.ruleSetVersion ||
+      JSON.stringify(run.referenceIds) !== JSON.stringify(seed.referenceIds) ||
+      JSON.stringify(run.selectedRuleIds) !== JSON.stringify(seed.selectedRuleIds)
+    )
+      return;
+    if (runData.some((r) => r.id === run.id)) return;
+    runData.push(run);
+    checkData.push(
+      ...checks
+        .filter((c) => c.runId === seed.id)
+        .map((c) => ({ ...structuredClone(c), id: `${run.id}:${c.id}`, runId: run.id })),
+    );
+    const review = reviewData.find((r) => r.id === run.reviewId)!;
+    review.latestRunId = run.id;
+    review.updatedAt = run.createdAt;
+  };
+  const loadSamples = () => {
+    if (samplesLoaded || typeof window === 'undefined') return;
+    samplesLoaded = true;
+    try {
+      const saved = runSchema
+        .array()
+        .max(20)
+        .parse(JSON.parse(sessionStorage.getItem(sampleStorageKey) || '[]'));
+      saved.forEach(attachSampleRun);
+    } catch {
+      /* Optional session storage: immutable seed examples remain available. */
+    }
+  };
+  const saveSamples = () => {
+    try {
+      sessionStorage.setItem(
+        sampleStorageKey,
+        JSON.stringify(runData.filter((r) => r.id.startsWith('sample-')).slice(-20)),
+      );
+    } catch {
+      /* In-memory demo remains usable. */
+    }
+  };
   let decisions: ReviewDecision[] = [];
   let loaded = false;
   let metadataLoaded = false;
@@ -61,12 +119,13 @@ export function createDemoRepository(): ReviewRepository {
   const load = () => {
     if (loaded || typeof window === 'undefined') return;
     loaded = true;
+    loadSamples();
     try {
       const parsed = JSON.parse(localStorage.getItem(storageKey) || '[]');
       decisions = decisionSchema
         .array()
         .parse(parsed)
-        .filter((d) => checks.some((c) => c.id === d.checkId));
+        .filter((d) => checkData.some((c) => c.id === d.checkId));
     } catch {
       decisions = [];
     }
@@ -80,6 +139,7 @@ export function createDemoRepository(): ReviewRepository {
   };
   const findReview = (id: string) => {
     loadMetadata();
+    loadSamples();
     const review = reviewData.find((r) => r.id === id);
     if (!review) throw new Error('Review not found.');
     return review;
@@ -90,11 +150,13 @@ export function createDemoRepository(): ReviewRepository {
       .join('');
   return {
     async listReviews(query = {}) {
+      loadMetadata();
+      loadSamples();
       let items = reviewData.flatMap((review) => {
         const run = runData.find((r) => r.id === review.latestRunId);
         const artwork = artworkData.find((a) => a.id === review.currentArtworkVersionId);
         return run && artwork
-          ? [{ ...review, run, artwork, checks: checks.filter((c) => c.runId === run.id) }]
+          ? [{ ...review, run, artwork, checks: checkData.filter((c) => c.runId === run.id) }]
           : [];
       });
       if (query.search)
@@ -113,6 +175,7 @@ export function createDemoRepository(): ReviewRepository {
     },
     async getReview(id) {
       loadMetadata();
+      loadSamples();
       const review = reviewData.find((r) => r.id === id);
       return review
         ? {
@@ -183,6 +246,7 @@ export function createDemoRepository(): ReviewRepository {
       return ref;
     },
     async startRun(input) {
+      loadSamples();
       const existing = runData.find((r) => r.requestKey === input.requestKey);
       if (existing) return existing;
       findReview(input.reviewId);
@@ -196,6 +260,26 @@ export function createDemoRepository(): ReviewRepository {
         )
       )
         throw new Error('Reference does not belong to this review.');
+      const seed = runs.find((r) => r.reviewId === input.reviewId);
+      if (seed && isSampleScenario(input.reviewId)) {
+        if (
+          input.artworkVersionId !== seed.artworkVersionId ||
+          input.ruleSetVersion !== seed.ruleSetVersion ||
+          JSON.stringify(input.referenceIds) !== JSON.stringify(seed.referenceIds) ||
+          JSON.stringify(input.selectedRuleIds) !== JSON.stringify(seed.selectedRuleIds)
+        ) {
+          throw new Error('Use the supplied sample files and selected checks.');
+        }
+        const run: Run = {
+          ...structuredClone(seed),
+          id: `sample-${crypto.randomUUID()}`,
+          requestKey: input.requestKey,
+          createdAt: new Date().toISOString(),
+        };
+        attachSampleRun(run);
+        saveSamples();
+        return run;
+      }
       // User uploads cannot inherit predetermined fixture findings.
       const run: Run = {
         ...input,
@@ -209,6 +293,7 @@ export function createDemoRepository(): ReviewRepository {
       return run;
     },
     async getRun(id) {
+      loadSamples();
       return runData.find((r) => r.id === id) ?? null;
     },
     async cancelRun(id) {
@@ -223,24 +308,25 @@ export function createDemoRepository(): ReviewRepository {
       return run
         ? {
             run,
-            checks: checks.filter((c) => c.runId === runId),
+            checks: checkData.filter((c) => c.runId === runId),
             reviewedScope:
               'Simulated results for the supplied artwork panels and selected checks only.',
             uncheckedRequirements: [
               'Full market regulatory review',
               'Nutrition verification',
+              'Printed type size and physical dimensions',
               'Assembled-package visibility',
               'Unselected brand requirements',
             ],
             decisions: decisions.filter((d) =>
-              checks.some((c) => c.id === d.checkId && c.runId === runId),
+              checkData.some((c) => c.id === d.checkId && c.runId === runId),
             ),
           }
         : null;
     },
     async recordDecision(checkId, action, reason = '') {
       load();
-      if (!checks.some((c) => c.id === checkId)) throw new Error('Check not found.');
+      if (!checkData.some((c) => c.id === checkId)) throw new Error('Check not found.');
       const decision = decisionSchema.parse({
         checkId,
         action,
@@ -263,6 +349,15 @@ export function createDemoRepository(): ReviewRepository {
       artworkData = structuredClone(artworks);
       referenceData = structuredClone(references);
       runData = structuredClone(runs);
+      checkData = structuredClone(checks);
+      samplesLoaded = true;
+      metadataLoaded = true;
+      try {
+        sessionStorage.removeItem(sampleStorageKey);
+        sessionStorage.removeItem('veriforge-upload-draft-v1');
+      } catch {
+        /* Storage is optional. */
+      }
       decisions = [];
       loaded = true;
       saveMetadata();

@@ -70,3 +70,43 @@ describe('sample repository boundaries', () => {
     vi.unstubAllEnvs();
   });
 });
+
+describe('seeded sample runs', () => {
+  it('creates one run per request, restores its exact findings, and resets the full workspace', async () => {
+    const store = new Map<string, string>();
+    vi.stubGlobal('window', {});
+    const storage = {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => store.set(key, value),
+      removeItem: (key: string) => store.delete(key),
+    };
+    vi.stubGlobal('sessionStorage', storage);
+    vi.stubGlobal('localStorage', storage);
+    const repo = createDemoRepository();
+    const original = (await repo.getReport('mori-strawberry-run'))!.run;
+    const input = {
+      reviewId: original.reviewId,
+      artworkVersionId: original.artworkVersionId,
+      referenceIds: original.referenceIds,
+      ruleSetVersion: original.ruleSetVersion,
+      selectedRuleIds: original.selectedRuleIds,
+      requestKey: 'demo-attempt',
+    };
+    const run = await repo.startRun(input);
+    expect(run.id).toMatch(/^sample-/);
+    expect((await repo.startRun(input)).id).toBe(run.id);
+    const result = (await repo.getReport(run.id))!;
+    expect(result.checks.map((check) => check.result)).toEqual(['fail', 'pass', 'needs_review']);
+    await repo.recordDecision(result.checks[0].id, 'acknowledged');
+    const restored = createDemoRepository();
+    expect((await restored.getReview(original.reviewId))?.review.latestRunId).toBe(run.id);
+    expect((await restored.getReport(run.id))?.decisions[0].action).toBe('acknowledged');
+    await expect(
+      repo.startRun({ ...input, requestKey: 'bad-version', selectedRuleIds: [] }),
+    ).rejects.toThrow('supplied sample');
+    await restored.reset();
+    expect((await restored.getReview(original.reviewId))?.review.latestRunId).toBe(original.id);
+    expect(await restored.getReport(run.id)).toBeNull();
+    expect(store.has('wavelength-sample-runs-v1')).toBe(false);
+  });
+});

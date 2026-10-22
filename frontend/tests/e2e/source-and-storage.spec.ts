@@ -28,8 +28,10 @@ test('reset clears the visible decision and the report', async ({ page }) => {
   await page.goto('/checks/mori-strawberry');
   await page.getByRole('button', { name: 'Acknowledge', exact: true }).click();
   await expect(page.getByTestId('decision-status')).toContainText('Acknowledged');
-  await page.getByRole('button', { name: 'Reset demo decisions', exact: true }).click();
-  await page.getByRole('button', { name: 'Reset decisions', exact: true }).click();
+  await page.getByRole('button', { name: 'Reset demo', exact: true }).click();
+  await page.getByRole('button', { name: 'Reset workspace', exact: true }).click();
+  await expect(page).toHaveURL('/dashboard');
+  await page.goto('/checks/mori-strawberry');
   await expect(page.getByTestId('decision-status')).toContainText('Open');
   await expect(page.getByTestId('assessment-summary')).toContainText('Issues found');
   await page.reload();

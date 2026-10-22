@@ -1,0 +1,20 @@
+{
+  "version": "seeded-demo-1",
+  "execution": "Predetermined examples only; no file extraction or live legal evaluation.",
+  "rules": [
+    {"id":"declaration","role":"company_policy","sources":["caa-faq","caa-notice","caa-standard"],"scope":"MORI company-policy text presence on supplied panels. CAA references are research background, not an authoritative assessment.","category":"Fictional Japan strawberry beverage","composition":"Assumed 2% total juice, all strawberry, no pulp; regulatory measurement basis not verified","acceptedForms":"CAA wording includes non-juice statements and supported proportion declarations; percentage text is not the only form","placement":"Needs physical artwork and assembled-package confirmation","exceptions":"Category, fruit presentation, technical placement exceptions and measurement basis need qualified review","translationStatus":"Unreviewed English interpretation"},
+    {"id":"quantity","role":"product_specification","scope":"Compare visible declared net content with the supplied specification; a draft match is not release approval"},
+    {"id":"type-size","role":"product_specification","scope":"No physical scale means needs review; pixels alone cannot establish printed type size"},
+    {"id":"allergens","role":"product_specification","sources":["organizer-carton","organizer-workbook"],"scope":"Raise a review question for draft advisory wording; no confirmed legal failure"},
+    {"id":"claims","role":"product_specification","sources":["organizer-carton","organizer-workbook"],"scope":"Raise a review question for vegan claim versus reconstructed honey ingredient; certification not validated"}
+  ],
+  "boundaryCases": [
+    {"id":"missing-disclosure","inputs":"Full supplied V1 artwork lacks the selected company-policy text","expected":"fail","review":"mori-strawberry"},
+    {"id":"corrected-text","inputs":"V2 statement present; selected net quantity matches","expected":"pass","review":"mori-corrected","excludes":["printed type size","assembled placement"]},
+    {"id":"raster-no-scale","inputs":"V2 raster without physical dimensions","expected":"needs_review","review":"mori-raster"},
+    {"id":"unknown-composition","inputs":"Composition or regulatory measurement basis unknown","expected":"needs_review","note":"Documented rule boundary; no authoritative regulatory result generated"},
+    {"id":"exactly-five","inputs":"Exactly 5% on a confirmed supported regulatory measurement basis","expected":"not_applicable","note":"Only the strict less-than-5% branch is excluded; not an overall compliance pass"},
+    {"id":"front-only","inputs":"Front panel alone; no statement seen","expected":"needs_review","note":"Cannot infer whole-package absence"},
+    {"id":"quantity-mismatch","inputs":"Artwork quantity differs from approved specification","expected":"fail","role":"product_data","note":"Product-data mismatch, not automatically a regulatory failure"}
+  ]
+}

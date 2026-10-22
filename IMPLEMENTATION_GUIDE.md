@@ -10,7 +10,7 @@
 
 **Tech stack:** Next.js, TypeScript, Tailwind CSS v4, shadcn/ui, Watermelon UI landing blocks, Zod, PDF.js, Vitest, Playwright. Backend: Python, FastAPI, PostgreSQL.
 
-**Product description:** [idea.md](idea.md). Keep it unchanged. M1–M4 frontend implementation is complete; see `PROGRESS.md` for actual checks and scope.
+**Product description:** [idea.md](idea.md). Keep it unchanged. M1–M4 frontend implementation and the M5–M6 seeded demo delivery are implemented; see `PROGRESS.md` for actual checks and remaining source limitations. M7–M10 are not started.
 
 ## Build order
 
@@ -223,21 +223,23 @@ The sheet contains draft/reconstructed information. Inspect the PDF and workbook
 
 ### Tasks
 
-- [ ] Save source records in `reference-data/sources.json`: URL, publisher/title, page/section, actual retrieval date, downloaded-file hash/path, language/translation status, effective date or unknown, reuse terms.
-- [ ] Save original V1/V2 artwork under `frontend/public/demo/`; save specifications, policies, rule definitions, and expected results under `reference-data/`.
-- [ ] Populate `frontend/src/demo/` and connect all sample actions through `demo-repository.ts`. Results must repeat exactly; “Reset demo” restores the starting state.
-- [ ] Add `frontend/scripts/validate-sources.ts`, `frontend/scripts/validate-demo.ts`, and `frontend/tests/e2e/demo.spec.ts`.
+- [x] Save source records in `reference-data/sources.json`: URL, publisher/title, page/section, actual retrieval date, downloaded-file hash/path, language/translation status, effective date or unknown, reuse terms.
+- [x] Save original V1/V2 artwork and readable demo references under `frontend/public/demo/`; record source provenance, rule definitions, and expected results under `reference-data/`.
+- [x] Populate `frontend/src/demo/` and connect all sample actions through `demo-repository.ts`. Results must repeat exactly; “Reset demo” restores the starting state.
+- [x] Add `frontend/scripts/validate-sources.ts`, `frontend/scripts/validate-demo.ts`, and `frontend/tests/e2e/demo.spec.ts`.
 
 **Verify in order:** First validate source records and read back citations. Then validate artwork paths/hashes, unique IDs, linked versions, page/region bounds, source locations, and expected counts. Source validation must work before fictional artwork/results exist.
+
+**Delivered scope (2026-10-22):** Three runnable prepared scenarios: MORI V1, corrected MORI V2, and the actual organizer’s Dancing Fish proof/workbook. Six baseline dashboard examples remain. Additional threshold/front-only/mismatch examples above are recorded as boundary cases in `reference-data/rules.json`, not extra runnable scenarios. MORI findings remain fictional company-policy/text comparisons; CAA research is linked background with unreviewed interpretation. Direct CAA file downloads failed; authored source-note artifacts and external original links are recorded explicitly. No claim of qualified legal validation or live analysis.
 
 **Checkpoint:** Every finding has matching artwork and reference evidence. Missing sources, unreadable text, incomplete panels, and uncertain specifications stay uncertain. Corrupt/unavailable browser storage recovers without a crash. Sample assets load locally; copied temporary image links are not dependencies.
 
 ## M6: Frontend submission package
 
-- [ ] Run all frontend checks and the complete sample journey on desktop and mobile.
-- [ ] Write `frontend/README.md` with verified install/start/reset commands and `.env.example` with demo mode enabled.
-- [ ] Prepare `docs/submission/`: flow diagram, implemented/simulated capability list, and a 3–5-minute recording script using the organizer files and Japan example.
-- [ ] Rehearse against a production build, including an issue, its evidence, a correction, and an uncertain result.
+- [x] Run frontend checks and rehearse the complete sample journey on desktop and mobile; record any failures and focused reruns in `PROGRESS.md`.
+- [x] Write `frontend/README.md` with verified install/start/reset commands and `.env.example` with demo mode enabled.
+- [x] Prepare `docs/submission/`: flow diagram, implemented/simulated capability list, and a 3–5-minute recording script using the organizer files and Japan example.
+- [x] Rehearse against a production build, including an issue, its evidence, a correction, and an uncertain result.
 
 **Checkpoint:** A fresh install works; nested URLs survive reload; no browser exceptions or broken sample assets remain. The recording describes sample results as simulated. Stop here if time is short.
 
