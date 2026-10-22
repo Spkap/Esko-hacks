@@ -2,18 +2,18 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-  ArrowDown,
-  ArrowRight,
-  ArrowUpRight,
-  FileUp,
-  ScanLine,
-  ListChecks,
-  Check,
-  Minus,
-  MoveUpRight,
-  Layers,
-  CircleDot,
-} from 'lucide-react';
+  ArrowDownIcon as ArrowDown,
+  ArrowRightIcon as ArrowRight,
+  ArrowUpRightIcon as ArrowUpRight,
+  FileArrowUpIcon as FileUp,
+  ScanIcon as ScanLine,
+  ListChecksIcon as ListChecks,
+  CheckIcon as Check,
+  MinusIcon as Minus,
+  ArrowUpRightIcon as MoveUpRight,
+  StackIcon as Layers,
+  RecordIcon as CircleDot,
+} from '@phosphor-icons/react/ssr';
 import { LandingNav } from '@/components/landing/landing-nav';
 import { LandingFooter } from '@/components/landing/landing-footer';
 import { SamplePreview } from '@/components/landing/sample-preview';
@@ -54,12 +54,12 @@ export default function Home() {
               <Button asChild className="wl-primary">
                 <Link href="/checks/mori-strawberry">
                   Try sample check
-                  <ArrowUpRight size={18} />
+                  <ArrowUpRight aria-hidden="true" size={18} />
                 </Link>
               </Button>
               <a className="wl-text-link" href="#interactive-demo">
                 Explore the review
-                <ArrowDown size={15} />
+                <ArrowDown aria-hidden="true" size={15} />
               </a>
             </div>
             <div className="wl-hero-disclosure">
@@ -89,7 +89,7 @@ export default function Home() {
             >
               <span className="wl-callout-label">
                 <span />A DETAIL WORTH REVIEWING
-                <MoveUpRight size={13} />
+                <MoveUpRight aria-hidden="true" size={13} />
               </span>
               <strong>
                 What’s missing
@@ -98,7 +98,7 @@ export default function Home() {
               </strong>
               <span className="wl-callout-bottom">
                 Explore the sample finding
-                <ArrowRight size={15} />
+                <ArrowRight aria-hidden="true" size={15} />
               </span>
             </Link>
             <figcaption>
@@ -114,25 +114,25 @@ export default function Home() {
             </span>
             <a href="#interactive-demo">
               SCROLL TO LOOK CLOSER
-              <ArrowDown size={13} />
+              <ArrowDown aria-hidden="true" size={13} />
             </a>
           </div>
         </section>
         <div className="wl-capability-strip">
           <div className="landing-container">
             <span>
-              <Layers size={17} />
+              <Layers aria-hidden="true" size={17} />
               Artwork & specifications
             </span>
             <span>
-              <CircleDot size={17} />A defined review scope
+              <CircleDot aria-hidden="true" size={17} />A defined review scope
             </span>
             <span>
-              <ListChecks size={17} />
+              <ListChecks aria-hidden="true" size={17} />
               Evidence behind every finding
             </span>
             <span>
-              <Check size={17} />
+              <Check aria-hidden="true" size={17} />
               Human judgment, connected
             </span>
           </div>
@@ -162,12 +162,12 @@ export default function Home() {
             <SamplePreview />
             <div className="wl-demo-footnote">
               <span>
-                <ScanLine size={15} />
+                <ScanLine aria-hidden="true" size={15} />
                 Select a finding. Follow the evidence. See the next step.
               </span>
               <Link href="/dashboard">
                 Open review workspace
-                <ArrowUpRight size={15} />
+                <ArrowUpRight aria-hidden="true" size={15} />
               </Link>
             </div>
           </div>
@@ -192,14 +192,14 @@ export default function Home() {
             <article>
               <div className="wl-process-visual wl-file-visual" aria-hidden="true">
                 <div className="wl-file-card wl-file-back">
-                  <FileUp size={21} />
+                  <FileUp aria-hidden="true" size={21} />
                   <span>PRODUCT SPECIFICATION</span>
                   <i />
                   <i />
                   <i />
                 </div>
                 <div className="wl-file-card wl-file-front">
-                  <ScanLine size={21} />
+                  <ScanLine aria-hidden="true" size={21} />
                   <strong>MORI</strong>
                   <span>ARTWORK / V1</span>
                   <div className="wl-file-swatch" />
@@ -215,7 +215,7 @@ export default function Home() {
                 </p>
                 <Link className="wl-process-link" href="/checks/new">
                   Prepare your files
-                  <ArrowUpRight size={14} />
+                  <ArrowUpRight aria-hidden="true" size={14} />
                 </Link>
               </div>
             </article>
@@ -232,11 +232,11 @@ export default function Home() {
                     <small>SELECTED COMPARISON</small>
                     <strong>Declared net quantity</strong>
                     <span>
-                      Artwork 250 mL <ArrowRight size={12} />
+                      Artwork 250 mL <ArrowRight aria-hidden="true" size={12} />
                       Specification 250 mL
                     </span>
                   </div>
-                  <Check size={16} />
+                  <Check aria-hidden="true" size={16} />
                 </div>
                 <div className="wl-evidence-line wl-evidence-line-bottom">
                   <span />
@@ -254,7 +254,7 @@ export default function Home() {
                 </p>
                 <Link className="wl-process-link" href="#interactive-demo">
                   Explore the checks
-                  <ArrowUpRight size={14} />
+                  <ArrowUpRight aria-hidden="true" size={14} />
                 </Link>
               </div>
             </article>
@@ -271,9 +271,9 @@ export default function Home() {
                     what comes next.
                   </strong>
                   <div>
-                    <Check size={14} />
+                    <Check aria-hidden="true" size={14} />
                     Evidence reviewed
-                    <ArrowUpRight size={15} />
+                    <ArrowUpRight aria-hidden="true" size={15} />
                   </div>
                 </div>
                 <span className="wl-visual-caption">03 — MOVE THE REVIEW FORWARD</span>
@@ -287,7 +287,7 @@ export default function Home() {
                 </p>
                 <Link className="wl-process-link" href="/checks/mori-strawberry/report">
                   See the handoff
-                  <ArrowUpRight size={14} />
+                  <ArrowUpRight aria-hidden="true" size={14} />
                 </Link>
               </div>
             </article>
@@ -305,7 +305,7 @@ export default function Home() {
               <p>A good review makes its boundaries as clear as its findings.</p>
               <Link href="/checks/mori-strawberry/report" className="wl-text-link">
                 See the sample report
-                <ArrowUpRight size={16} />
+                <ArrowUpRight aria-hidden="true" size={16} />
               </Link>
             </div>
             <ReportSnapshot />
@@ -319,7 +319,7 @@ export default function Home() {
                     a measurement that still needs review.
                   </p>
                 </div>
-                <ScanLine size={20} />
+                <ScanLine aria-hidden="true" size={20} />
               </div>
               <div>
                 <span className="wl-scope-number">02</span>
@@ -330,7 +330,7 @@ export default function Home() {
                     connected; your uploads stay preview-only.
                   </p>
                 </div>
-                <FileUp size={20} />
+                <FileUp aria-hidden="true" size={20} />
               </div>
               <div>
                 <span className="wl-scope-number">03</span>
@@ -341,7 +341,7 @@ export default function Home() {
                     Authoritative rules and more markets are planned.
                   </p>
                 </div>
-                <Minus size={20} />
+                <Minus aria-hidden="true" size={20} />
               </div>
             </div>
           </div>
@@ -357,7 +357,7 @@ export default function Home() {
           <Button asChild className="wl-primary">
             <Link href="/checks/mori-strawberry">
               Try sample check
-              <ArrowUpRight size={18} />
+              <ArrowUpRight aria-hidden="true" size={18} />
             </Link>
           </Button>
           <div className="wl-closing-waves" aria-hidden="true">

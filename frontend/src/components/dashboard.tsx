@@ -1,7 +1,14 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ArrowUpRight, Info, Plus, Search, SearchX, X } from 'lucide-react';
+import {
+  ArrowUpRightIcon as ArrowUpRight,
+  InfoIcon as Info,
+  PlusIcon as Plus,
+  MagnifyingGlassIcon as Search,
+  MagnifyingGlassMinusIcon as SearchX,
+  XIcon as X,
+} from '@phosphor-icons/react/ssr';
 import { repository } from '@/data/repository';
 import { Button } from './ui/button';
 import { ErrorState, LoadingState } from './data-state';
@@ -41,7 +48,7 @@ export function Dashboard() {
         </div>
         <Button asChild>
           <Link href="/checks/new">
-            <Plus size={17} />
+            <Plus aria-hidden="true" size={17} />
             New check
           </Link>
         </Button>
@@ -67,14 +74,14 @@ export function Dashboard() {
           </div>
           <Link href="/checks/mori-strawberry" className="sample-shortcut">
             Explore sample
-            <ArrowUpRight size={14} />
+            <ArrowUpRight aria-hidden="true" size={14} />
           </Link>
         </div>
         <div className="filter-bar">
           <div className="field search-field">
             <label htmlFor="review-search">Search reviews</label>
             <div className="search-wrap">
-              <Search size={17} />
+              <Search aria-hidden="true" size={17} />
               <input
                 type="search"
                 className="text-input"
@@ -131,7 +138,7 @@ export function Dashboard() {
               <div className="table-meta-actions">
                 {hasFilters ? (
                   <Button variant="ghost" onClick={clear}>
-                    <X size={14} />
+                    <X aria-hidden="true" size={14} />
                     Reset filters
                   </Button>
                 ) : (
@@ -144,7 +151,7 @@ export function Dashboard() {
             ) : (
               <div className="empty-state">
                 <span className="empty-icon">
-                  <SearchX size={26} />
+                  <SearchX aria-hidden="true" size={26} />
                 </span>
                 <h2>No matching reviews</h2>
                 <p className="muted small">Try a different product name or reset your filters.</p>
@@ -157,7 +164,7 @@ export function Dashboard() {
         )}
       </section>
       <div className="dashboard-scope-note">
-        <Info size={16} />
+        <Info aria-hidden="true" size={16} />
         <p>
           <strong>A focused review, with context.</strong> Demo data uses fictional examples.
           Selected checks do not establish legal approval.

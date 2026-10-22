@@ -1,4 +1,7 @@
-import { AlertCircle, SearchX } from 'lucide-react';
+import {
+  WarningCircleIcon as AlertCircle,
+  MagnifyingGlassMinusIcon as SearchX,
+} from '@phosphor-icons/react/ssr';
 import Link from 'next/link';
 import { Button } from './ui/button';
 export function LoadingState({ label = 'Loading reviews' }: { label?: string }) {
@@ -25,7 +28,7 @@ export function ErrorState({
   const Heading = headingLevel;
   return (
     <div className="panel state-panel" role="alert">
-      <AlertCircle />
+      <AlertCircle aria-hidden="true" />
       <Heading>Couldn’t load this workspace</Heading>
       <p className="muted">{message}</p>
       <Button onClick={retry}>Try again</Button>
@@ -35,7 +38,7 @@ export function ErrorState({
 export function MissingState({ title = 'Review not found' }: { title?: string }) {
   return (
     <div className="panel empty-state">
-      <SearchX size={32} />
+      <SearchX aria-hidden="true" size={32} />
       <h1>{title}</h1>
       <p className="muted">This review may have been removed, or the address may be incomplete.</p>
       <Button asChild>

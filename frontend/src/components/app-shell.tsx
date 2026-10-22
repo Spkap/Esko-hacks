@@ -3,16 +3,16 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
-  LayoutDashboard,
-  PanelLeft,
-  ChevronRight,
-  RotateCcw,
-  FlaskConical,
-  ArrowUpRight,
-  ShieldCheck,
-  FilePlus2,
-  Globe2,
-} from 'lucide-react';
+  SquaresFourIcon as LayoutDashboard,
+  SidebarSimpleIcon as PanelLeft,
+  CaretRightIcon as ChevronRight,
+  ArrowCounterClockwiseIcon as RotateCcw,
+  FlaskIcon as FlaskConical,
+  ArrowUpRightIcon as ArrowUpRight,
+  ShieldCheckIcon as ShieldCheck,
+  FilePlusIcon as FilePlus2,
+  GlobeHemisphereWestIcon as Globe2,
+} from '@phosphor-icons/react/ssr';
 import { Button } from './ui/button';
 import { Modal } from './modal';
 import { Brand } from './brand';
@@ -32,7 +32,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         aria-current={pathname === '/dashboard' ? 'page' : undefined}
         onClick={() => setNav(false)}
       >
-        <LayoutDashboard size={18} />
+        <LayoutDashboard weight="duotone" aria-hidden="true" size={18} />
         Packaging reviews
       </Link>
       <Link
@@ -41,9 +41,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         className={`nav-link ${pathname.startsWith('/checks/mori-') ? 'active' : ''}`}
         onClick={() => setNav(false)}
       >
-        <ShieldCheck size={18} />
+        <ShieldCheck weight="duotone" aria-hidden="true" size={18} />
         Sample artwork
-        <ArrowUpRight size={14} />
+        <ArrowUpRight aria-hidden="true" size={14} />
       </Link>
       <Link
         href="/checks/new"
@@ -51,13 +51,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         className={`nav-link ${pathname === '/checks/new' ? 'active' : ''}`}
         onClick={() => setNav(false)}
       >
-        <FilePlus2 size={18} />
+        <FilePlus2 weight="duotone" aria-hidden="true" size={18} />
         New check
       </Link>
       <Link href="/" className="nav-link" onClick={() => setNav(false)}>
-        <Globe2 size={18} />
+        <Globe2 weight="duotone" aria-hidden="true" size={18} />
         About Wavelength
-        <ArrowUpRight size={14} />
+        <ArrowUpRight aria-hidden="true" size={14} />
       </Link>
     </nav>
   );
@@ -73,7 +73,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {navigation}
         <div className="sidebar-bottom">
           <Button variant="ghost" onClick={() => setReset(true)}>
-            <RotateCcw size={16} />
+            <RotateCcw aria-hidden="true" size={16} />
             Reset demo decisions
           </Button>
           <div className="demo-note">
@@ -92,9 +92,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </span>
         </div>
         <div className="topbar-breadcrumb">
-          <LayoutDashboard size={15} />
+          <LayoutDashboard weight="duotone" aria-hidden="true" size={15} />
           <Link href="/dashboard">Workspace</Link>
-          <ChevronRight size={13} />
+          <ChevronRight aria-hidden="true" size={13} />
           <span>
             {pathname === '/checks/new'
               ? 'New check'
@@ -107,7 +107,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="topbar-meta">
           <span className="demo-label">
-            <FlaskConical size={13} />
+            <FlaskConical weight="duotone" aria-hidden="true" size={13} />
             {dataMode === 'demo' ? 'Demo data' : 'Live mode'}
           </span>
           <span className="reviewer-name muted">Demo reviewer</span>
@@ -121,7 +121,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             aria-label="Open navigation"
             onClick={() => setNav(true)}
           >
-            <PanelLeft size={18} />
+            <PanelLeft aria-hidden="true" size={18} />
           </Button>
         </div>
       </header>
@@ -145,7 +145,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               setReset(true);
             }}
           >
-            <RotateCcw size={16} />
+            <RotateCcw aria-hidden="true" size={16} />
             Reset demo decisions
           </Button>
         </Modal>

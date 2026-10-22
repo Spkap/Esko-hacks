@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { XIcon as X } from '@phosphor-icons/react/ssr';
 import { Button } from './ui/button';
 export function Modal({
   title,
@@ -65,7 +65,7 @@ export function Modal({
       <div className="dialog-heading">
         <h2>{title}</h2>
         <Button variant="ghost" size="icon" aria-label="Close dialog" onClick={onClose}>
-          <X size={18} />
+          <X aria-hidden="true" size={18} />
         </Button>
       </div>
       {children}

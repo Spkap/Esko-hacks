@@ -1,6 +1,9 @@
 'use client';
 import Link from 'next/link';
-import { ArrowUpRight, FileText } from 'lucide-react';
+import {
+  ArrowUpRightIcon as ArrowUpRight,
+  FileTextIcon as FileText,
+} from '@phosphor-icons/react/ssr';
 import { repository } from '@/data/repository';
 import { summarize } from '@/domain/summary';
 import { useRepository } from '../use-repository';
@@ -23,7 +26,7 @@ export function ReportSnapshot() {
       <div className="wl-report-card">
         <div className="wl-report-chrome">
           <span>
-            <FileText size={14} />
+            <FileText weight="duotone" aria-hidden="true" size={14} />
             REVIEW HANDOFF
           </span>
           <span>Sample report</span>
@@ -52,7 +55,7 @@ export function ReportSnapshot() {
                     {resultLabels[check.result]}
                   </span>
                   <span>{check.title}</span>
-                  <ArrowUpRight size={13} />
+                  <ArrowUpRight aria-hidden="true" size={13} />
                 </Link>
               ))}
             </div>
@@ -66,7 +69,7 @@ export function ReportSnapshot() {
             </div>
             <Link className="wl-report-open" href="/checks/mori-strawberry/report">
               Open sample report
-              <ArrowUpRight size={16} />
+              <ArrowUpRight aria-hidden="true" size={16} />
             </Link>
           </>
         )}

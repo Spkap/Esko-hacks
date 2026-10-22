@@ -1,5 +1,9 @@
 import Link from 'next/link';
-import { ArrowRight, FileImage, FileText } from 'lucide-react';
+import {
+  ArrowRightIcon as ArrowRight,
+  FileImageIcon as FileImage,
+  FileTextIcon as FileText,
+} from '@phosphor-icons/react/ssr';
 import type { ReviewListItem } from '@/domain/types';
 import { summarize } from '@/domain/summary';
 import { Button } from './ui/button';
@@ -32,7 +36,7 @@ export function ReviewTable({ reviews }: { reviews: ReviewListItem[] }) {
               <td>
                 <div className="product-cell">
                   <span className={`art-thumb ${isPdf ? 'granola' : ''}`} aria-hidden="true">
-                    <FileIcon size={20} />
+                    <FileIcon weight="duotone" aria-hidden="true" size={20} />
                   </span>
                   <div>
                     <Link className="product-name" href={`/checks/${review.id}`}>
@@ -68,7 +72,7 @@ export function ReviewTable({ reviews }: { reviews: ReviewListItem[] }) {
               <td>
                 <Button asChild variant="outline" size="icon" className="row-open">
                   <Link href={`/checks/${review.id}`} aria-label={`Open ${review.productName}`}>
-                    <ArrowRight size={16} />
+                    <ArrowRight aria-hidden="true" size={16} />
                   </Link>
                 </Button>
               </td>

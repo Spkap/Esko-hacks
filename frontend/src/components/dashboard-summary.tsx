@@ -1,4 +1,9 @@
-import { Layers, AlertCircle, CircleDashed, CheckCircle2 } from 'lucide-react';
+import {
+  StackIcon as Layers,
+  WarningCircleIcon as AlertCircle,
+  CircleDashedIcon as CircleDashed,
+  CheckCircleIcon as CheckCircle2,
+} from '@phosphor-icons/react/ssr';
 import { summarize } from '@/domain/summary';
 import type { ReviewListItem } from '@/domain/types';
 
@@ -67,7 +72,7 @@ export function DashboardSummary({
         >
           <span className="summary-filter-label">
             <span className={`summary-icon ${tone}`}>
-              <Icon size={15} />
+              <Icon weight="duotone" aria-hidden="true" size={15} />
             </span>
             {label}
           </span>

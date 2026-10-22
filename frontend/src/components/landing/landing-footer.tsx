@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Brand } from '../brand';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRightIcon as ArrowUpRight } from '@phosphor-icons/react/ssr';
 // Brand / grouped links / divided closing line adapted from Watermelon footer-1.
 export function LandingFooter() {
   return (
@@ -13,15 +13,15 @@ export function LandingFooter() {
         <nav aria-label="Footer navigation">
           <Link href="/dashboard">
             Review workspace
-            <ArrowUpRight size={15} />
+            <ArrowUpRight aria-hidden="true" size={15} />
           </Link>
           <Link href="/checks/new">
             New check
-            <ArrowUpRight size={15} />
+            <ArrowUpRight aria-hidden="true" size={15} />
           </Link>
           <Link href="/checks/mori-strawberry">
             Sample review
-            <ArrowUpRight size={15} />
+            <ArrowUpRight aria-hidden="true" size={15} />
           </Link>
         </nav>
       </div>

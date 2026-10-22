@@ -1,6 +1,11 @@
 'use client';
 import { useRef, useState } from 'react';
-import { BookOpen, Check, ExternalLink, Info } from 'lucide-react';
+import {
+  BookOpenTextIcon as BookOpen,
+  CheckIcon as Check,
+  ArrowSquareOutIcon as ExternalLink,
+  InfoIcon as Info,
+} from '@phosphor-icons/react/ssr';
 import type { CheckResult, ReferenceDocument, ReviewDecision } from '@/domain/types';
 import { repository } from '@/data/repository';
 import { Button } from './ui/button';
@@ -67,7 +72,7 @@ export function EvidencePanel({
       </div>
       {check.reason && (
         <p className="uncertainty-note">
-          <Info size={15} />
+          <Info aria-hidden="true" size={15} />
           <span>{check.reason}</span>
         </p>
       )}
@@ -78,7 +83,7 @@ export function EvidencePanel({
       )}
       <div className="source-panel">
         <div className="source-title">
-          <BookOpen size={16} />
+          <BookOpen aria-hidden="true" size={16} />
           <h3>Reference evidence</h3>
         </div>
         <p className="source-name">{source?.title || 'Source unavailable'}</p>
@@ -92,7 +97,7 @@ export function EvidencePanel({
             </p>
             <a className="source-link" href={source.url} target="_blank" rel="noreferrer">
               Open source document
-              <ExternalLink size={13} />
+              <ExternalLink aria-hidden="true" size={13} />
               <span className="sr-only"> in a new tab</span>
             </a>
           </>
@@ -120,7 +125,7 @@ export function EvidencePanel({
             disabled={busy || decision?.action === 'acknowledged'}
             onClick={() => save('acknowledged')}
           >
-            <Check size={15} />
+            <Check aria-hidden="true" size={15} />
             Acknowledge
           </Button>
           <Button

@@ -1,4 +1,9 @@
-import { AlertCircle, CheckCircle2, CircleDashed, MinusCircle } from 'lucide-react';
+import {
+  WarningCircleIcon as AlertCircle,
+  CheckCircleIcon as CheckCircle2,
+  CircleDashedIcon as CircleDashed,
+  MinusCircleIcon as MinusCircle,
+} from '@phosphor-icons/react/ssr';
 export function StatusBadge({ label }: { label: string }) {
   const kind =
     label === 'Issues found' || label === 'Fail'
@@ -18,7 +23,7 @@ export function StatusBadge({ label }: { label: string }) {
           : MinusCircle;
   return (
     <span className={`status-badge ${kind}`}>
-      <Icon size={13} />
+      <Icon aria-hidden="true" size={13} />
       {label}
     </span>
   );

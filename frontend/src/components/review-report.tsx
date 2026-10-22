@@ -1,6 +1,10 @@
 'use client';
 import Link from 'next/link';
-import { ArrowLeft, FileText, Info } from 'lucide-react';
+import {
+  ArrowLeftIcon as ArrowLeft,
+  FileTextIcon as FileText,
+  InfoIcon as Info,
+} from '@phosphor-icons/react/ssr';
 import { repository } from '@/data/repository';
 import { summarize } from '@/domain/summary';
 import { useRepository } from './use-repository';
@@ -36,7 +40,7 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
   return (
     <>
       <Link className="back-link" href={`/checks/${reviewId}`}>
-        <ArrowLeft size={14} />
+        <ArrowLeft aria-hidden="true" size={14} />
         Back to artwork review
       </Link>
       <div className="page-heading">
@@ -49,7 +53,7 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
             {detail.review.productName} · {detail.review.market} · Artwork V{artwork?.version}
           </p>
         </div>
-        <FileText size={32} className="muted" />
+        <FileText aria-hidden="true" size={32} className="muted" />
       </div>
       <section className="panel report-overview">
         <div className="report-overview-heading">
@@ -188,7 +192,7 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
           ))}
         </ul>
         <p className="scope-note">
-          <Info size={15} />
+          <Info aria-hidden="true" size={15} />
           Simulated checks do not establish legal approval. Reviewer decisions do not change the
           original results.
         </p>

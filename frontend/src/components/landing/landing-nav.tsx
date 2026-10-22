@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, ArrowUpRight } from 'lucide-react';
+import { ListIcon as Menu, ArrowUpRightIcon as ArrowUpRight } from '@phosphor-icons/react/ssr';
 import { Button } from '../ui/button';
 import { Modal } from '../modal';
 import { Brand } from '../brand';
@@ -18,7 +18,7 @@ export function LandingNav() {
       </a>
       <Link href="/dashboard" onClick={() => setOpen(false)}>
         Workspace
-        <ArrowUpRight size={14} />
+        <ArrowUpRight aria-hidden="true" size={14} />
       </Link>
     </>
   );
@@ -32,7 +32,7 @@ export function LandingNav() {
         <Button asChild variant="outline">
           <Link href="/checks/new">
             New check
-            <ArrowUpRight size={15} />
+            <ArrowUpRight aria-hidden="true" size={15} />
           </Link>
         </Button>
         <Button
@@ -43,7 +43,7 @@ export function LandingNav() {
           aria-expanded={open}
           onClick={() => setOpen(true)}
         >
-          <Menu size={19} />
+          <Menu aria-hidden="true" size={19} />
         </Button>
       </div>
       {open && (
@@ -52,7 +52,7 @@ export function LandingNav() {
             {links}
             <Link href="/checks/mori-strawberry" onClick={() => setOpen(false)}>
               Try sample check
-              <ArrowUpRight size={16} />
+              <ArrowUpRight aria-hidden="true" size={16} />
             </Link>
           </nav>
         </Modal>

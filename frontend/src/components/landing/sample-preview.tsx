@@ -1,7 +1,11 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowUpRight, BookOpen, ScanLine } from 'lucide-react';
+import {
+  ArrowUpRightIcon as ArrowUpRight,
+  BookOpenTextIcon as BookOpen,
+  ScanIcon as ScanLine,
+} from '@phosphor-icons/react/ssr';
 import { repository } from '@/data/repository';
 import { useRepository } from '../use-repository';
 import { ArtworkViewer } from '../artwork-viewer';
@@ -39,7 +43,7 @@ export function SamplePreview() {
     <section className="landing-preview" aria-label="Interactive sample review">
       <div className="preview-topline">
         <span>
-          <ScanLine size={16} />
+          <ScanLine aria-hidden="true" size={16} />
           <strong>MORI Strawberry</strong>
           <span className="preview-market">Japan / Artwork V1</span>
         </span>
@@ -76,14 +80,14 @@ export function SamplePreview() {
             <p>{selected.observed}</p>
             <div className="preview-source">
               <span>
-                <BookOpen size={14} />
+                <BookOpen aria-hidden="true" size={14} />
                 {selected.evidence.sourceLocation}
               </span>
               <blockquote>{selected.evidence.excerpt}</blockquote>
               {source && (
                 <a href={source.url} target="_blank" rel="noreferrer">
                   Read source
-                  <ArrowUpRight size={14} />
+                  <ArrowUpRight aria-hidden="true" size={14} />
                   <span className="sr-only"> in a new tab</span>
                 </a>
               )}
@@ -97,7 +101,7 @@ export function SamplePreview() {
               href={`/checks/mori-strawberry?check=${selected.id}`}
             >
               Open full review
-              <ArrowUpRight size={16} />
+              <ArrowUpRight aria-hidden="true" size={16} />
             </Link>
           </div>
         </div>

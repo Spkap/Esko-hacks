@@ -1,4 +1,10 @@
-import { ChevronRight, AlertCircle, CheckCircle2, CircleDashed, MinusCircle } from 'lucide-react';
+import {
+  CaretRightIcon as ChevronRight,
+  WarningCircleIcon as AlertCircle,
+  CheckCircleIcon as CheckCircle2,
+  CircleDashedIcon as CircleDashed,
+  MinusCircleIcon as MinusCircle,
+} from '@phosphor-icons/react/ssr';
 import type { CheckResult } from '@/domain/types';
 export const resultLabels = {
   pass: 'Pass',
@@ -47,7 +53,7 @@ export function FindingList({
                     : 'Company checklist'}
               </span>
             </span>
-            <ChevronRight size={15} />
+            <ChevronRight aria-hidden="true" size={15} />
           </button>
         );
       })}

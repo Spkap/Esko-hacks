@@ -78,3 +78,7 @@ User explicitly requested a much stronger visual first impression for judges. Th
 - Composition: quieter shared workspace chrome, one clear New check action, compact grouped summary filters based on actual records, a table-led review library, consistent 44px controls, visible active filters/reset and deliberate row navigation. Preserve URL filters, loading/error/empty recovery, assessment wording and honest demo labels.
 - Main table remains the dominant work surface; no decorative charts, trend claims, unrelated analytics, landing imagery or dark theme. Summary buttons filter the actual list and describe selected scope precisely.
 - Refine density and spacing without replacing the existing stack or installing a table framework. Shared workspace navigation/buttons stay consistent on review/upload/report routes; dashboard-specific table styles remain scoped. Narrow screens use labeled review cards with a visible open action.
+
+## Iconography — 2026-10-22
+- Phosphor replaces Lucide throughout the app. Regular weight for compact controls and semantic status; restrained duotone for navigation, document thumbnails and summary icons. Preserve the custom Wavelength waveform. Use server-safe SSR exports and explicit sizes; decorative SVGs are hidden from assistive technology while controls keep their accessible labels.
+- API checked through Context7 against the official Phosphor React README. MIT notice retained in frontend/THIRD_PARTY_NOTICES.md.

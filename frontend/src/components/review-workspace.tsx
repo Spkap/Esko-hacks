@@ -2,7 +2,14 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight, FileText, Info, Layers, ListChecks } from 'lucide-react';
+import {
+  ArrowLeftIcon as ArrowLeft,
+  ArrowRightIcon as ArrowRight,
+  FileTextIcon as FileText,
+  InfoIcon as Info,
+  StackIcon as Layers,
+  ListChecksIcon as ListChecks,
+} from '@phosphor-icons/react/ssr';
 import { repository } from '@/data/repository';
 import { summarize } from '@/domain/summary';
 import type { ReviewDecision } from '@/domain/types';
@@ -43,7 +50,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
     return (
       <>
         <Link href="/dashboard" className="back-link">
-          <ArrowLeft size={14} />
+          <ArrowLeft aria-hidden="true" size={14} />
           All reviews
         </Link>
         <div className="page-heading">
@@ -89,7 +96,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
   return (
     <>
       <Link href="/dashboard" className="back-link">
-        <ArrowLeft size={14} />
+        <ArrowLeft aria-hidden="true" size={14} />
         All reviews
       </Link>
       <div className="page-heading review-heading">
@@ -106,7 +113,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
         </div>
         <Button asChild>
           <Link href={`/checks/${reviewId}/report`}>
-            <FileText size={16} />
+            <FileText aria-hidden="true" size={16} />
             View report
           </Link>
         </Button>
@@ -127,7 +134,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
       </div>
       {report && report.run.status !== 'completed' && (
         <div className="execution-notice" role="status">
-          <Info size={18} />
+          <Info aria-hidden="true" size={18} />
           <p>
             <strong>{summary?.label}.</strong> Partial results do not mean the review has passed.
           </p>
@@ -139,7 +146,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
           aria-pressed={pane === 'artwork'}
           onClick={() => setPane('artwork')}
         >
-          <Layers size={16} />
+          <Layers aria-hidden="true" size={16} />
           Artwork
         </Button>
         <Button
@@ -147,7 +154,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
           aria-pressed={pane === 'findings'}
           onClick={() => setPane('findings')}
         >
-          <ListChecks size={16} />
+          <ListChecks aria-hidden="true" size={16} />
           Findings & evidence
         </Button>
       </div>
@@ -172,7 +179,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
             {reviewId === 'mori-strawberry' && (
               <Link className="source-link" href="/checks/mori-corrected">
                 Compare the corrected sample
-                <ArrowRight size={14} />
+                <ArrowRight aria-hidden="true" size={14} />
               </Link>
             )}
           </div>
@@ -204,7 +211,7 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
         </section>
       </div>
       <p className="scope-note">
-        <Info size={15} />
+        <Info aria-hidden="true" size={15} />
         Fictional demo with simulated findings, not verified market regulations. Only the supplied
         panels and selected checks are covered.
       </p>

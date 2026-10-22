@@ -3,14 +3,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import {
-  ArrowLeft,
-  ArrowRight,
-  FileCheck2,
-  FileUp,
-  FlaskConical,
-  Info,
-  RotateCcw,
-} from 'lucide-react';
+  ArrowLeftIcon as ArrowLeft,
+  ArrowRightIcon as ArrowRight,
+  FileMagnifyingGlassIcon as FileCheck2,
+  FileArrowUpIcon as FileUp,
+  FlaskIcon as FlaskConical,
+  InfoIcon as Info,
+  ArrowCounterClockwiseIcon as RotateCcw,
+} from '@phosphor-icons/react/ssr';
 import { repository, dataMode } from '@/data/repository';
 import type { ArtworkVersion, ReferenceDocument } from '@/domain/types';
 import { Button } from './ui/button';
@@ -172,7 +172,7 @@ export function NewCheck() {
   return (
     <>
       <Link href="/dashboard" className="back-link">
-        <ArrowLeft size={14} />
+        <ArrowLeft aria-hidden="true" size={14} />
         All reviews
       </Link>
       <div className="page-heading">
@@ -243,7 +243,7 @@ export function NewCheck() {
           {slots.map((slot) => (
             <div className="field file-field" key={slot}>
               <label htmlFor={slot}>
-                <FileUp size={17} />
+                <FileUp weight="duotone" aria-hidden="true" size={17} />
                 {titles[slot]}
               </label>
               <input
@@ -301,11 +301,11 @@ export function NewCheck() {
           )}
           <div className="form-actions">
             <Button disabled={busy || !!preview} type="submit">
-              <FileCheck2 size={17} />
+              <FileCheck2 aria-hidden="true" size={17} />
               {busy ? 'Preparing preview…' : preview ? 'Preview ready' : 'Create file preview'}
             </Button>
             <Button variant="ghost" type="button" onClick={reset} disabled={busy}>
-              <RotateCcw size={15} />
+              <RotateCcw aria-hidden="true" size={15} />
               Reset
             </Button>
           </div>
@@ -316,7 +316,7 @@ export function NewCheck() {
         <aside className="upload-aside">
           <div className="sample-invite">
             <span className="eyebrow">
-              <FlaskConical size={15} />
+              <FlaskConical weight="duotone" aria-hidden="true" size={15} />
               No files? No problem.
             </span>
             <h2>Meet MORI Strawberry.</h2>
@@ -335,13 +335,13 @@ export function NewCheck() {
             <Button asChild>
               <Link href="/checks/mori-strawberry">
                 Use sample
-                <ArrowRight size={16} />
+                <ArrowRight aria-hidden="true" size={16} />
               </Link>
             </Button>
             <p className="small">Fictional artwork · simulated findings</p>
           </div>
           <div className="upload-boundary">
-            <Info size={18} />
+            <Info aria-hidden="true" size={18} />
             <p>Uploads are preview-only. Explore the sample to see simulated findings.</p>
           </div>
           {dataMode !== 'demo' && (
@@ -362,7 +362,7 @@ export function NewCheck() {
             <Button asChild variant="outline">
               <Link href={`/checks/${reviewId}`}>
                 Open saved details
-                <ArrowRight size={16} />
+                <ArrowRight aria-hidden="true" size={16} />
               </Link>
             </Button>
           </div>

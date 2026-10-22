@@ -3,15 +3,15 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import {
-  ChevronLeft,
-  ChevronRight,
-  Expand,
-  ExternalLink,
-  RotateCw,
-  ZoomIn,
-  ZoomOut,
-  ScanLine,
-} from 'lucide-react';
+  CaretLeftIcon as ChevronLeft,
+  CaretRightIcon as ChevronRight,
+  ArrowsOutIcon as Expand,
+  ArrowSquareOutIcon as ExternalLink,
+  ArrowClockwiseIcon as RotateCw,
+  MagnifyingGlassPlusIcon as ZoomIn,
+  MagnifyingGlassMinusIcon as ZoomOut,
+  ScanIcon as ScanLine,
+} from '@phosphor-icons/react/ssr';
 import type { ArtworkVersion, CheckResult } from '@/domain/types';
 import { rotateRegion } from '@/domain/geometry';
 import { Button } from './ui/button';
@@ -98,7 +98,7 @@ export function ArtworkViewer({
           rel="noreferrer"
           aria-label="Open original artwork in a new tab"
         >
-          <ExternalLink size={16} />
+          <ExternalLink aria-hidden="true" size={16} />
         </a>
       </div>
       <div className="viewer-toolbar">
@@ -110,7 +110,7 @@ export function ArtworkViewer({
             disabled={page <= 1}
             onClick={() => setPageOverride({ check: selected?.id, page: page - 1 })}
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft aria-hidden="true" size={16} />
           </Button>
           <label htmlFor="artwork-page-select" className="sr-only">
             Artwork page
@@ -133,7 +133,7 @@ export function ArtworkViewer({
             disabled={page >= artwork.pages.length}
             onClick={() => setPageOverride({ check: selected?.id, page: page + 1 })}
           >
-            <ChevronRight size={16} />
+            <ChevronRight aria-hidden="true" size={16} />
           </Button>
         </div>
         <div className="zoom-controls">
@@ -144,7 +144,7 @@ export function ArtworkViewer({
             disabled={scale <= 0.15}
             onClick={() => setZoom(Math.max(0.1, scale - 0.2))}
           >
-            <ZoomOut size={16} />
+            <ZoomOut aria-hidden="true" size={16} />
           </Button>
           <output aria-label="Zoom level">{Math.round(scale * 100)}%</output>
           <Button
@@ -154,10 +154,10 @@ export function ArtworkViewer({
             disabled={scale >= 3}
             onClick={() => setZoom(Math.min(3, scale + 0.2))}
           >
-            <ZoomIn size={16} />
+            <ZoomIn aria-hidden="true" size={16} />
           </Button>
           <Button variant="ghost" size="icon" aria-label="Fit page" onClick={() => setZoom(null)}>
-            <Expand size={16} />
+            <Expand aria-hidden="true" size={16} />
           </Button>
           <Button
             variant="ghost"
@@ -165,7 +165,7 @@ export function ArtworkViewer({
             aria-label="Rotate clockwise"
             onClick={() => setTurns((n) => n + 1)}
           >
-            <RotateCw size={16} />
+            <RotateCw aria-hidden="true" size={16} />
           </Button>
         </div>
       </div>
@@ -265,7 +265,7 @@ export function ArtworkViewer({
         </div>
       </div>
       <div className="viewer-caption">
-        <ScanLine size={15} />
+        <ScanLine aria-hidden="true" size={15} />
         <span>
           {selected && !selected.evidence.region
             ? selected.evidence.inspectedPanels
