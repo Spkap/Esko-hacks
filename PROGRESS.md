@@ -101,3 +101,10 @@
 ## Active scope and next step
 - M1–M2 implementation complete for MVP review. Stop here and wait for the user before M3 or further testing/optimization.
 - Delivery branch: `codex/frontend-m1-m6` (name reflects the original wider request). User authorized committing and pushing the M1–M2 MVP to `origin` on 2026-10-22.
+
+## Light dashboard refinement — 2026-10-22
+- Refined the dashboard into a light, table-focused workspace: consistent buttons/navigation, calmer borders, tighter rows, clearer hierarchy, real result-summary filters, visible row actions, filter reset feedback, and record-derived updated dates. Reused existing shadcn/Radix controls and preserved the cinematic landing page.
+- Read the project frontend skills; consulted current shadcn guidance through Context7 and Carbon data-table guidance plus shadcn Tasks through Firecrawl. References and composition decisions are recorded in DESIGN.md. Kev availability check failed with an AWS SSM broken pipe; no model judgment or GPU startup was used.
+- Checks actually run: lint, typecheck, production build passed. Final production dashboard/accessibility/reflow browser run: 8/8 passed. Review evidence/decisions/report/PDF/recovery smoke run: 4/4 passed on the development server. Fixed muted-text contrast and the mobile review-count visibility issue found during this iteration.
+- Visually inspected production dashboard screenshots at 320 and 1440px, plus upload/review screens for shared shell consistency. Four-width captures are in frontend/evidence/dashboard-{320,768,1024,1440}.png. Additional temporary shared-screen captures: /tmp/wl-dashboard-shared-{upload,review}.png.
+- No new dependencies or full test suite added. No known dashboard demo blocker. Native filter labels remain compact at 320px. Next: user review of the light dashboard; backend/live analysis remains outside this change.

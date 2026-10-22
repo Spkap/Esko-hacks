@@ -10,11 +10,14 @@ import {
   FlaskConical,
   ArrowUpRight,
   ShieldCheck,
+  FilePlus2,
+  Globe2,
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Modal } from './modal';
 import { Brand } from './brand';
 import { repository, dataMode } from '@/data/repository';
+import './workspace.css';
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -26,6 +29,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Link
         href="/dashboard"
         className={`nav-link ${pathname === '/dashboard' ? 'active' : ''}`}
+        aria-current={pathname === '/dashboard' ? 'page' : undefined}
         onClick={() => setNav(false)}
       >
         <LayoutDashboard size={18} />
@@ -33,7 +37,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </Link>
       <Link
         href="/checks/mori-strawberry"
-        className={`nav-link ${pathname.startsWith('/checks/') && pathname !== '/checks/new' ? 'active' : ''}`}
+        aria-current={pathname.startsWith('/checks/mori-') ? 'page' : undefined}
+        className={`nav-link ${pathname.startsWith('/checks/mori-') ? 'active' : ''}`}
         onClick={() => setNav(false)}
       >
         <ShieldCheck size={18} />
@@ -42,13 +47,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </Link>
       <Link
         href="/checks/new"
+        aria-current={pathname === '/checks/new' ? 'page' : undefined}
         className={`nav-link ${pathname === '/checks/new' ? 'active' : ''}`}
         onClick={() => setNav(false)}
       >
-        <ShieldCheck size={18} />
+        <FilePlus2 size={18} />
         New check
       </Link>
       <Link href="/" className="nav-link" onClick={() => setNav(false)}>
+        <Globe2 size={18} />
         About Wavelength
         <ArrowUpRight size={14} />
       </Link>
@@ -62,7 +69,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </a>
       <aside className="sidebar">
         <Brand />
-        <div className="workspace-label eyebrow">Review workspace</div>
+        <div className="workspace-label eyebrow">Workspace</div>
         {navigation}
         <div className="sidebar-bottom">
           <Button variant="ghost" onClick={() => setReset(true)}>
@@ -80,6 +87,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <header className="topbar">
         <div className="mobile-brand">
           <Brand />
+          <span className="workspace-mobile-mode">
+            {dataMode === 'demo' ? 'Demo data · Review workspace' : 'Live mode · Review workspace'}
+          </span>
         </div>
         <div className="topbar-breadcrumb">
           <LayoutDashboard size={15} />
