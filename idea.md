@@ -1,251 +1,174 @@
-# Veriforge
+I've translated your friend's ideas into clear, natural English while preserving his actual thought process, product vision, and technical concerns. This is an intent-based translation, not a word-for-word transcription.
 
-## From Packaging Artwork to Launch Readiness
+## English translation: Your friend's product vision
 
-**Product vision and idea · Esko AIForge · 22 October 2026**
+Imagine you're launching a new energy drink. You've already prepared the packaging design, but how do you know whether that packaging is actually ready for the market?
 
-**Selected challenge:** Is this Packaging Artwork Ready to Launch?
+I'm not talking about whether the product looks good or whether the product idea is viable. I'm specifically talking about **packaging and design compliance**.
 
-**Current priority:** Communicate a compelling product idea, demonstrate its core workflow through a clean frontend dashboard, and complete the submission. Backend design and technical architecture belong in a later discussion.
+For example, suppose you're launching a product in Japan. There are regulations regarding what information must appear on the packaging, how quantities should be declared, what labels are mandatory, and whether the information printed on the package accurately represents the actual product.
 
-## 1. The idea in one minute
+If your packaging misses any mandatory information or violates a regulation, your product might fail compliance checks, preventing you from launching it in that market.
 
-A packaging design can look finished while still containing information that needs correction. The person responsible for moving it forward must reconcile the artwork, approved product information, company requirements, and relevant labeling rules before deciding what happens next.
+**The problem I want to solve is how companies verify that their packaging designs meet all the necessary requirements before launching a product.**
 
-**Veriforge is an AI-assisted packaging review workspace that turns scattered requirements into a clear, evidence-backed path to approval.**
+Currently, I assume much of this verification is performed manually. Teams review packaging designs, compare them against regulations, identify issues, make corrections, and repeat the process through multiple iterations. This can consume considerable time and effort.
 
-A user brings together the artwork, product context, and supporting documents. Veriforge is intended to identify potential inconsistencies, show where they appear, explain the supporting requirement, and recommend the next action. The team can then separate clear corrections from questions requiring an expert and track the revised artwork through review.
+My vision is to build an **AI-powered packaging compliance verification platform** that automates this process.
 
-The product should answer three questions immediately:
+A user should be able to upload their packaging design, select the target market, and have the system analyze whether the packaging meets the relevant compliance requirements.
 
-1. **What is blocking this artwork from moving forward?**
-2. **What evidence supports each finding?**
-3. **What should we fix, clarify, or send for human review?**
+The system should consider two major categories of requirements:
 
-The promise is clearer decisions and fewer avoidable review loops. Final approval remains with the responsible people.
+1. **Regulatory compliance:** Country-specific laws, mandatory labeling information, packaging requirements, quantity declarations, and other applicable regulations.
+2. **Brand and design compliance:** Internal company guidelines, approved design specifications, brand colors, mandatory visual elements, and other packaging standards.
 
-## 2. Our vision
+For example, Coca-Cola has specific brand guidelines, including its recognizable red color. Similarly, other companies may have rules defining how their packaging should look and what information it must contain. Our system should eventually be capable of checking these requirements as well.
 
-> Give packaging teams the clarity to move every artwork from uncertainty to a confident, accountable approval decision.
+However, the main focus should remain on **verifying packaging design compliance**, rather than evaluating the product itself.
 
-We want designers to understand exactly what needs changing, reviewers to spend their attention on meaningful judgment, and launch owners to see what still stands between an artwork and approval.
+From a technical perspective, I see two major challenges.
 
-This vision balances ambition with a credible starting point: help one team review one artwork against a known set of requirements, then expand from there. It reflects three product values: **clarity, evidence, and human accountability**. It also aligns with the challenge’s focus on reliable review and Esko’s stated ambition to help brands bring higher-quality products to market.
+**The first challenge is standardizing the input data.**
 
-### Vision options considered
+Packaging designs and specifications may arrive in different file formats. We need to determine how to convert these inputs into a standardized structure that an AI system can analyze reliably. We should also explore whether existing tools, SDKs, or integrations can simplify this process.
 
-| Option | Emphasis |
-|---|---|
-| Give packaging teams the clarity to move every artwork from uncertainty to a confident, accountable approval decision. | Selected: combines an emotional outcome with a concrete workflow. |
-| Make every packaging review easier to understand, act on, and trust. | Memorable and practical, but less explicit about the destination. |
-| Help teams catch packaging mistakes before they become launch problems. | Strong expression of the pain, but narrower than the long-term vision. |
+**The second challenge is building a reliable compliance knowledge base.**
 
-## 3. The problem worth solving
+We need structured reference data that defines the requirements against which packaging designs will be evaluated. This could include national packaging regulations, market-specific labeling requirements, and internal company policies.
 
-**The central problem is uncertainty at the point of artwork approval.**
+For our initial prototype, we could use a focused set of sample regulations and company guidelines to demonstrate how the verification works.
 
-The hackathon brief describes information spread across documents, spreadsheets, artwork files, websites, and conversations. Our product hypothesis is that this fragmentation creates three connected burdens:
+The AI agent would then compare the uploaded packaging against these requirements, identify missing or incorrect elements, and explain what needs to be fixed.
 
-- **Finding the right reference:** Which product information and rules apply to this artwork and market?
-- **Understanding the discrepancy:** What differs, where is it, and does the evidence justify a correction?
-- **Coordinating the response:** Who needs to act, and has the revised artwork actually resolved the issue?
+**For the hackathon, the immediate priority should be building an impressive, interactive landing page and a working demonstration of this verification process.**
 
-A vague comment such as “check the quantity” leaves the designer with another investigation. A useful finding shows the artwork value, the approved value, the source, and the next step together.
+We could use an energy drink packaging design as our example, showing how the platform checks its compliance for a particular market, highlights violations, and suggests corrections.
 
-Potential consequences include revision cycles, delayed approvals, and errors reaching production. We have not yet measured their frequency, cost, or severity with customers; these are discovery hypotheses, not quantified benefits.
+We can build the backend as well, but we shouldn't spend excessive time perfecting every technical detail at this stage.
 
-## 4. Who we serve first
+What matters right now is clearly demonstrating the problem, our proposed solution, and a believable end-to-end workflow.
 
-Our first segment is **teams reviewing food packaging against an approved content sheet and a defined set of supplied requirements**. This gives us a concrete review task with references people can inspect.
+The idea is to show how AI can make packaging compliance verification faster, more consistent, and less dependent on repetitive manual reviews.
 
-The primary user is the packaging reviewer or coordinator responsible for assembling feedback and moving the artwork toward approval. Designers and regulatory or quality reviewers participate in the same workflow.
+## The core essence of his intent
 
-| User need | Job to be done | Current alternative | Value Veriforge aims to deliver |
-|---|---|---|---|
-| Review and coordinate an artwork | “Help me identify unresolved issues and prepare a defensible review.” | Read documents, compare values, consolidate comments in a spreadsheet or review tool. | One prioritized view of findings, references, and outstanding decisions. |
-| Correct the artwork | “Help me understand exactly what to change and why.” | Interpret email threads, PDF annotations, and disconnected comments. | Specific feedback linked to the affected artwork and expected content. |
-| Resolve specialist questions | “Help me focus on the decisions that require my expertise.” | Recheck routine details alongside ambiguous claims and rules. | A focused review queue that preserves uncertainty and supporting evidence. |
+Your friend is proposing a pre-launch AI packaging compliance checker, not a packaging generator or a general product evaluation tool.
 
-**First buyer hypothesis:** A packaging operations or quality lead who owns review throughput and consistency. Buyer identity and willingness to pay still need validation.
+PROPOSED PRODUCT WORKFLOW
 
-For the hackathon, use the organizer-provided US granola artwork and matching content sheet as the starting scenario. Keep requirements aligned with that market. The original India food-labeling direction remains a future expansion or a separate scenario once matching artwork and references are available.
+Upload packaging design
 
-## 5. The product experience
+Artwork, labels, specifications
 
-The experience should feel like a focused review desk. The artwork and the decision belong at the center of the screen.
+Choose target market
 
-```mermaid
-flowchart LR
-    A[Add artwork and references] --> B[Confirm product and market]
-    B --> C[Review findings and evidence]
-    C --> D[Fix or request expert review]
-    D --> E[Review revised artwork]
-    E --> F[Prepare approval handoff]
-```
+Japan, India, EU, etc.
 
-### Step 1: Start a review
+AI compliance analysis
 
-The user adds artwork, an approved content sheet, and any relevant rulebook or company guidelines. They confirm the product, intended market, artwork version, and which references are authoritative.
+Compare extracted design details against regulatory and brand requirements
 
-If essential information is missing or references conflict, the product asks a focused question. It keeps the gap visible until someone resolves it.
+Passed checks
 
-### Step 2: Understand the review scope
+Requirements satisfied
 
-Before showing results, the workspace states what it is checking and which references it is using. Product-data checks, supplied regulatory requirements, and company policies appear as distinct categories.
+Flagged issues
 
-This prevents a review against a small rule set from implying complete compliance coverage.
+Violations and suggested fixes
 
-### Step 3: See what needs attention
+His thinking can be distilled into four points:
 
-The review opens with the most consequential unresolved issues. Selecting a finding connects three things in one view: the artwork location, the expected information, and its supporting source.
+1. The problem: Packaging compliance reviews involve manual effort, repeated revisions, and the risk of overlooking mandatory requirements.
+2. The solution: An AI system that inspects packaging designs and checks them against market-specific regulations and internal brand guidelines.
+3. The technical bottlenecks: Standardizing packaging inputs and obtaining reliable, structured compliance rules.
+4. The immediate objective: Build a compelling landing page with an interactive, end-to-end compliance-checking demonstration for the hackathon. Prioritize a complete, credible prototype over perfection.
 
-A finding explains:
+One important distinction: AI-generated sample compliance data is acceptable for demonstrating the interface, but it cannot be treated as authoritative legal requirements. Actual compliance verification needs traceable, jurisdiction-specific rules from reliable sources.
 
-- What was observed and what was expected.
-- Where the relevant information appears, or which panels were inspected for missing content.
-- Which document and section support the finding.
-- Why it matters and what action is recommended.
-- Whether the issue is established by the supplied evidence or needs a person to decide.
+## The vision in one sentence
 
-### Step 4: Act on the finding
+Build an AI-powered packaging compliance platform that helps brands verify whether their packaging designs meet market-specific regulations and internal brand standards before products go to market, reducing manual reviews, costly revisions, and launch delays.
 
-The user can request a correction, send a question for specialist review, or dismiss a finding with a reason. A reviewer can record a decision and its rationale. These actions remain visible in the review history.
+And the most important interpretation of your friend's thinking is this: he wants to automate the verification of an existing packaging design, not generate the design itself. That distinction should guide the product scope, landing page, and hackathon demonstration. Yes! Japan is a strong example for your packaging compliance product, especially because Japanese consumer protection rules address misleading visual representations on food packaging.
 
-### Step 5: Check the revision and prepare the handoff
+But there's an important distinction: Japan does not have a universal law requiring every food image on a package to be exactly the same size as the actual food. That is a common industry practice, not a blanket legal requirement.
 
-The user adds a revised artwork and sees which previous issues are resolved, still open, or require fresh review. An issue is only marked resolved when the revision and supporting evidence justify that status.
+Japan's Act against Unjustifiable Premiums and Misleading Representations prohibits packaging that materially misleads consumers about the product's quality, quantity, or characteristics.&#x20;
 
-The final handoff summarizes the artwork version, reviewed scope, outstanding exceptions, and human decisions. A new artwork version requires review before it inherits approval.
+[image](https://www.google.com/s2/favicons?domain=https://www.caa.go.jp\&sz=32)
 
-## 6. The dashboard we should demonstrate
+消費者庁
 
-Build one coherent journey through four focused views. A reviewer should understand the product without needing a narrated tour of every control.
++1
 
-| View | Main user question | Essential content |
-|---|---|---|
-| Review overview | “What needs my attention?” | Artwork cards with product, market, version, review status, and unresolved issue counts. |
-| New review | “What are we checking?” | Artwork and reference inputs, confirmed context, missing-information prompts, and a sample-review shortcut. |
-| Artwork review workspace | “What is wrong, and why?” | Large artwork preview, numbered finding markers, prioritized findings, source evidence, and next actions. |
-| Review summary | “What can move forward?” | Resolved and open issues, expert decisions still needed, scope, and approval-handoff summary. |
+## Example 1: Food image versus actual size
 
-**The signature interaction:** Click a quantity discrepancy and immediately see the affected artwork region beside the approved value and source reference. The user can understand and act without searching through separate files.
+[Jagariko Potato Sticks: Calories, Nutrition and Health Facts | NutriScan App](https://images.openai.com/static-rsc-4/FUn25ckapE57wnj6OqnGKdUOjRRet08C7u8sH4kwyMT9vn9b0EwuWfEWhlzYy-7ARHzlJxxLHEDheO1pRebLvcIP4EyRPEcPV2jKD3L57b-wbhaz3geJgdwed31uqzm6QtelXBEIWfI26u3nN5gcrKVzRk4rAqRyvlaxOHVmJEw?purpose=inline)
 
-The interface should prioritize readable artwork, plain language, and consistent status labels. Use restrained color and pair it with text or icons. Every prominent control in the demonstrated path should produce a meaningful result.
+[Kinoko no Yama - Delicious Japanese Snack](https://images.openai.com/static-rsc-4/FUiASNmrWGqtskU7j5qWzGvQVt3cpI7DWlTt39qhXAec0Dt_b7n1vCf8Ch4bR2nR81vODq0cZx2hpum25R6W0XtywvXOmBKcKz2qLQe-qYdRGrW0pG4vnoiO9ElUQfa08Uyl7kitTGRqlHuA6h7_iex6sjgbC-5iKUUD_IejmCk?purpose=inline)
 
-### Statuses that communicate honestly
+[Calbee Jagarico: The Irresistible Crunch of The Beloved Japanese Potat – Japan Crate](https://images.openai.com/static-rsc-4/7wWTKvkyNua4bqDOJiyFrJgysOBX1QKNTZEA6DMJvCPw1qJA9sVjKZU5biVQweY9vBGGjdDvyVNflq0geDTxJ9cxkD7GwU97uGchPV25qszp7FMuxkXjN70lUR3LJgy-XF2IeNvn2ax0JmFsLhfe94msKghzXwfSgBowuVu-p5s?purpose=inline)
 
-| Level | Status | Meaning |
-|---|---|---|
-| Individual check | Matches reference | The inspected element agrees with the cited requirement. |
-| Individual check | Issue found | The supplied evidence establishes a discrepancy. |
-| Individual check | Needs human review | Interpretation, unclear content, or conflicting references prevent a firm conclusion. |
-| Coverage | Not checked | This requirement or part of the artwork has not been assessed. |
-| Overall review | Changes required | Confirmed issues remain unresolved. |
-| Overall review | Review incomplete | Required checks or human decisions remain open. |
-| Overall review | Ready for approval | The defined review is complete and ready for the designated approver. |
+6
 
-“Ready for approval” applies only to the stated scope and artwork version. It is distinct from a recorded human approval. Avoid a percentage compliance score that could hide an important unresolved issue.
+Imagine a Japanese snack manufacturer selling chocolate cookies.
 
-## 7. One compelling demo story
+- Actual product: Each cookie is approximately 3 cm across.
+- Packaging image: The cookie is illustrated as 5 cm across.
+- Potential issue: If the presentation creates a materially misleading impression of the cookie's size, it may raise compliance concerns.
+- Your AI solution: Compare the artwork with the product's physical specifications and flag potentially misleading size representations.
 
-**Scenario:** A packaging coordinator receives a food-carton design and needs to prepare it for approval.
+Importantly, a size difference alone doesn't automatically establish a legal violation. The overall impression on consumers matters.
 
-The following findings are illustrative fixtures, not verified defects in the organizer’s sample files and not statements of law.
+## Example 2: A real Japanese packaging violation
 
-| Illustrative finding | Evidence shown in the demo | User action |
-|---|---|---|
-| Artwork says 200 g; approved product sheet says 250 g. | Artwork region beside the relevant product-sheet entry. | Request a correction. |
-| A statement required by the supplied company rulebook is absent. | Rulebook requirement beside the inspected artwork panels. | Request the statement be added. |
-| A marketing claim has no supporting document in the review. | Claim location and an explicit missing-evidence message. | Ask a specialist to verify; avoid declaring the claim unlawful. |
-| Product name agrees with the approved sheet. | Matching values and source reference. | Confirm the check needs no action. |
+[「100％メロンテイスト」実は果汁2%だった。原料の大部分は他のフルーツ、SNSでも衝撃走る | ハフポスト NEWS](https://images.openai.com/static-rsc-4/uWaVFzdbhrRJfKrsnvovBJIQ1CE1x02N8yrTok0L0YqfdqVyBMV3bmKxa5NA-y0rimI7XolxV6Xn4y32jWYc_FAbvqiWf9yRfbAFEFLIZMHpeJ77kJdh0JlLEgiAC3etoLjDz2br_5o6aZUDeOjSnoSz_rpMF9VYPLLMMpqV0-c?purpose=inline)
 
-For the recording, use findings grounded in the actual sample files, or visibly label an intentionally modified demonstration copy. Do not attribute invented errors to the original artwork.
+Tropicana 100% Melon Taste
 
-The story takes the viewer from an initial “Changes required” state to a revised artwork with corrections resolved and one specialist decision still open. The final screen explains exactly what remains before approval.
+In 2022, Japanese regulators found that the drink's packaging misleadingly suggested that most of its juice came from melon.
 
-**The memorable moment:** The team moves from “something may be wrong” to “we know what to change and who must decide.”
+Actual melon juice content: approximately 2%. Other fruit juices: approximately 98%.
 
-## 8. Why this product is valuable
+The company, Kirin Beverage, subsequently received a ¥19.15 million penalty in January 2023 for the misleading presentation.&#x20;
 
-Veriforge brings the observation, requirement, evidence, and action together at the point of review. Its proposed differentiation is the completeness of that decision experience:
+[image](https://www.google.com/s2/favicons?domain=https://www.caa.go.jp\&sz=32)
 
-- **Context:** Findings relate to a specified product, market, artwork version, and reference set.
-- **Traceability:** People can inspect the basis for a finding and challenge it.
-- **Actionability:** Feedback explains the correction or decision needed.
-- **Continuity:** Review history connects an issue with the revised artwork and its disposition.
+消費者庁
 
-AI’s intended role is to help interpret varied references, relate them to artwork, surface discrepancies, and explain uncertainty in useful language. The interface should make that assistance easy to inspect and correct.
++2
 
-This is a positioning hypothesis. We have not completed a competitive assessment and should not claim these capabilities are unique or absent from existing Esko products. Longer term, Veriforge could complement established artwork review workflows; no integration or partnership is assumed.
+## Example 3: A precise Japanese rule your AI could check
 
-## 9. Strategy and deliberate focus
+Japan has a particularly useful requirement for fruit-flavoured drinks.
 
-The strategy is to win a narrow review task through useful evidence and clear next actions, then earn the right to cover more packaging scenarios.
+For certain beverages containing less than 5% fruit juice, displaying fruit names or fruit illustrations requires a clear disclosure of the actual juice content or the absence of juice.&#x20;
 
-| Strategy decision | Direction |
-|---|---|
-| Vision | Make packaging approval decisions clearer and accountable. |
-| First segment | Food-packaging teams working with approved content and supplied requirements. |
-| Cost and value position | Prioritize dependable review value over competing on the cheapest scan. Relative costs and pricing are unvalidated. |
-| Value proposition | Turn fragmented references and comments into an actionable review with visible evidence. |
-| Trade-offs | Complete one artwork-review journey before adding countries, categories, or broad automation. |
-| Metrics | Measure completed review decisions, comprehension, evidence quality, and review effort. |
-| Growth hypothesis | Begin with assisted pilots for packaging or quality leads; expand within teams after demonstrating repeat value. |
-| Required capabilities | Packaging-domain input, usable evidence presentation, consistent review decisions, and customer discovery. Seek expert input for rule interpretation. |
-| Potential defensibility | Trusted review history and reusable company-specific requirements could become valuable over time. No moat is established today. |
+[image](https://www.google.com/s2/favicons?domain=https://www.caa.go.jp\&sz=32)
 
-The likely commercial direction is a team subscription, potentially shaped by review volume. Pricing and unit economics should follow evidence about customer value and the cost of delivering dependable reviews.
+消費者庁
 
-### Hackathon scope
++1
 
-Prioritize one sample product, one market, a small reference set, and a complete review journey. The frontend should demonstrate opening findings, inspecting evidence, taking a review action, and seeing a clear summary.
+For example, imagine a strawberry energy drink containing 2% strawberry juice, with a large strawberry image on the packaging but no clear juice-percentage disclosure.
 
-Defer worldwide regulatory discovery, automatic artwork editing, production release, enterprise integrations, and extensive portfolio analytics. These would dilute the core story before we have demonstrated its value.
+AI Packaging Compliance Report
 
-A guided frontend prototype can communicate this product vision. Any pre-authored findings, simulated analysis, or revision transitions must be labeled as demonstration behavior. Only implemented capabilities should be described as working AI functionality.
+Issue detected
 
-## 10. What success means
+Target market: Japan | Product: Strawberry Energy Drink
 
-**For this submission:** A viewer can follow the core workflow, understand a finding and its evidence, and explain what remains before approval within a short demo.
+Missing juice-content disclosure
 
-**Proposed North Star:** Weekly artwork reviews reaching a documented human decision, with review scope and unresolved exceptions visible. A decision can be approval, requested changes, or escalation; the metric should reward useful review rather than rubber-stamping.
+Strawberry imagery detected on the front label. Product specification indicates 2% strawberry juice, but the required percentage disclosure is not clearly visible.
 
-**First validation metric:** The proportion of first-time target users who can correctly identify the main issue, explain its evidence, and choose the next action without facilitator help.
+Suggested correction
 
-Supporting measures should include time to understand a finding, expert agreement with findings, unsupported findings, missed known issues, and reviewer effort compared with the current process. No performance results or customer savings are claimed yet.
+Add a clearly visible disclosure such as `果汁2%` (2% fruit juice), following the applicable Japanese display requirements.
 
-## 11. Assumptions to test after submission
+Illustrative AI report, based on Japanese Consumer Affairs Agency guidance.
 
-| Hypothesis | Low-effort experiment | What would challenge it? |
-|---|---|---|
-| Connecting artwork and source evidence reduces review effort. | Ask several packaging reviewers to assess the same example with their current approach and the prototype. | They still need to repeat the full investigation to trust each finding. |
-| The proposed review states are understandable. | Give users a mix of confirmed issues, uncertain findings, and unchecked requirements; ask what can move forward. | Users mistake incomplete review for approval. |
-| Designers can act on the feedback. | Give a designer a finding without verbal explanation and ask them to describe the intended correction. | They cannot locate the issue or understand the expected content. |
-| Teams can supply authoritative references. | Walk through a recent review and ask which documents were considered final. | References are unavailable, contradictory, or routinely outdated. |
-| A lead will adopt a focused review workspace. | Discuss a recent approval delay, existing tools, and conditions for a small pilot. | The workflow adds coordination effort without replacing meaningful work. |
+For your hackathon, I'd recommend the third example over the size-matching example. It has a specific, verifiable regulatory basis, a measurable condition, and an identifiable packaging defect. That makes it ideal for demonstrating an AI agent that reads a product specification, analyzes packaging artwork, identifies a violation, cites the relevant rule, and suggests a correction.
 
-These tests should shape the next iteration. They are not prerequisites for finishing the concept document or frontend demonstration.
-
-## 12. Where the vision can grow
-
-**Now:** Make one review understandable and actionable.
-
-**Next:** Support repeated reviews, artwork revisions, reusable company requirements, and team handoffs.
-
-**Later:** Help teams assess market variants, understand which artworks may be affected by changing requirements, and connect review evidence with existing artwork management workflows.
-
-The enduring product question is: **“Can this artwork move forward, and what evidence supports that decision?”**
-
-## 13. Submission pitch and brief alignment
-
-### Ready-to-use product pitch
-
-Veriforge helps packaging teams understand what stands between finished artwork and approval. It brings artwork, approved product information, and supplied requirements into one review workspace. Users can see potential issues on the artwork, inspect the evidence, and decide whether to request a correction or involve a specialist. The proposed experience carries those findings through revision to a clear approval handoff. Our hackathon focus is a simple dashboard demonstrating that journey for one food-packaging scenario. The ambition is to make packaging review easier to understand, act on, and trust.
-
-### What the brief means for this concept
-
-The [official Esko AIForge brief](https://www.hackerearth.com/community/challenges/hackathon/esko-aiforge/) asks for an artwork checker with explanations, evidence, and a distinction between problems and cases needing human review. It favors an intuitive working prototype and thoughtful handling of uncertainty. This concept centers those outcomes.
-
-The submission also calls for a flow or architecture diagram, a description of the technologies actually used, a 3–5 minute recording with sample files, and source code. This document supplies the product direction and workflow; it does not establish that those deliverables or live AI verification are complete. Implementation details can be documented separately once built.
-
-**Source basis:** The official challenge page, retrieved on 22 October 2026; the local brief at `/Users/sourabhkapure/Downloads/Esko AIForge.md`; and the supplied Veriforge proposal. Customer needs, commercial choices, and benefits beyond the brief are explicitly proposed hypotheses.
+Official reference: [Japan Consumer Affairs Agency, Questions 34 and 35](https://www.caa.go.jp/policies/policy/representation/fair_labeling/faq/representation/?utm_source=chatgpt.com).
