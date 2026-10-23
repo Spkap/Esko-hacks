@@ -12,7 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/ASl5XMgqJk4"><strong>Watch the demo ↗</strong></a> ·
+  <a href="https://wavelength-packaging.vercel.app"><strong>Open the live app ↗</strong></a> ·
+  <a href="https://youtu.be/-TE1nZH6VSI"><strong>Watch the demo ↗</strong></a> ·
   <a href="#a-review-in-practice">Follow a review</a> ·
   <a href="#run-locally">Run locally</a> ·
   <a href="#what-works-today">Explore the scope</a>
@@ -27,27 +28,19 @@
 
 ## Watch it in action
 
-[![Watch the Wavelength demo: packaging artwork, evidence, and the path to a corrected review](frontend/evidence/halo-first-viewport-1440.png)](https://youtu.be/ASl5XMgqJk4)
+[![Watch the Wavelength demo: packaging artwork, evidence, and the path to a corrected review](frontend/evidence/halo-first-viewport-1440.png)](https://youtu.be/-TE1nZH6VSI)
 
-**[Watch the 2:17 demo on YouTube →](https://youtu.be/ASl5XMgqJk4)**
+**[Watch the Wavelength demo on YouTube →](https://youtu.be/-TE1nZH6VSI)**
 
-See the complete path from a missing statement to corrected artwork, then inspect the organizer's actual carton proof.
+Follow a packaging review from artwork and supporting evidence to findings, reviewer decisions, and corrected artwork.
 
-| Jump to | What you will see |
-| :--- | :--- |
-| [0:24 · Prepare a review](https://youtu.be/ASl5XMgqJk4?t=24) | Artwork, market, specification, and reference files. |
-| [0:47 · Inspect the evidence](https://youtu.be/ASl5XMgqJk4?t=47) | A finding connected to the artwork, its source, and a correction. |
-| [1:25 · Compare corrected V2](https://youtu.be/ASl5XMgqJk4?t=85) | The missing statement is added; selected checks pass. |
-| [1:39 · Read the report](https://youtu.be/ASl5XMgqJk4?t=99) | Results, version context, and requirements outside scope. |
-| [1:54 · Review organizer material](https://youtu.be/ASl5XMgqJk4?t=114) | Dancing Fish carton proof and draft-source review questions. |
-
-> **Two explicit modes:** the video shows the seeded demo. The new local **live** mode reads actual PDF/PNG/JPEG artwork and JSON/XLSX/PDF references, runs supported deterministic checks, and saves versioned results in PostgreSQL. Optional AI explanations are integrated but disabled in the zero-cost configuration; qualified regulatory verification remains manual. Demo mode still needs no backend or key.
+> **Two ways to explore:** the prepared demo scenarios need no account, backend, or AI key. The live workflow accepts real PDF/PNG/JPEG artwork and JSON/XLSX/PDF references, extracts supported content (including OCR where needed), runs deterministic checks, and saves versioned results. Uploads are private and workspaces use browser-specific guest sessions. AI inference and live regulatory-data retrieval are not enabled; reviewers must verify uncertain or legal requirements.
 
 ## Why we built it
 
-A finished design still has to agree with the product specification, the intended market, and the brand's requirements. A missing statement or an unsupported claim can be easy to overlook when the evidence lives in another document.
+A small packaging mistake can become costly once it reaches print. Reviewers often have to switch between artwork, product specifications, and supporting documents to confirm that quantities match, required statements are present, and claims have evidence.
 
-Wavelength gives packaging designers, brand teams, and quality reviewers a shared review desk: the artwork on one side, the finding and its evidence on the other. Each concern has a source and a next step; each report says what was actually reviewed.
+Wavelength brings those materials into one review workspace. Teams compare artwork with supplied specifications and references for a selected market, then inspect findings beside the relevant page, observed and expected values, source evidence, and suggested next steps. Reports preserve reviewer decisions and make unresolved or out-of-scope checks visible.
 
 | Review principle | How it appears in the product |
 | :--- | :--- |
@@ -135,7 +128,7 @@ The report identifies the artwork version, reference revisions, selected checks,
 | **Recheck and hand off** | Run prepared scenarios, compare corrected V2, recover a run after reload, and read scoped reports. |
 | **Explore your own files** | Preview PDF, PNG, or JPEG files up to 20 MiB each; uploaded files never inherit sample findings. |
 
-**Live mode now available:** private multipart uploads, native PDF text and local OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, specification revisions, analysis history, conditional policy text, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Public accounts and evaluated AI interpretation are not implemented.
+**Live mode now available:** private uploads, native PDF text and OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, specification revisions, analysis history, conditional policy text, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Persistent accounts, AI inference, and live regulatory-data retrieval are not implemented.
 
 ### Three runnable scenarios
 
@@ -195,17 +188,17 @@ Stop the development server before building. After pulling dependency changes, r
 
 ## How it is built
 
-The screens use one repository interface with separate demo and live implementations. Live mode uses a loopback-only, single-reviewer Next.js bridge; its bearer token remains on the server.
+The screens use one repository interface with separate demo and live implementations. Local development uses a loopback-only bridge; the deployed app creates a browser-specific guest session and keeps its JWT on the server.
 
 ```mermaid
 flowchart TD
     UI["Next.js review interface"] --> R["Review repository interface"]
     R --> D["Demo: bundled examples + browser storage"]
     R --> H["Live: validated HTTP repository"]
-    H --> B["Loopback-only server bridge"]
+    H --> B["Server bridge + guest session"]
     B --> API["JWT-authenticated FastAPI"]
     API --> DB["PostgreSQL: versions, jobs, decisions"]
-    API --> F["Private uploaded files + SHA-256"]
+    API --> F["Private file storage + SHA-256"]
     DB --> W["Leased worker + bounded parser processes"]
     W --> E["Native text / OCR / JSON / XLSX"]
     E --> C["Deterministic supported comparisons"]
@@ -214,7 +207,7 @@ flowchart TD
 
 **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Phosphor icons, and local Manrope/Noto Sans JP fonts. **Data validation:** Zod. **Checks:** Vitest and Playwright.
 
-In demo mode, uploads remain browser-local previews and require re-selection after reload. In live mode, actual bytes are stored privately by the backend and bound to immutable file revisions. Service failures never substitute sample answers. The repository default is `NEXT_PUBLIC_DATA_MODE=demo`; configure the backend and server-only token to enable live mode.
+In demo mode, uploads remain browser-local previews and require re-selection after reload. In live mode, uploaded bytes are stored privately and bound to immutable file revisions. Service failures never substitute sample answers. The repository default is `NEXT_PUBLIC_DATA_MODE=demo`; configure the backend and server-only token to enable local live mode.
 
 <details>
 <summary><strong>Development checks and repository map</strong></summary>
@@ -252,7 +245,7 @@ The product vision is AI-assisted packaging review across market requirements, p
 | :--- | :--- |
 | Deterministic supported checks | Evaluate an optional AI interpretation provider against labeled examples before enabling it. |
 | Explicit supplied-reference comparisons | Expand qualified, versioned regulatory sources and product applicability. |
-| Local single-reviewer API bridge | Integrate real browser sessions and user management before public deployment. |
+| Browser-specific guest workspaces | Add persistent accounts and team access when the prototype needs long-lived identities. |
 | Digital previews with uncertain physical scale | Establish trustworthy dimensions before evaluating printed-size requirements. |
 
 The review should always show when a source is draft, a requirement is uncertain, or a check was left out.
@@ -260,4 +253,4 @@ The review should always show when a source is draft, a requirement is uncertain
 ---
 
 <p align="center"><strong>Connect the artwork. Inspect the evidence. Make the next decision clear.</strong></p>
-<p align="center"><a href="https://youtu.be/ASl5XMgqJk4">Watch the demo</a> · <a href="#run-locally">Try the samples</a> · <a href="reference-data/README.md">Read the source notes</a></p>
+<p align="center"><a href="https://wavelength-packaging.vercel.app">Open the live app</a> · <a href="https://youtu.be/-TE1nZH6VSI">Watch the demo</a> · <a href="#run-locally">Try the samples</a> · <a href="reference-data/README.md">Read the source notes</a></p>
