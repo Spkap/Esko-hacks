@@ -24,6 +24,7 @@ import { FindingList } from './finding-list';
 import { EvidencePanel } from './evidence-panel';
 import { RunProgress } from './run-progress';
 import { RecheckArtwork } from './recheck-artwork';
+import { RunSavedInputs } from './run-saved-inputs';
 export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
   const params = useSearchParams();
   const requestedRun = dataMode === 'live' ? params.get('run') : null;
@@ -79,15 +80,20 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
           </div>
         </div>
         <section className="panel report-overview">
-          <h2>No compliance checks have been run</h2>
+          <h2>
+            {dataMode === 'live'
+              ? 'No checks for this artwork yet'
+              : 'No compliance checks have been run'}
+          </h2>
           <p>
             {dataMode === 'live'
-              ? 'The uploaded files are saved, but no analysis run has started. Start a new check to choose inputs and run the supported comparisons.'
+              ? 'This artwork is saved and has no analysis run. Choose saved reference revisions below to start the supported comparisons.'
               : 'Live analysis is not connected. Only file details are saved. Re-select your files to preview them again.'}
           </p>
           <p className="small muted">
             Artwork: {artwork.filename} · V{artwork.version}
           </p>
+          {dataMode === 'live' && <RunSavedInputs detail={detail} onStarted={retry} />}
           <div className="button-row">
             <Button asChild>
               <Link href="/checks/new">

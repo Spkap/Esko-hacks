@@ -1,0 +1,9 @@
+FROM python:3.11-slim-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng tesseract-ocr-jpn libglib2.0-0 libgomp1 fonts-noto-cjk && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir uv==0.11.18
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+COPY app ./app
+ENV PYTHONUNBUFFERED=1 WAVELENGTH_POLL_SECONDS=5 WAVELENGTH_STORAGE_DIR=/tmp/wavelength-files
+CMD ["uv", "run", "--no-sync", "python", "-m", "app.worker"]

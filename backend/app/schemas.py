@@ -21,6 +21,16 @@ class RunInput(Model):
     requestKey: str = Field(min_length=1, max_length=200)
 
 
+class BlobFileInput(Model):
+    url: str = Field(min_length=1, max_length=2048)
+    filename: str = Field(min_length=1, max_length=240)
+    role: (
+        Literal["regulatory_reference", "company_policy", "product_specification"]
+        | None
+    ) = None
+    approvalStatus: Literal["draft", "approved", "unknown"] | None = None
+
+
 class DecisionInput(Model):
     action: Literal["open", "acknowledged", "dismissed"]
     reason: str = Field(default="", max_length=3000)

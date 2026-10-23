@@ -26,3 +26,5 @@ backend/**/*.pyc
 backend/*.egg-info/
 .DS_Store
 __pycache__/
+.vercel
+.env*.local

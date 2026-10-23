@@ -7,6 +7,8 @@ import json
 import os
 import warnings
 import zipfile
+from urllib.parse import urlparse
+import httpx
 from pathlib import Path
 from uuid import uuid4
 from PIL import Image
@@ -19,7 +21,12 @@ Image.MAX_IMAGE_PIXELS = MAX_PIXELS
 
 
 def storage_root():
-    root = Path(os.environ.get("WAVELENGTH_STORAGE_DIR", "./private-files")).resolve()
+    root = Path(
+        os.environ.get(
+            "WAVELENGTH_STORAGE_DIR",
+            "/tmp/wavelength-files" if os.environ.get("VERCEL") else "./private-files",
+        )
+    ).resolve()
     if "public" in root.parts:
         raise RuntimeError("File storage must be outside public directories")
     root.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -158,3 +165,57 @@ async def save_upload(upload, kind):
     except BaseException:
         path.unlink(missing_ok=True)
         raise
+
+
+def cloud_storage():
+    return os.environ.get("WAVELENGTH_STORAGE_MODE") == "blob"
+
+
+def download_blob(url, review_id=None, kind=None):
+    parsed = urlparse(url)
+    host = os.environ.get("WAVELENGTH_BLOB_HOST", "")
+    if (
+        not host
+        or parsed.scheme != "https"
+        or parsed.netloc != host
+        or parsed.username
+        or parsed.password
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise APIError(422, "invalid_file", "Unrecognized private storage object")
+    if review_id and not parsed.path.startswith(f"/reviews/{review_id}/{kind}/"):
+        raise APIError(404, "not_found", "Object does not belong to this review")
+    token = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
+    if not token:
+        raise APIError(503, "storage_unavailable", "Private storage is not configured")
+    try:
+        with httpx.stream(
+            "GET",
+            url,
+            headers={"Authorization": "Bearer " + token},
+            timeout=15,
+            follow_redirects=False,
+        ) as response:
+            if response.status_code != 200:
+                raise APIError(
+                    503,
+                    "storage_unavailable",
+                    "Private object could not be read",
+                    retryable=True,
+                )
+            content = bytearray()
+            for chunk in response.iter_bytes():
+                content.extend(chunk)
+                if len(content) > MAX_BYTES:
+                    raise APIError(
+                        413, "oversized_input", "Files must be at most 20 MiB"
+                    )
+            return bytes(content)
+    except httpx.HTTPError:
+        raise APIError(
+            503,
+            "storage_unavailable",
+            "Private storage is temporarily unavailable",
+            retryable=True,
+        )

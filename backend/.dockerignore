@@ -1,0 +1,6 @@
+.env*
+.venv
+.data
+private-files
+__pycache__
+.pytest_cache

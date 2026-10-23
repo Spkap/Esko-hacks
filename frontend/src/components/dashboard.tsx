@@ -75,7 +75,7 @@ export function Dashboard() {
         <div className="ledger-heading">
           <div>
             <h2>Review library</h2>
-            <span>Latest artwork versions</span>
+            <span>Version-specific results</span>
           </div>
           {dataMode === 'demo' && (
             <Link href="/checks/mori-strawberry" className="sample-shortcut">

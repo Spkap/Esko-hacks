@@ -105,6 +105,42 @@ export function createHttpRepository(
     if (approvalStatus) body.set('approvalStatus', approvalStatus);
     return { method: 'POST', body };
   };
+  async function saveFile<T>(
+    id: string,
+    file: File,
+    kind: 'artwork' | 'reference',
+    schema: z.ZodType<T>,
+    role?: string,
+    approvalStatus?: string,
+  ) {
+    const endpoint = `/reviews/${encodeURIComponent(id)}/${kind === 'artwork' ? 'artworks' : 'references'}`;
+    if (process.env.NEXT_PUBLIC_UPLOAD_MODE !== 'blob')
+      return request(endpoint, schema, upload(file, role, approvalStatus));
+    if (!file.size || file.size > 20 * 1024 * 1024)
+      throw new RepositoryError(
+        'Files must be nonempty and at most 20 MiB.',
+        413,
+        'oversized_input',
+      );
+    const { upload: uploadBlob } = await import('@vercel/blob/client');
+    const name = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(-150);
+    const blob = await uploadBlob(`reviews/${id}/${kind}/${crypto.randomUUID()}-${name}`, file, {
+      access: 'private',
+      handleUploadUrl: '/api/uploads',
+      clientPayload: JSON.stringify({ reviewId: id, kind }),
+      contentType: file.type || 'application/octet-stream',
+      multipart: file.size > 4 * 1024 * 1024,
+    });
+    return request(
+      `${endpoint}/from-blob`,
+      schema,
+      post({
+        url: blob.url,
+        filename: file.name.slice(0, 240),
+        ...(role ? { role, approvalStatus } : {}),
+      }),
+    );
+  }
   return {
     listReviews(query = {}) {
       const params = new URLSearchParams(
@@ -117,14 +153,9 @@ export function createHttpRepository(
     getReview: (id) =>
       request(`/reviews/${encodeURIComponent(id)}`, reviewDetailSchema.nullable(), undefined, true),
     createReview: (input) => request('/reviews', reviewSchema, post(input)),
-    addArtwork: (id, file) =>
-      request(`/reviews/${encodeURIComponent(id)}/artworks`, artworkSchema, upload(file)),
+    addArtwork: (id, file) => saveFile(id, file, 'artwork', artworkSchema),
     addReference: (id, file, role, status) =>
-      request(
-        `/reviews/${encodeURIComponent(id)}/references`,
-        referenceSchema,
-        upload(file, role, status),
-      ),
+      saveFile(id, file, 'reference', referenceSchema, role, status),
     startRun: (input) => request('/runs', runSchema, post(input)),
     getRun: (id) =>
       request(`/runs/${encodeURIComponent(id)}`, runSchema.nullable(), undefined, true),

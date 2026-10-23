@@ -2,6 +2,10 @@
 
 import argparse
 import json
+import hashlib
+import tempfile
+import signal
+from threading import Event
 import logging
 import os
 import subprocess
@@ -18,6 +22,7 @@ from app.schemas import run_json, CheckOutput
 LEASE_SECONDS = 60
 MAX_ATTEMPTS = 3
 RUN_SECONDS = 300
+shutdown = Event()
 logger = logging.getLogger("wavelength.worker")
 
 
@@ -115,6 +120,8 @@ def stage(run_id, token, operation, payload):
     started = time.monotonic()
     try:
         while True:
+            if shutdown.is_set():
+                raise InterruptedError("Worker is shutting down")
             try:
                 stdout, stderr = process.communicate(timeout=0.5)
                 break
@@ -149,6 +156,7 @@ def stage(run_id, token, operation, payload):
 
 
 def process_job(run_id, token):
+    runtime_files = tempfile.TemporaryDirectory(prefix="wavelength-job-")
     try:
         with Session.begin() as session:
             row = active(session, run_id, token)
@@ -159,12 +167,14 @@ def process_job(run_id, token):
                     "id": artwork.id,
                     "path": artwork.path,
                     "fileType": artwork.file_type,
+                    "fileHash": artwork.sha256,
                 },
                 references=[
                     dict(
                         id=r.id,
                         path=r.path,
                         fileType=r.file_type,
+                        fileHash=r.sha256,
                         role=r.role,
                         approvalStatus=r.approval_status,
                         title=r.filename,
@@ -172,6 +182,22 @@ def process_job(run_id, token):
                     for r in refs
                 ],
             )
+        from app.storage import download_blob
+
+        for index, record in enumerate([payload["artwork"], *payload["references"]]):
+            if record["path"].startswith("https://"):
+                with Session.begin() as session:
+                    row = active(session, run_id, token)
+                    row.lease_until = now() + timedelta(seconds=LEASE_SECONDS)
+                content = download_blob(record["path"])
+                if hashlib.sha256(content).hexdigest() != record["fileHash"]:
+                    raise ValueError(
+                        "Stored file hash differs from the immutable revision"
+                    )
+                local_path = Path(runtime_files.name) / str(index)
+                local_path.write_bytes(content)
+                local_path.chmod(0o600)
+                record["path"] = str(local_path)
         extracted = stage(run_id, token, "extract", payload)
         with Session.begin() as session:
             row = active(session, run_id, token)
@@ -206,7 +232,15 @@ def process_job(run_id, token):
             row.lease_token = None
             row.lease_until = None
     except InterruptedError:
-        pass
+        if shutdown.is_set():
+            with Session.begin() as session:
+                row = session.get(Run, run_id)
+                if (
+                    row
+                    and row.lease_token == token
+                    and row.status in ("extracting", "checking")
+                ):
+                    row.status, row.lease_token, row.lease_until = "queued", None, None
     except Exception as exc:
         with Session.begin() as session:
             row = session.scalar(select(Run).where(Run.id == run_id).with_for_update())
@@ -226,20 +260,25 @@ def process_job(run_id, token):
                 row.lease_token = None
                 row.lease_until = None
 
+    finally:
+        runtime_files.cleanup()
+
 
 def main():
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = argparse.ArgumentParser()
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
-    while True:
+    signal.signal(signal.SIGTERM, lambda *_: shutdown.set())
+    signal.signal(signal.SIGINT, lambda *_: shutdown.set())
+    while not shutdown.is_set():
         job = claim()
         if job:
             process_job(*job)
         if args.once:
             return
         if not job:
-            time.sleep(1)
+            shutdown.wait(float(os.environ.get("WAVELENGTH_POLL_SECONDS", "1")))
 
 
 if __name__ == "__main__":

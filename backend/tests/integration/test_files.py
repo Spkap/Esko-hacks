@@ -50,3 +50,41 @@ def test_history_remains_available_after_unrun_new_version(client):
     assert "latestRunId" not in detail["review"]
     assert detail["runs"][0]["id"] == run["id"]
     assert detail["runs"][0]["artworkVersionId"] == first_artwork["id"]
+
+
+def test_dashboard_artwork_matches_latest_analysis_snapshot(client):
+    from conftest import start
+
+    review = create(client)
+    first = artwork(client, review).json()
+    latest_upload = artwork(client, review).json()
+    run = start(client, review, first).json()
+    row = client.get("/v1/reviews", headers=headers()).json()["items"][0]
+    assert row["currentArtworkVersionId"] == latest_upload["id"]
+    assert row["run"]["id"] == run["id"]
+    assert row["artwork"]["id"] == row["run"]["artworkVersionId"] == first["id"]
+
+
+def test_pagination_search_and_cursor_owner_are_consistent(client):
+    from conftest import headers
+
+    first = create(client)
+    artwork(client, first)
+    second = create(client)
+    artwork(client, second)
+    page = client.get("/v1/reviews?limit=1&search=Actual", headers=headers()).json()
+    assert len(page["items"]) == 1 and page["nextCursor"]
+    next_page = client.get(
+        "/v1/reviews",
+        params={"limit": 1, "search": "Actual", "cursor": page["nextCursor"]},
+        headers=headers(),
+    ).json()
+    assert len(next_page["items"]) == 1
+    assert page["items"][0]["id"] != next_page["items"][0]["id"]
+    assert "nextCursor" not in next_page
+    assert (
+        client.get(
+            "/v1/reviews", params={"cursor": page["nextCursor"]}, headers=headers("bob")
+        ).status_code
+        == 422
+    )

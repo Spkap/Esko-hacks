@@ -30,9 +30,15 @@ test('live upload runs real extraction and preserves upload hash and rule versio
     'Requires live backend, database, worker and server-only reviewer token.',
   );
   test.setTimeout(180000);
+  const browserAuthorization: string[] = [];
+  page.on('request', (request) => {
+    if (request.url().includes('/api/backend/') && request.headers().authorization)
+      browserAuthorization.push(request.url());
+  });
   const artwork = artworkPdf();
+  const productName = `Live quantity mismatch ${Date.now()}`;
   await page.goto('/checks/new');
-  await page.getByLabel('Product name').fill(`Live quantity mismatch ${Date.now()}`);
+  await page.getByLabel('Product name').fill(productName);
   await page
     .getByLabel('Packaging artwork', { exact: true })
     .setInputFiles({ name: 'actual-250ml.pdf', mimeType: 'application/pdf', buffer: artwork });
@@ -67,6 +73,31 @@ test('live upload runs real extraction and preserves upload hash and rule versio
   expect(
     report.checks.find((check: { ruleId: string }) => check.ruleId === 'net-quantity').result,
   ).toBe('fail');
+  const storedFile = await page.request.get(`/api/backend${detail.artworkVersions[0].url}`);
+  expect(storedFile.status()).toBe(200);
+  expect(
+    createHash('sha256')
+      .update(await storedFile.body())
+      .digest('hex'),
+  ).toBe(detail.artworkVersions[0].fileHash);
+  expect(storedFile.headers()['cache-control']).toContain('no-store');
+  await page.getByRole('button', { name: 'Acknowledge', exact: true }).click();
+  await expect(page.getByTestId('decision-status')).toContainText('Acknowledged');
+  await page.reload();
+  await expect(page.getByTestId('decision-status')).toContainText('Acknowledged');
+  await expect(page.getByTestId('selected-evidence')).toContainText('Fail');
+  await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+  await page
+    .getByLabel('Reason for dismissal')
+    .fill('Integration test: reviewer investigation recorded.');
+  await page.getByRole('button', { name: 'Save dismissal' }).click();
+  await expect(page.getByTestId('decision-status')).toContainText('Dismissed');
+  await page.reload();
+  await expect(page.getByTestId('selected-evidence')).toContainText(
+    'Integration test: reviewer investigation recorded.',
+  );
+  await page.getByRole('button', { name: 'Reopen', exact: true }).click();
+  await expect(page.getByTestId('decision-status')).toContainText('Open');
   await page.getByRole('link', { name: 'View report' }).click();
   await expect(page.getByRole('heading', { name: 'Review report', exact: true })).toBeVisible();
   await expect(page.getByText('actual-250ml.pdf', { exact: false })).toBeVisible();
@@ -125,6 +156,12 @@ test('live upload runs real extraction and preserves upload hash and rule versio
     },
   });
   expect(upload.status()).toBe(201);
+  await page.goto(`/checks/${reviewId}`);
+  await page.getByRole('button', { name: 'Analyze saved inputs' }).click();
+  await expect(page.getByTestId('assessment-summary')).toContainText('Review incomplete', {
+    timeout: 120000,
+  });
+  await expect(page.getByTestId('selected-evidence')).toContainText('350 mL');
   await page.goto(originalReportUrl);
   await expect(page.getByText('actual-250ml.pdf', { exact: false })).toBeVisible();
   await expect(page.getByText('Issues found', { exact: true })).toBeVisible();
@@ -156,4 +193,42 @@ test('live upload runs real extraction and preserves upload hash and rule versio
   });
   const recovered = await (await page.request.get(`/api/backend/v1/reviews/${reviewId}`)).json();
   expect(recovered.review.latestRunId).not.toBe(queuedRun.id);
+  await page.goto('/dashboard');
+  await page.getByLabel('Search reviews').fill(productName);
+  await page.getByLabel('Result', { exact: true }).selectOption('Issues found');
+  const row = page.getByTestId('review-row').filter({ hasText: productName });
+  await expect(row).toHaveCount(1);
+  await expect(row.locator('.version-label')).toHaveText('V1');
+  await page.getByLabel('Market', { exact: true }).selectOption('United States');
+  await expect(page.getByRole('heading', { name: 'No matching reviews' })).toBeVisible();
+  await page.getByRole('button', { name: 'Reset filters' }).click();
+  await page.getByLabel('Search reviews').fill(productName);
+  await page.getByRole('link', { name: productName, exact: true }).click();
+  await expect(page.locator('.review-heading')).toContainText('Artwork V1');
+  expect(browserAuthorization).toEqual([]);
+});
+
+test('live service errors are visible and retry returns to real backend data', async ({ page }) => {
+  test.skip(process.env.NEXT_PUBLIC_DATA_MODE !== 'live', 'Requires live server.');
+  for (const status of [401, 503]) {
+    await page.route(/\/api\/backend\/v1\/reviews(?:\?.*)?$/, (route) =>
+      route.fulfill({
+        status,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          code: 'INTEGRATION_ERROR',
+          message: `Integration boundary ${status}`,
+          retryable: status === 503,
+        }),
+      }),
+    );
+    await page.goto('/dashboard');
+    await expect(
+      page.getByRole('alert').filter({ hasText: `Integration boundary ${status}` }),
+    ).toContainText(`Integration boundary ${status}`);
+    await expect(page.getByTestId('review-row')).toHaveCount(0);
+    await page.unroute(/\/api\/backend\/v1\/reviews(?:\?.*)?$/);
+    await page.getByRole('button', { name: 'Try again', exact: true }).click();
+    await expect(page.getByTestId('review-row').first()).toBeVisible();
+  }
 });

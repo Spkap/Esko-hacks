@@ -1,12 +1,13 @@
 import base64
 import hashlib
 import json
+import io
 from contextlib import asynccontextmanager
 from pathlib import Path
 from uuid import uuid4
 from fastapi import FastAPI, Depends, UploadFile, File, Form, Query
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
 from starlette.exceptions import HTTPException
 from sqlalchemy import select, func, text
 from sqlalchemy.exc import SQLAlchemyError
@@ -18,6 +19,7 @@ from app.schemas import (
     ReviewInput,
     RunInput,
     DecisionInput,
+    BlobFileInput,
     review_json,
     file_json,
     run_json,
@@ -33,7 +35,7 @@ from app.schemas import (
     DetailOutput,
     ListOutput,
 )
-from app.storage import save_upload, storage_root
+from app.storage import save_upload, storage_root, cloud_storage, download_blob
 
 
 @asynccontextmanager
@@ -208,8 +210,12 @@ def list_reviews(
     rows = session.scalars(query.execution_options(yield_per=25))
     items = []
     for row in rows:
-        artwork = session.get(FileRevision, row.current_artwork_id)
         run = session.get(Run, row.latest_run_id) if row.latest_run_id else None
+        # A rerun may intentionally analyze a historical revision. Never label its
+        # results with the newest uploaded file.
+        artwork = session.get(
+            FileRevision, run.artwork_id if run else row.current_artwork_id
+        )
         checks = (
             [
                 c.payload
@@ -314,7 +320,7 @@ def get_review(review_id: str, owner=Depends(auth.identity), session=Depends(db)
 
 
 async def upload_revision(
-    review_id, upload, kind, owner, session, role=None, approval=None
+    review_id, upload, kind, owner, session, role=None, approval=None, blob_url=None
 ):
     row = owned(session, review_id, owner, lock=True)
     path, sha256, file_type, pages = await save_upload(upload, kind)
@@ -332,7 +338,7 @@ async def upload_revision(
             kind=kind,
             revision=revision,
             filename=Path(upload.filename or "upload").name[:240],
-            path=str(path),
+            path=blob_url or str(path),
             sha256=sha256,
             file_type=file_type,
             pages=pages,
@@ -346,6 +352,8 @@ async def upload_revision(
             row.latest_run_id = None
         row.updated_at = now()
         session.commit()
+        if blob_url:
+            path.unlink(missing_ok=True)
         return file_json(record)
     except Exception:
         session.rollback()
@@ -365,6 +373,10 @@ async def add_artwork(
     owner=Depends(auth.identity),
     session=Depends(db),
 ):
+    if cloud_storage():
+        raise APIError(
+            422, "direct_upload_required", "Use the private direct upload flow"
+        )
     return await upload_revision(review_id, file, "artwork", owner, session)
 
 
@@ -390,8 +402,63 @@ async def add_reference(
         raise APIError(
             422, "invalid_input", "Unsupported reference role or approval status"
         )
+    if cloud_storage():
+        raise APIError(
+            422, "direct_upload_required", "Use the private direct upload flow"
+        )
     return await upload_revision(
         review_id, file, "reference", owner, session, role, approvalStatus
+    )
+
+
+@app.post(
+    "/v1/reviews/{review_id}/artworks/from-blob",
+    status_code=201,
+    response_model=ArtworkOutput,
+    response_model_exclude_none=True,
+)
+async def artwork_from_blob(
+    review_id: str,
+    data: BlobFileInput,
+    owner=Depends(auth.identity),
+    session=Depends(db),
+):
+    owned(session, review_id, owner)
+    content = download_blob(data.url, review_id, "artwork")
+    upload = UploadFile(filename=data.filename, file=io.BytesIO(content))
+    return await upload_revision(
+        review_id, upload, "artwork", owner, session, blob_url=data.url
+    )
+
+
+@app.post(
+    "/v1/reviews/{review_id}/references/from-blob",
+    status_code=201,
+    response_model=ReferenceOutput,
+    response_model_exclude_none=True,
+)
+async def reference_from_blob(
+    review_id: str,
+    data: BlobFileInput,
+    owner=Depends(auth.identity),
+    session=Depends(db),
+):
+    owned(session, review_id, owner)
+    if not data.role or not data.approvalStatus:
+        raise APIError(
+            422, "invalid_input", "Reference role and approval status are required"
+        )
+    content = download_blob(data.url, review_id, "reference")
+    upload = UploadFile(filename=data.filename, file=io.BytesIO(content))
+    return await upload_revision(
+        review_id,
+        upload,
+        "reference",
+        owner,
+        session,
+        data.role,
+        data.approvalStatus,
+        blob_url=data.url,
     )
 
 
@@ -401,6 +468,20 @@ def get_file(file_id: str, owner=Depends(auth.identity), session=Depends(db)):
     if not record:
         raise APIError(404, "not_found", "File not found")
     owned(session, record.review_id, owner)
+    if record.path.startswith("https://"):
+        content = download_blob(record.path, record.review_id, record.kind)
+        if hashlib.sha256(content).hexdigest() != record.sha256:
+            raise APIError(
+                409, "file_changed", "Stored bytes no longer match the saved revision"
+            )
+        return StreamingResponse(
+            io.BytesIO(content),
+            media_type=record.file_type,
+            headers={
+                "Cache-Control": "private, no-store",
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
     path = Path(record.path).resolve()
     if path.parent != storage_root() or not path.is_file():
         raise APIError(404, "not_found", "Stored file unavailable")

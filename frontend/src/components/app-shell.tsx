@@ -115,7 +115,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {dataMode === 'demo' ? 'Demo data' : 'Live mode'}
           </span>
           <span className="reviewer-name muted">
-            {dataMode === 'demo' ? 'Demo reviewer' : 'Local reviewer'}
+            {dataMode === 'demo' ? 'Demo reviewer' : 'Guest workspace'}
           </span>
           <span className="avatar" aria-hidden="true">
             DR

@@ -1,24 +1,23 @@
 import { NextRequest } from 'next/server';
+import { reviewerSession, trustedOrigin } from '@/lib/cloud-session';
 export const runtime = 'nodejs';
 const limit = 21 * 1024 * 1024;
 async function proxy(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
-  // This bridge deliberately represents one LOCAL reviewer, not a public login.
-  const host = request.headers.get('host') || '';
-  const hostname = host.startsWith('[') ? host.slice(0, host.indexOf(']') + 1) : host.split(':')[0];
-  if (!['localhost', '127.0.0.1', '[::1]'].includes(hostname))
+  if (!trustedOrigin(request))
     return Response.json(
-      { message: 'The local reviewer bridge only accepts loopback hosts.' },
+      { message: 'This request is not from an allowed workspace origin.' },
       { status: 403 },
     );
   if (path[0] !== 'v1' || path.some((p) => !/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/.test(p)))
     return Response.json({ message: 'Invalid service path.' }, { status: 400 });
-  if (
-    !['GET', 'HEAD'].includes(request.method) &&
-    request.headers.get('origin') !== `${request.nextUrl.protocol}//${host}`
-  )
-    return Response.json({ message: 'Same-origin requests required.' }, { status: 403 });
-  const token = process.env.WAVELENGTH_API_TOKEN;
+  let session;
+  try {
+    session = reviewerSession(request);
+  } catch {
+    return Response.json({ message: 'Workspace sessions are not configured.' }, { status: 503 });
+  }
+  const token = session.token;
   if (!token)
     return Response.json(
       { message: 'Local reviewer credentials are not configured.' },
@@ -53,7 +52,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
     const contentType = request.headers.get('content-type');
     if (contentType) headers.set('Content-Type', contentType);
     const response = await fetch(
-      `${process.env.WAVELENGTH_API_URL || 'http://127.0.0.1:8000'}/${path.join('/')}${request.nextUrl.search}`,
+      `${(process.env.WAVELENGTH_API_URL || 'http://127.0.0.1:8000').replace(/\/$/, '')}/${path.join('/')}${request.nextUrl.search}`,
       {
         method: request.method,
         headers,
@@ -69,6 +68,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
     const mime = response.headers.get('content-type') || 'application/octet-stream';
     const safe = /^(application\/(json|pdf)|image\/(png|jpeg))(;|$)/.test(mime);
     resultHeaders.set('Content-Type', safe ? mime : 'application/octet-stream');
+    if (session.cookie) resultHeaders.set('Set-Cookie', session.cookie);
     if (!safe) resultHeaders.set('Content-Disposition', 'attachment');
     return new Response(response.body, { status: response.status, headers: resultHeaders });
   } catch {
