@@ -11,6 +11,8 @@ def database_url():
     url = os.environ.get("DATABASE_URL", "postgresql+psycopg://localhost/wavelength")
     if url.startswith(("postgres://", "postgresql://")):
         url = "postgresql+psycopg://" + url.split("://", 1)[1]
+    if not url.startswith("postgresql+psycopg://"):
+        raise ValueError("DATABASE_URL must use PostgreSQL with the psycopg driver.")
     return url
 
 

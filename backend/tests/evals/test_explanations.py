@@ -93,7 +93,8 @@ def test_permanent_http_failure_is_not_retried(monkeypatch):
     assert len(calls) == 1
 
 
-def test_openai_protocol_limits_and_empty_provider_output(monkeypatch):
+@pytest.mark.parametrize("reasoning_effort", [None, "none"])
+def test_openai_protocol_limits_and_empty_provider_output(monkeypatch, reasoning_effort):
     import json
     from io import BytesIO
     from unittest.mock import patch
@@ -105,10 +106,19 @@ def test_openai_protocol_limits_and_empty_provider_output(monkeypatch):
     monkeypatch.setenv("WAVELENGTH_AI_MODEL", "test-model")
     monkeypatch.setenv("WAVELENGTH_AI_KEY", "test-key")
 
+    if reasoning_effort is None:
+        monkeypatch.delenv("WAVELENGTH_AI_REASONING_EFFORT", raising=False)
+    else:
+        monkeypatch.setenv("WAVELENGTH_AI_REASONING_EFFORT", reasoning_effort)
+
     def response(request, timeout):
         body = json.loads(request.data)
         assert body["max_tokens"] == 384 and timeout == 10
         assert body["model"] == "test-model"
+        if reasoning_effort is None:
+            assert "reasoning_effort" not in body
+        else:
+            assert body["reasoning_effort"] == reasoning_effort
         assert body["response_format"] == {"type": "json_object"}
         return BytesIO(b'{"choices": []}')
 

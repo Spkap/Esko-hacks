@@ -1,30 +1,70 @@
-frontend/node_modules/
-frontend/.next/
-frontend/test-results/
-frontend/playwright-report/
-frontend/.env.local
-frontend/tsconfig.tsbuildinfo
-frontend/public/pdf.worker.min.mjs
-.worktrees/
+# Dependencies and package-manager caches
+node_modules/
 .pnpm-store/
 
-# Local planning, research, and submission documents
+# Frontend build output and generated declarations
+.next/
+/frontend/out/
+/frontend/build/
+/frontend/next-env.d.ts
+*.tsbuildinfo
+/frontend/public/pdf.worker.min.mjs
+
+# Test reports, coverage and generated browser screenshots
+test-results/
+playwright-report/
+playwright/.cache/
+/frontend/evidence/
+coverage/
+htmlcov/
+.coverage
+.coverage.*
+
+# Python environments, caches and package build output
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+*.egg-info/
+/backend/build/
+/backend/dist/
+
+# Private configuration; commit only credential-free templates
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local backend databases, uploads and runtime state
+/backend/.data/
+/backend/private-files/
+
+# Generated logs, process identifiers and temporary files
+*.log
+*.pid
+*.pid.lock
+*.tmp
+*.temp
+
+# Local planning notes and video-production work
 /docs/
+/PROGRESS.md
+/demo-output/
+.worktrees/
+.vercel/
 
 # Local agent instructions
 AGENTS.md
 agents.md
 
-# Local backend runtime, uploaded documents, and credentials
-backend/.venv/
-backend/.env
-backend/.env.*.local
-backend/.data/
-backend/.pytest_cache/
-backend/**/__pycache__/
-backend/**/*.pyc
-backend/*.egg-info/
+# Operating-system and editor temporary files
 .DS_Store
-__pycache__/
-.vercel
-.env*.local
+Thumbs.db
+Desktop.ini
+*~
+*.swp
+*.swo

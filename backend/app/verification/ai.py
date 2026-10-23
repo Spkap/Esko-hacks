@@ -59,6 +59,11 @@ def explain_check(check, provider=None):
                     "model": model,
                     "temperature": 0,
                     "max_tokens": 384,
+                    **(
+                        {"reasoning_effort": os.environ["WAVELENGTH_AI_REASONING_EFFORT"]}
+                        if os.environ.get("WAVELENGTH_AI_REASONING_EFFORT")
+                        else {}
+                    ),
                     "response_format": {"type": "json_object"},
                     "messages": [
                         {"role": "system", "content": prompt["instruction"]},

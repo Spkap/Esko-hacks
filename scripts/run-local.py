@@ -12,6 +12,7 @@ import time
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
+PNPM = shutil.which("pnpm.cmd" if os.name == "nt" else "pnpm") or "pnpm"
 
 
 def environment():
@@ -34,7 +35,7 @@ def available(port):
 
 
 def database_ready(env):
-    command = "import os,psycopg; c=psycopg.connect(os.environ['DATABASE_URL'].replace('postgresql+psycopg://','postgresql://'),connect_timeout=3); c.execute('SELECT 1'); c.close()"
+    command = "from app.database import engine; from sqlalchemy import text; c=engine.connect(); c.execute(text('SELECT 1')); c.close()"
     return (
         subprocess.run(
             ["uv", "run", "--frozen", "python", "-c", command],
@@ -84,7 +85,7 @@ def write_token(env):
     path = ROOT / "frontend/.env.local"
     updates = {
         "NEXT_PUBLIC_DATA_MODE": "live",
-        "WAVELENGTH_API_URL": "http://127.0.0.1:8000",
+        "WAVELENGTH_API_URL": f"http://127.0.0.1:{env.get('WAVELENGTH_API_PORT', '8000')}",
         "WAVELENGTH_API_TOKEN": token,
     }
     lines = [
@@ -147,9 +148,10 @@ def main():
             "Dependencies and configured PostgreSQL database are ready. No provider request sent."
         )
         return
-    if not all(available(port) for port in (8000, 3000)):
+    api_port = int(env.get("WAVELENGTH_API_PORT", "8000"))
+    if not all(available(port) for port in (api_port, 3000)):
         raise RuntimeError(
-            "Port 8000 or 3000 is occupied. Stop the existing Wavelength session before starting another; this launcher never stops other services."
+            f"Port {api_port} or 3000 is occupied. Stop the existing Wavelength session before starting another; this launcher never stops other services."
         )
     subprocess.run(
         ["uv", "sync", "--frozen"], cwd=ROOT / "backend", env=env, check=True
@@ -163,26 +165,36 @@ def main():
     write_token(env)
     frontend_env = dict(os.environ, NEXT_PUBLIC_DATA_MODE="live")
     subprocess.run(
-        ["pnpm", "install", "--frozen-lockfile"],
+        [PNPM, "install", "--frozen-lockfile"],
         cwd=ROOT / "frontend",
         env=frontend_env,
         check=True,
     )
     if args.production:
         subprocess.run(
-            ["pnpm", "build"], cwd=ROOT / "frontend", env=frontend_env, check=True
+            [PNPM, "build"], cwd=ROOT / "frontend", env=frontend_env, check=True
         )
     children = []
 
     def stop(*_):
         for child in reversed(children):
             if child.poll() is None:
-                os.killpg(child.pid, signal.SIGTERM)
+                if os.name == "nt":
+                    subprocess.run(
+                        ["taskkill", "/PID", str(child.pid), "/T", "/F"],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+                else:
+                    os.killpg(child.pid, signal.SIGTERM)
         for child in children:
             try:
                 child.wait(timeout=10)
             except subprocess.TimeoutExpired:
-                os.killpg(child.pid, signal.SIGKILL)
+                if os.name == "nt":
+                    child.kill()
+                else:
+                    os.killpg(child.pid, signal.SIGKILL)
 
     def interrupted(*_):
         stop()
@@ -209,15 +221,15 @@ def main():
                 "--host",
                 "127.0.0.1",
                 "--port",
-                "8000",
+                str(api_port),
             ],
             "backend",
             env,
         )
-        wait_for("http://127.0.0.1:8000/v1/health", api)
+        wait_for(f"http://127.0.0.1:{api_port}/v1/health", api)
         start(["uv", "run", "--frozen", "python", "-m", "app.worker"], "backend", env)
         web = start(
-            ["pnpm", "start" if args.production else "dev"], "frontend", frontend_env
+            [PNPM, "start" if args.production else "dev"], "frontend", frontend_env
         )
         wait_for("http://127.0.0.1:3000", web)
         print(

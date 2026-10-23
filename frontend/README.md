@@ -2,7 +2,7 @@
 
 The interactive packaging-review prototype: dashboard, artwork viewer, evidence panels, reviewer decisions, prepared sample runs, and reports.
 
-[Product overview](../README.md) · [Watch the demo](https://youtu.be/ASl5XMgqJk4) · [Sample provenance](../reference-data/README.md)
+[Product overview](../README.md) · [Sample provenance](../reference-data/README.md)
 
 ## Start development
 
@@ -102,7 +102,6 @@ Source records, artifact hashes, rule assumptions, and expected results are in [
 
 A sample pass covers only its selected checks. It does not establish full market compliance or legal approval.
 
-Local planning and progress notes may exist under the Git-ignored `docs/` folder. They are optional and are not required to install or run the frontend.
 
 ## Local live analysis
 
