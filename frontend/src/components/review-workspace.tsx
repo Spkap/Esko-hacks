@@ -11,7 +11,7 @@ import {
   ListChecksIcon as ListChecks,
 } from '@phosphor-icons/react/ssr';
 import { isSampleScenario } from '@/demo/scenarios';
-import { repository } from '@/data/repository';
+import { repository, dataMode } from '@/data/repository';
 import { summarize } from '@/domain/summary';
 import type { ReviewDecision } from '@/domain/types';
 import { useRepository } from './use-repository';
@@ -22,8 +22,11 @@ import { StatusBadge } from './status-badge';
 import { ArtworkViewer } from './artwork-viewer';
 import { FindingList } from './finding-list';
 import { EvidencePanel } from './evidence-panel';
+import { RunProgress } from './run-progress';
+import { RecheckArtwork } from './recheck-artwork';
 export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
   const params = useSearchParams();
+  const requestedRun = dataMode === 'live' ? params.get('run') : null;
   const [pane, setPane] = useState<'artwork' | 'findings'>('findings');
   const [updates, setUpdates] = useState<Record<string, ReviewDecision>>({});
   useEffect(() => {
@@ -33,15 +36,24 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
   }, []);
   const { data, loading, error, retry } = useRepository(async () => {
     const detail = await repository.getReview(reviewId);
-    const report = detail?.review.latestRunId
-      ? await repository.getReport(detail.review.latestRunId)
-      : null;
-    return { detail, report };
-  }, [reviewId]);
+    const run =
+      (requestedRun || detail?.review.latestRunId) && dataMode === 'live'
+        ? await repository.getRun(requestedRun || detail!.review.latestRunId!)
+        : null;
+    if (requestedRun && (!run || run.reviewId !== reviewId))
+      throw new Error('This analysis run does not belong to this review.');
+    const report =
+      (!run || run.status === 'completed') && (requestedRun || detail?.review.latestRunId)
+        ? await repository.getReport(requestedRun || detail!.review.latestRunId!)
+        : null;
+    return { detail, report, run };
+  }, [reviewId, requestedRun]);
   if (loading) return <LoadingState label="Loading artwork review" />;
   if (error) return <ErrorState message={error} retry={retry} />;
   if (!data?.detail) return <MissingState />;
-  const { detail, report } = data;
+  const { detail, report, run } = data;
+  if (run && run.status !== 'completed')
+    return <RunProgress runId={run.id} reviewId={reviewId} onDone={retry} />;
   const artwork = detail.artworkVersions.find(
     (a) =>
       a.id === report?.run.artworkVersionId ||
@@ -57,7 +69,9 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
         </Link>
         <div className="page-heading">
           <div>
-            <div className="eyebrow">Preview only</div>
+            <div className="eyebrow">
+              {dataMode === 'live' ? 'Uploaded artwork' : 'Preview only'}
+            </div>
             <h1>{detail.review.productName}</h1>
             <p>
               {detail.review.market} · {detail.review.category}
@@ -67,19 +81,24 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
         <section className="panel report-overview">
           <h2>No compliance checks have been run</h2>
           <p>
-            Live analysis is not connected. Only file details are saved. Re-select your files to
-            preview them again.
+            {dataMode === 'live'
+              ? 'The uploaded files are saved, but no analysis run has started. Start a new check to choose inputs and run the supported comparisons.'
+              : 'Live analysis is not connected. Only file details are saved. Re-select your files to preview them again.'}
           </p>
           <p className="small muted">
             Artwork: {artwork.filename} · V{artwork.version}
           </p>
           <div className="button-row">
             <Button asChild>
-              <Link href="/checks/new">Re-select files</Link>
+              <Link href="/checks/new">
+                {dataMode === 'live' ? 'New check' : 'Re-select files'}
+              </Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/checks/mori-strawberry">Explore sample findings</Link>
-            </Button>
+            {dataMode === 'demo' && (
+              <Button asChild variant="outline">
+                <Link href="/checks/mori-strawberry">Explore sample findings</Link>
+              </Button>
+            )}
           </div>
         </section>
       </>
@@ -110,11 +129,14 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
           <p>
             {detail.review.category}
             <span className="metadata-separator">/</span>Artwork V{artwork.version}
-            <span className="metadata-separator">/</span>Illustrative review
+            <span className="metadata-separator">/</span>
+            {dataMode === 'demo' ? 'Illustrative review' : 'Uploaded document review'}
           </p>
         </div>
         <Button asChild>
-          <Link href={`/checks/${reviewId}/report`}>
+          <Link
+            href={`/checks/${reviewId}/report${dataMode === 'live' ? `?run=${report.run.id}` : ''}`}
+          >
             <FileText aria-hidden="true" size={16} />
             View report
           </Link>
@@ -131,6 +153,25 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
             Run this sample again <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
+      )}
+      {dataMode === 'live' && detail.runs && detail.runs.length > 1 && (
+        <details className="panel" style={{ padding: 16, marginBottom: 16 }}>
+          <summary>Analysis history</summary>
+          <ul>
+            {detail.runs.map((historyRun) => (
+              <li key={historyRun.id}>
+                <Link className="link" href={`/checks/${reviewId}?run=${historyRun.id}`}>
+                  Artwork V
+                  {
+                    detail.artworkVersions.find((a) => a.id === historyRun.artworkVersionId)
+                      ?.version
+                  }{' '}
+                  · {historyRun.status} · {new Date(historyRun.createdAt).toLocaleString()}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
       <div className="review-summary" data-testid="assessment-summary">
         {summary && (
@@ -184,6 +225,23 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
             }}
           />
           <div className="artwork-context">
+            {dataMode === 'live' && (
+              <RecheckArtwork
+                run={report.run}
+                references={detail.references}
+                onStarted={() => {
+                  const next = new URLSearchParams(window.location.search);
+                  next.delete('run');
+                  next.delete('check');
+                  window.history.replaceState(
+                    null,
+                    '',
+                    `${window.location.pathname}${next.size ? `?${next}` : ''}`,
+                  );
+                  retry();
+                }}
+              />
+            )}
             <span className="eyebrow">Version context</span>
             <p className="small muted">
               Results apply to artwork V{artwork.version} and checklist{' '}
@@ -238,8 +296,10 @@ export function ReviewWorkspace({ reviewId }: { reviewId: string }) {
       </div>
       <p className="scope-note">
         <Info aria-hidden="true" size={15} />
-        Fictional demo with simulated findings, not verified market regulations. Only the supplied
-        panels and selected checks are covered.
+        {dataMode === 'demo'
+          ? 'Fictional demo with simulated findings, not verified market regulations.'
+          : 'Analysis of uploaded documents does not establish legal approval.'}{' '}
+        Only the supplied panels and selected checks are covered.
       </p>
     </>
   );

@@ -1,35 +1,51 @@
 'use client';
+import { AIExplanation } from './ai-explanation';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeftIcon as ArrowLeft,
   FileTextIcon as FileText,
   InfoIcon as Info,
 } from '@phosphor-icons/react/ssr';
-import { repository } from '@/data/repository';
+import { repository, dataMode } from '@/data/repository';
 import { summarize } from '@/domain/summary';
 import { useRepository } from './use-repository';
 import { LoadingState, ErrorState, MissingState } from './data-state';
 import { StatusBadge } from './status-badge';
 import { resultLabels } from './finding-list';
 export function ReviewReport({ reviewId }: { reviewId: string }) {
+  const params = useSearchParams();
+  const requestedRun = dataMode === 'live' ? params.get('run') : null;
   const { data, loading, error, retry } = useRepository(async () => {
     const detail = await repository.getReview(reviewId);
+    const run =
+      dataMode === 'live' && (requestedRun || detail?.review.latestRunId)
+        ? await repository.getRun(requestedRun || detail!.review.latestRunId!)
+        : null;
+    if (requestedRun && (!run || run.reviewId !== reviewId))
+      throw new Error('This analysis run does not belong to this review.');
     return {
       detail,
-      report: detail?.review.latestRunId
-        ? await repository.getReport(detail.review.latestRunId)
-        : null,
+      run,
+      report:
+        (requestedRun || detail?.review.latestRunId) && (!run || run.status === 'completed')
+          ? await repository.getReport(requestedRun || detail!.review.latestRunId!)
+          : null,
     };
-  }, [reviewId]);
+  }, [reviewId, requestedRun]);
   if (loading) return <LoadingState label="Loading report" />;
   if (error) return <ErrorState message={error} retry={retry} />;
   if (!data?.detail) return <MissingState />;
-  const { detail, report } = data;
+  const { detail, report, run } = data;
   if (!report)
     return (
       <div className="panel state-panel">
         <h1>No report yet</h1>
-        <p>No checks have been run for this review.</p>
+        <p>
+          {run
+            ? `This run is ${run.status}. A report is available only after successful processing.`
+            : 'No checks have been run for this review.'}
+        </p>
         <Link className="link" href={`/checks/${reviewId}`}>
           Return to artwork
         </Link>
@@ -39,7 +55,10 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
   const artwork = detail.artworkVersions.find((a) => a.id === report.run.artworkVersionId);
   return (
     <>
-      <Link className="back-link" href={`/checks/${reviewId}`}>
+      <Link
+        className="back-link"
+        href={`/checks/${reviewId}${dataMode === 'live' ? `?run=${report.run.id}` : ''}`}
+      >
         <ArrowLeft aria-hidden="true" size={14} />
         Back to artwork review
       </Link>
@@ -171,7 +190,11 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
                     </dd>
                   </div>
                 </dl>
-                <Link className="source-link" href={`/checks/${reviewId}?check=${check.id}`}>
+                <AIExplanation check={check} />
+                <Link
+                  className="source-link"
+                  href={`/checks/${reviewId}?check=${check.id}${dataMode === 'live' ? `&run=${report.run.id}` : ''}`}
+                >
                   Inspect this finding →
                 </Link>
               </article>
@@ -193,8 +216,8 @@ export function ReviewReport({ reviewId }: { reviewId: string }) {
         </ul>
         <p className="scope-note">
           <Info aria-hidden="true" size={15} />
-          Simulated checks do not establish legal approval. Reviewer decisions do not change the
-          original results.
+          {dataMode === 'demo' ? 'Simulated checks' : 'Selected checks'} do not establish legal
+          approval. Reviewer decisions do not change the original results.
         </p>
       </section>
     </>

@@ -41,7 +41,7 @@ See the complete path from a missing statement to corrected artwork, then inspec
 | [1:39 · Read the report](https://youtu.be/ASl5XMgqJk4?t=99) | Results, version context, and requirements outside scope. |
 | [1:54 · Review organizer material](https://youtu.be/ASl5XMgqJk4?t=114) | Dancing Fish carton proof and draft-source review questions. |
 
-> **Prototype scope:** the review interface is interactive; sample assessments are predetermined. Live OCR, AI inference, and regulatory verification are future work. No account, backend, or AI key is required to try the samples.
+> **Two explicit modes:** the video shows the seeded demo. The new local **live** mode reads actual PDF/PNG/JPEG artwork and JSON/XLSX/PDF references, runs supported deterministic checks, and saves versioned results in PostgreSQL. AI interpretation and qualified regulatory verification remain future work. Demo mode still needs no backend or key.
 
 ## Why we built it
 
@@ -135,7 +135,7 @@ The report identifies the artwork version, reference revisions, selected checks,
 | **Recheck and hand off** | Run prepared scenarios, compare corrected V2, recover a run after reload, and read scoped reports. |
 | **Explore your own files** | Preview PDF, PNG, or JPEG files up to 20 MiB each; uploaded files never inherit sample findings. |
 
-**Still to build:** OCR and semantic extraction, AI inference, live rule evaluation, server-side file storage, and accounts. The progress sequence is explicitly simulated.
+**Live mode now available:** private multipart uploads, native PDF text and local OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Public accounts and evaluated AI interpretation are not implemented.
 
 ### Three runnable scenarios
 
@@ -160,6 +160,14 @@ pnpm -C frontend dev
 
 Open [the landing page](http://127.0.0.1:3000) or [the review workspace](http://127.0.0.1:3000/dashboard).
 
+### Enable actual local analysis
+
+Follow the [backend setup](backend/README.md) to configure PostgreSQL, apply migrations, issue a local reviewer token, and start the API plus worker. Set `NEXT_PUBLIC_DATA_MODE=live`, `WAVELENGTH_API_URL`, and server-only `WAVELENGTH_API_TOKEN` in `frontend/.env.local`, then restart Next.js.
+
+Upload real artwork and a specification, declare the source's approval status, and run checks. Use the [structured specification example](reference-data/live-specification-example.json) for unambiguous product values and required statements. Exact labeled spreadsheet quantity rows also retain their sheet/cell source locations. Draft, conflicting, or unreadable evidence stays uncertain.
+
+This bridge intentionally accepts loopback hosts only; it is a local single-reviewer workspace, not public multitenant authentication. An optional explanation-provider adapter exists but is not part of the default worker pipeline and has not been evaluated with paid inference.
+
 ### Try the complete demo
 
 1. Open **New check → Start with sample files**.
@@ -181,21 +189,26 @@ Stop the development server before building. After pulling dependency changes, r
 
 ## How it is built
 
-The screens use a shared repository interface. The current implementation reads bundled sample records and stores demo activity in the browser.
+The screens use one repository interface with separate demo and live implementations. Live mode uses a loopback-only, single-reviewer Next.js bridge; its bearer token remains on the server.
 
 ```mermaid
 flowchart TD
-    UI["Next.js + React interface<br/>Dashboard · Viewer · Evidence · Reports"]
-    UI --> R["Shared review repository"]
-    R --> S["Bundled sample scenarios<br/>Artwork · Specifications · Findings"]
-    R --> L["localStorage<br/>Reviewer decisions"]
-    R --> T["sessionStorage<br/>Sample runs · Drafts · Upload metadata"]
-    UI --> P["PDF.js<br/>Browser PDF rendering"]
+    UI["Next.js review interface"] --> R["Review repository interface"]
+    R --> D["Demo: bundled examples + browser storage"]
+    R --> H["Live: validated HTTP repository"]
+    H --> B["Loopback-only server bridge"]
+    B --> API["JWT-authenticated FastAPI"]
+    API --> DB["PostgreSQL: versions, jobs, decisions"]
+    API --> F["Private uploaded files + SHA-256"]
+    DB --> W["Leased worker + bounded parser processes"]
+    W --> E["Native text / OCR / JSON / XLSX"]
+    E --> C["Deterministic supported comparisons"]
+    C --> DB
 ```
 
 **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Phosphor icons, and local Manrope/Noto Sans JP fonts. **Data validation:** Zod. **Checks:** Vitest and Playwright.
 
-Your uploaded file contents are not persisted or uploaded to a server. Re-select your own files after a reload. The default `NEXT_PUBLIC_DATA_MODE=demo` uses the sample workspace; `live` displays an explicit connection error because a live backend is not connected.
+In demo mode, uploads remain browser-local previews and require re-selection after reload. In live mode, actual bytes are stored privately by the backend and bound to immutable file revisions. Service failures never substitute sample answers. The repository default is `NEXT_PUBLIC_DATA_MODE=demo`; configure the backend and server-only token to enable live mode.
 
 <details>
 <summary><strong>Development checks and repository map</strong></summary>
@@ -227,13 +240,13 @@ For browser checks against a production build, use `PLAYWRIGHT_PRODUCTION=1`; us
 
 ## What comes next
 
-The product vision is AI-assisted packaging review across market requirements, product accuracy, and brand guidelines. The next step is to connect the working review experience to dependable extraction and traceable checks.
+The product vision is AI-assisted packaging review across market requirements, product accuracy, and brand guidelines. The live path now connects the review experience to extraction and traceable comparisons. The next step is to broaden supported interpretation without hiding uncertainty.
 
 | Current boundary | Next step |
 | :--- | :--- |
-| Prepared sample assessments | Extract inspectable text and structure from real artwork and specifications. |
-| Bundled references and limited sample comparisons | Evaluate a small supported rule set against versioned, traceable sources. |
-| Local browser activity | Add a backend for files, review versions, jobs, and persisted decisions. |
+| Deterministic supported checks | Evaluate an optional AI interpretation provider against labeled examples before enabling it. |
+| Explicit supplied-reference comparisons | Expand qualified, versioned regulatory sources and product applicability. |
+| Local single-reviewer API bridge | Integrate real browser sessions and user management before public deployment. |
 | Digital previews with uncertain physical scale | Establish trustworthy dimensions before evaluating printed-size requirements. |
 
 The review should always show when a source is draft, a requirement is uncertain, or a check was left out.

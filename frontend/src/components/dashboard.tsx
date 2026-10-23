@@ -9,7 +9,7 @@ import {
   MagnifyingGlassMinusIcon as SearchX,
   XIcon as X,
 } from '@phosphor-icons/react/ssr';
-import { repository } from '@/data/repository';
+import { repository, dataMode } from '@/data/repository';
 import { Button } from './ui/button';
 import { ErrorState, LoadingState } from './data-state';
 import { useRepository } from './use-repository';
@@ -23,14 +23,19 @@ export function Dashboard() {
   const search = params.get('q') || '';
   const market = params.get('market') || '';
   const result = params.get('result') || '';
+  const cursor = dataMode === 'live' ? params.get('cursor') || '' : '';
   const hasFilters = !!(search || market || result);
   const { data, loading, error, retry } = useRepository(
     () =>
-      Promise.all([repository.listReviews({ search, market, result }), repository.listReviews()]),
-    [search, market, result],
+      Promise.all([
+        repository.listReviews({ search, market, result, cursor }),
+        repository.listReviews(),
+      ]),
+    [search, market, result, cursor],
   );
   function setFilter(key: string, value: string) {
     const next = new URLSearchParams(window.location.search);
+    next.delete('cursor');
     if (value) next.set(key, value);
     else next.delete(key);
     window.history.replaceState(null, '', `${pathname}${next.size ? `?${next}` : ''}`);
@@ -53,7 +58,7 @@ export function Dashboard() {
           </Link>
         </Button>
       </div>
-      {!error && (
+      {!error && dataMode === 'demo' && (
         <>
           <DashboardSummary
             reviews={all}
@@ -72,10 +77,12 @@ export function Dashboard() {
             <h2>Review library</h2>
             <span>Latest artwork versions</span>
           </div>
-          <Link href="/checks/mori-strawberry" className="sample-shortcut">
-            Explore sample
-            <ArrowUpRight aria-hidden="true" size={14} />
-          </Link>
+          {dataMode === 'demo' && (
+            <Link href="/checks/mori-strawberry" className="sample-shortcut">
+              Explore sample
+              <ArrowUpRight aria-hidden="true" size={14} />
+            </Link>
+          )}
         </div>
         <div className="filter-bar">
           <div className="field search-field">
@@ -130,8 +137,9 @@ export function Dashboard() {
               <div className="table-result-count">
                 <span role="status">
                   {filtered.length} {filtered.length === 1 ? 'review' : 'reviews'}
+                  {dataMode === 'live' ? ' on this page' : ''}
                 </span>
-                {hasFilters && (
+                {hasFilters && dataMode === 'demo' && (
                   <span className="filtered-from">of {all.length} in this workspace</span>
                 )}
               </div>
@@ -142,7 +150,11 @@ export function Dashboard() {
                     Reset filters
                   </Button>
                 ) : (
-                  <span>Updated artwork · simulated assessments</span>
+                  <span>
+                    {dataMode === 'demo'
+                      ? 'Updated artwork · simulated assessments'
+                      : 'Uploaded artwork · selected checks'}
+                  </span>
                 )}
               </div>
             </div>
@@ -153,11 +165,48 @@ export function Dashboard() {
                 <span className="empty-icon">
                   <SearchX aria-hidden="true" size={26} />
                 </span>
-                <h2>No matching reviews</h2>
-                <p className="muted small">Try a different product name or reset your filters.</p>
-                <Button variant="outline" onClick={clear}>
-                  Clear filters
-                </Button>
+                <h2>{hasFilters ? 'No matching reviews' : 'No reviews yet'}</h2>
+                <p className="muted small">
+                  {hasFilters
+                    ? 'Try a different product name or reset your filters.'
+                    : 'Upload artwork and a specification to begin.'}
+                </p>
+                {hasFilters ? (
+                  <Button variant="outline" onClick={clear}>
+                    Clear filters
+                  </Button>
+                ) : (
+                  <Button asChild>
+                    <Link href="/checks/new">New check</Link>
+                  </Button>
+                )}
+              </div>
+            )}
+            {dataMode === 'live' && (cursor || data?.[0].nextCursor) && (
+              <div className="button-row" style={{ padding: 20 }} aria-label="Review pages">
+                {cursor && (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      const next = new URLSearchParams(params.toString());
+                      next.delete('cursor');
+                      router.push(`/dashboard?${next}`);
+                    }}
+                  >
+                    First page
+                  </Button>
+                )}
+                {data?.[0].nextCursor && (
+                  <Button
+                    onClick={() => {
+                      const next = new URLSearchParams(params.toString());
+                      next.set('cursor', data[0].nextCursor!);
+                      router.push(`/dashboard?${next}`);
+                    }}
+                  >
+                    Next page
+                  </Button>
+                )}
               </div>
             )}
           </>
@@ -166,7 +215,10 @@ export function Dashboard() {
       <div className="dashboard-scope-note">
         <Info aria-hidden="true" size={16} />
         <p>
-          <strong>A focused review, with context.</strong> Demo data uses fictional examples.
+          <strong>A focused review, with context.</strong>{' '}
+          {dataMode === 'demo'
+            ? 'Demo data uses fictional examples.'
+            : 'Live checks use your uploaded documents.'}
           Selected checks do not establish legal approval.
         </p>
       </div>

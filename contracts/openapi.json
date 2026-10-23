@@ -1,0 +1,1547 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Wavelength private API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reviews": {
+      "post": {
+        "summary": "Create Review",
+        "operationId": "create_review_v1_reviews_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List Reviews",
+        "operationId": "list_reviews_v1_reviews_get",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Search"
+            }
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Market"
+            }
+          },
+          {
+            "name": "result",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Result"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 25,
+              "minimum": 1,
+              "default": 25,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reviews/{review_id}": {
+      "get": {
+        "summary": "Get Review",
+        "operationId": "get_review_v1_reviews__review_id__get",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reviews/{review_id}/artworks": {
+      "post": {
+        "summary": "Add Artwork",
+        "operationId": "add_artwork_v1_reviews__review_id__artworks_post",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_add_artwork_v1_reviews__review_id__artworks_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtworkOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reviews/{review_id}/references": {
+      "post": {
+        "summary": "Add Reference",
+        "operationId": "add_reference_v1_reviews__review_id__references_post",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_add_reference_v1_reviews__review_id__references_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/files/{file_id}": {
+      "get": {
+        "summary": "Get File",
+        "operationId": "get_file_v1_files__file_id__get",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/runs": {
+      "post": {
+        "summary": "Start Run",
+        "operationId": "start_run_v1_runs_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/runs/{run_id}": {
+      "get": {
+        "summary": "Get Run",
+        "operationId": "get_run_v1_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/runs/{run_id}/cancel": {
+      "post": {
+        "summary": "Cancel Run",
+        "operationId": "cancel_run_v1_runs__run_id__cancel_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/runs/{run_id}/report": {
+      "get": {
+        "summary": "Get Report",
+        "operationId": "get_report_v1_runs__run_id__report_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/checks/{check_id}/decisions": {
+      "post": {
+        "summary": "Record Decision",
+        "operationId": "record_decision_v1_checks__check_id__decisions_post",
+        "parameters": [
+          {
+            "name": "check_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Check Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecisionOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ArtworkOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "reviewId": {
+            "type": "string",
+            "title": "Reviewid"
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Version"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "fileHash": {
+            "type": "string",
+            "title": "Filehash"
+          },
+          "fileType": {
+            "type": "string",
+            "enum": [
+              "image/png",
+              "image/jpeg",
+              "application/pdf"
+            ],
+            "title": "Filetype"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/Page"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Pages"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "reviewId",
+          "version",
+          "filename",
+          "fileHash",
+          "fileType",
+          "url",
+          "pages"
+        ],
+        "title": "ArtworkOutput"
+      },
+      "Body_add_artwork_v1_reviews__review_id__artworks_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_add_artwork_v1_reviews__review_id__artworks_post"
+      },
+      "Body_add_reference_v1_reviews__review_id__references_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "approvalStatus": {
+            "type": "string",
+            "title": "Approvalstatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "role",
+          "approvalStatus"
+        ],
+        "title": "Body_add_reference_v1_reviews__review_id__references_post"
+      },
+      "CheckOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "runId": {
+            "type": "string",
+            "title": "Runid"
+          },
+          "ruleId": {
+            "type": "string",
+            "title": "Ruleid"
+          },
+          "ruleVersion": {
+            "type": "string",
+            "title": "Ruleversion"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "regulatory",
+              "product_data",
+              "brand"
+            ],
+            "title": "Kind"
+          },
+          "applicability": {
+            "type": "string",
+            "enum": [
+              "applicable",
+              "not_applicable",
+              "uncertain"
+            ],
+            "title": "Applicability"
+          },
+          "result": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "needs_review",
+              "not_checked"
+            ],
+            "title": "Result"
+          },
+          "observed": {
+            "type": "string",
+            "title": "Observed"
+          },
+          "expected": {
+            "type": "string",
+            "title": "Expected"
+          },
+          "suggestedCorrection": {
+            "type": "string",
+            "title": "Suggestedcorrection"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/Evidence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "runId",
+          "ruleId",
+          "ruleVersion",
+          "title",
+          "kind",
+          "applicability",
+          "result",
+          "observed",
+          "expected",
+          "suggestedCorrection",
+          "evidence"
+        ],
+        "title": "CheckOutput"
+      },
+      "DecisionInput": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "open",
+              "acknowledged",
+              "dismissed"
+            ],
+            "title": "Action"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 3000,
+            "title": "Reason",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "DecisionInput"
+      },
+      "DecisionOutput": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "open",
+              "acknowledged",
+              "dismissed"
+            ],
+            "title": "Action"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 3000,
+            "title": "Reason",
+            "default": ""
+          },
+          "checkId": {
+            "type": "string",
+            "title": "Checkid"
+          },
+          "actor": {
+            "type": "string",
+            "title": "Actor"
+          },
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "action",
+          "checkId",
+          "actor",
+          "timestamp"
+        ],
+        "title": "DecisionOutput"
+      },
+      "DetailOutput": {
+        "properties": {
+          "review": {
+            "$ref": "#/components/schemas/ReviewOutput"
+          },
+          "artworkVersions": {
+            "items": {
+              "$ref": "#/components/schemas/ArtworkOutput"
+            },
+            "type": "array",
+            "title": "Artworkversions"
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/ReferenceOutput"
+            },
+            "type": "array",
+            "title": "References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "review",
+          "artworkVersions",
+          "references"
+        ],
+        "title": "DetailOutput"
+      },
+      "Evidence": {
+        "properties": {
+          "artworkVersionId": {
+            "type": "string",
+            "title": "Artworkversionid"
+          },
+          "page": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Page"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Region"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "inspectedPanels": {
+            "type": "string",
+            "title": "Inspectedpanels"
+          },
+          "sourceId": {
+            "type": "string",
+            "title": "Sourceid"
+          },
+          "sourceLocation": {
+            "type": "string",
+            "title": "Sourcelocation"
+          },
+          "excerpt": {
+            "type": "string",
+            "title": "Excerpt"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "artworkVersionId",
+          "page",
+          "inspectedPanels",
+          "sourceId",
+          "sourceLocation",
+          "excerpt"
+        ],
+        "title": "Evidence"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "productName": {
+            "type": "string",
+            "title": "Productname"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "currentArtworkVersionId": {
+            "type": "string",
+            "title": "Currentartworkversionid"
+          },
+          "latestRunId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latestrunid"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "title": "Updatedat"
+          },
+          "run": {
+            "$ref": "#/components/schemas/RunOutput"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/CheckOutput"
+            },
+            "type": "array",
+            "title": "Checks"
+          },
+          "artwork": {
+            "$ref": "#/components/schemas/ArtworkOutput"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "productName",
+          "category",
+          "market",
+          "currentArtworkVersionId",
+          "createdAt",
+          "updatedAt",
+          "run",
+          "checks",
+          "artwork"
+        ],
+        "title": "ListItem"
+      },
+      "ListOutput": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextcursor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ListOutput"
+      },
+      "Page": {
+        "properties": {
+          "width": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Width"
+          },
+          "height": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Height"
+          },
+          "rotation": {
+            "type": "integer",
+            "enum": [
+              0,
+              90,
+              180,
+              270
+            ],
+            "title": "Rotation"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "width",
+          "height",
+          "rotation"
+        ],
+        "title": "Page"
+      },
+      "ReferenceOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "reviewId": {
+            "type": "string",
+            "title": "Reviewid"
+          },
+          "revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Revision"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "fileHash": {
+            "type": "string",
+            "title": "Filehash"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "regulatory_reference",
+              "company_policy",
+              "product_specification"
+            ],
+            "title": "Role"
+          },
+          "approvalStatus": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "approved",
+              "unknown"
+            ],
+            "title": "Approvalstatus"
+          },
+          "readingStatus": {
+            "type": "string",
+            "enum": [
+              "read",
+              "unread",
+              "partial",
+              "failed"
+            ],
+            "title": "Readingstatus"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "reviewId",
+          "revision",
+          "title",
+          "fileHash",
+          "role",
+          "approvalStatus",
+          "readingStatus",
+          "url"
+        ],
+        "title": "ReferenceOutput"
+      },
+      "Region": {
+        "properties": {
+          "x": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "X"
+          },
+          "y": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Y"
+          },
+          "width": {
+            "type": "number",
+            "maximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Width"
+          },
+          "height": {
+            "type": "number",
+            "maximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Height"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height"
+        ],
+        "title": "Region"
+      },
+      "ReportOutput": {
+        "properties": {
+          "run": {
+            "$ref": "#/components/schemas/RunOutput"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/CheckOutput"
+            },
+            "type": "array",
+            "title": "Checks"
+          },
+          "reviewedScope": {
+            "type": "string",
+            "title": "Reviewedscope"
+          },
+          "uncheckedRequirements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Uncheckedrequirements"
+          },
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/DecisionOutput"
+            },
+            "type": "array",
+            "title": "Decisions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run",
+          "checks",
+          "reviewedScope",
+          "uncheckedRequirements",
+          "decisions"
+        ],
+        "title": "ReportOutput"
+      },
+      "ReviewInput": {
+        "properties": {
+          "productName": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Productname"
+          },
+          "market": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Market"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Category"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "productName",
+          "market",
+          "category"
+        ],
+        "title": "ReviewInput"
+      },
+      "ReviewOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "productName": {
+            "type": "string",
+            "title": "Productname"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "market": {
+            "type": "string",
+            "title": "Market"
+          },
+          "currentArtworkVersionId": {
+            "type": "string",
+            "title": "Currentartworkversionid"
+          },
+          "latestRunId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latestrunid"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "title": "Updatedat"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "productName",
+          "category",
+          "market",
+          "currentArtworkVersionId",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "ReviewOutput"
+      },
+      "RunInput": {
+        "properties": {
+          "reviewId": {
+            "type": "string",
+            "title": "Reviewid"
+          },
+          "artworkVersionId": {
+            "type": "string",
+            "title": "Artworkversionid"
+          },
+          "referenceIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Referenceids"
+          },
+          "ruleSetVersion": {
+            "type": "string",
+            "title": "Rulesetversion"
+          },
+          "selectedRuleIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Selectedruleids"
+          },
+          "requestKey": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Requestkey"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "reviewId",
+          "artworkVersionId",
+          "referenceIds",
+          "ruleSetVersion",
+          "selectedRuleIds",
+          "requestKey"
+        ],
+        "title": "RunInput"
+      },
+      "RunOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "reviewId": {
+            "type": "string",
+            "title": "Reviewid"
+          },
+          "artworkVersionId": {
+            "type": "string",
+            "title": "Artworkversionid"
+          },
+          "referenceIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Referenceids"
+          },
+          "ruleSetVersion": {
+            "type": "string",
+            "title": "Rulesetversion"
+          },
+          "selectedRuleIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Selectedruleids"
+          },
+          "mode": {
+            "type": "string",
+            "const": "live",
+            "title": "Mode"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "extracting",
+              "checking",
+              "completed",
+              "failed",
+              "cancelled"
+            ],
+            "title": "Status"
+          },
+          "requestKey": {
+            "type": "string",
+            "title": "Requestkey"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "reviewId",
+          "artworkVersionId",
+          "referenceIds",
+          "ruleSetVersion",
+          "selectedRuleIds",
+          "mode",
+          "status",
+          "requestKey",
+          "createdAt"
+        ],
+        "title": "RunOutput"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

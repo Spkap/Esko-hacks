@@ -78,6 +78,11 @@ export const runSchema = z.object({
   mode: z.enum(['demo', 'live']),
   status: jobStatusSchema,
   requestKey: z.string(),
+  error: z
+    .object({ message: z.string(), code: z.string().optional() })
+    .passthrough()
+    .nullable()
+    .optional(),
   createdAt: z.string(),
 });
 export type Run = z.infer<typeof runSchema>;
@@ -94,6 +99,24 @@ export const checkSchema = z.object({
   expected: z.string(),
   suggestedCorrection: z.string(),
   reason: z.string().optional(),
+  aiExplanation: z
+    .object({
+      status: z.enum([
+        'disabled',
+        'unavailable',
+        'no_source',
+        'input_limit',
+        'budget_exhausted',
+        'explained',
+        'provider_failed',
+        'rejected',
+      ]),
+      promptVersion: z.string(),
+      model: z.string().optional(),
+      explanation: z.string().optional(),
+      sourceIds: z.array(z.string()).optional(),
+    })
+    .optional(),
   evidence: z.object({
     artworkVersionId: z.string(),
     page: z.number().int().positive(),
@@ -118,6 +141,25 @@ export const decisionSchema = z
     'A dismissal requires a reason',
   );
 export type ReviewDecision = z.infer<typeof decisionSchema>;
+export const reportSchema = z.object({
+  run: runSchema,
+  checks: z.array(checkSchema),
+  reviewedScope: z.string(),
+  uncheckedRequirements: z.array(z.string()),
+  decisions: z.array(decisionSchema),
+});
+export const reviewDetailSchema = z.object({
+  review: reviewSchema,
+  artworkVersions: z.array(artworkSchema),
+  references: z.array(referenceSchema),
+  runs: z.array(runSchema).optional(),
+});
+export const reviewListSchema = z.object({
+  items: z.array(
+    reviewSchema.extend({ run: runSchema, checks: z.array(checkSchema), artwork: artworkSchema }),
+  ),
+  nextCursor: z.string().optional(),
+});
 export type Report = {
   run: Run;
   checks: CheckResult[];
@@ -129,6 +171,7 @@ export type ReviewDetail = {
   review: Review;
   artworkVersions: ArtworkVersion[];
   references: ReferenceDocument[];
+  runs?: Run[];
 };
 export type ReviewListItem = Review & { run: Run; checks: CheckResult[]; artwork: ArtworkVersion };
 export type ReviewQuery = {

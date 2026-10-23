@@ -14,3 +14,15 @@ frontend/public/pdf.worker.min.mjs
 # Local agent instructions
 AGENTS.md
 agents.md
+
+# Local backend runtime, uploaded documents, and credentials
+backend/.venv/
+backend/.env
+backend/.env.*.local
+backend/.data/
+backend/.pytest_cache/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/*.egg-info/
+.DS_Store
+__pycache__/

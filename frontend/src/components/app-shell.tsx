@@ -35,16 +35,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <LayoutDashboard weight="duotone" aria-hidden="true" size={18} />
         Packaging reviews
       </Link>
-      <Link
-        href="/checks/mori-strawberry"
-        aria-current={pathname.startsWith('/checks/mori-') ? 'page' : undefined}
-        className={`nav-link ${pathname.startsWith('/checks/mori-') ? 'active' : ''}`}
-        onClick={() => setNav(false)}
-      >
-        <ShieldCheck weight="duotone" aria-hidden="true" size={18} />
-        Sample artwork
-        <ArrowUpRight aria-hidden="true" size={14} />
-      </Link>
+      {dataMode === 'demo' && (
+        <Link
+          href="/checks/mori-strawberry"
+          aria-current={pathname.startsWith('/checks/mori-') ? 'page' : undefined}
+          className={`nav-link ${pathname.startsWith('/checks/mori-') ? 'active' : ''}`}
+          onClick={() => setNav(false)}
+        >
+          <ShieldCheck weight="duotone" aria-hidden="true" size={18} />
+          Sample artwork
+          <ArrowUpRight aria-hidden="true" size={14} />
+        </Link>
+      )}
       <Link
         href="/checks/new"
         aria-current={pathname === '/checks/new' ? 'page' : undefined}
@@ -72,10 +74,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="workspace-label eyebrow">Workspace</div>
         {navigation}
         <div className="sidebar-bottom">
-          <Button variant="ghost" onClick={() => setReset(true)}>
-            <RotateCcw aria-hidden="true" size={16} />
-            Reset demo
-          </Button>
+          {dataMode === 'demo' && (
+            <Button variant="ghost" onClick={() => setReset(true)}>
+              <RotateCcw aria-hidden="true" size={16} />
+              Reset demo
+            </Button>
+          )}
           <div className="demo-note">
             <div className="eyebrow" style={{ marginBottom: 8 }}>
               Built for careful review
@@ -110,7 +114,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <FlaskConical weight="duotone" aria-hidden="true" size={13} />
             {dataMode === 'demo' ? 'Demo data' : 'Live mode'}
           </span>
-          <span className="reviewer-name muted">Demo reviewer</span>
+          <span className="reviewer-name muted">
+            {dataMode === 'demo' ? 'Demo reviewer' : 'Local reviewer'}
+          </span>
           <span className="avatar" aria-hidden="true">
             DR
           </span>
@@ -129,7 +135,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
         <footer className="page-footer">
           <span>WAVELENGTH / PACKAGING REVIEW WORKSPACE</span>
-          <span>Frontend prototype · Demo workspace</span>
+          <span>
+            {dataMode === 'demo'
+              ? 'Frontend prototype · Demo workspace'
+              : 'Live analysis · Private local workspace'}
+          </span>
         </footer>
       </main>
       <div role="status" className="sr-only">
@@ -138,16 +148,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {nav && (
         <Modal title="Workspace navigation" variant="drawer" onClose={() => setNav(false)}>
           {navigation}
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setNav(false);
-              setReset(true);
-            }}
-          >
-            <RotateCcw aria-hidden="true" size={16} />
-            Reset demo
-          </Button>
+          {dataMode === 'demo' && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setNav(false);
+                setReset(true);
+              }}
+            >
+              <RotateCcw aria-hidden="true" size={16} />
+              Reset demo
+            </Button>
+          )}
         </Modal>
       )}
       {reset && (

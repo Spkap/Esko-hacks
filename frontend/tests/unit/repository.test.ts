@@ -66,7 +66,7 @@ describe('sample repository boundaries', () => {
   it('live mode rejects without falling back to demo data', async () => {
     vi.stubEnv('NEXT_PUBLIC_DATA_MODE', 'live');
     const { repository } = await import('../../src/data/repository');
-    await expect(repository.listReviews()).rejects.toThrow('Live analysis is not connected');
+    await expect(repository.listReviews()).rejects.toThrow('Cannot reach the analysis service');
     vi.unstubAllEnvs();
   });
 });

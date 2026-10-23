@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1",
+  "product": {
+    "netQuantity": {"value": 250, "unit": "mL"},
+    "juicePercent": 2,
+    "measurementBasis": "volume",
+    "completePanels": true
+  },
+  "requiredStatements": [
+    {"id": "juice-statement", "text": "果汁2%", "title": "Juice declaration"}
+  ]
+}

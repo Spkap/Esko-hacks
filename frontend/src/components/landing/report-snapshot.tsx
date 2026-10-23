@@ -4,7 +4,9 @@ import {
   ArrowUpRightIcon as ArrowUpRight,
   FileTextIcon as FileText,
 } from '@phosphor-icons/react/ssr';
-import { repository } from '@/data/repository';
+import { dataMode } from '@/data/repository';
+import { createDemoRepository } from '@/data/demo-repository';
+const repository = createDemoRepository();
 import { summarize } from '@/domain/summary';
 import { useRepository } from '../use-repository';
 import { StatusBadge } from '../status-badge';
@@ -50,7 +52,14 @@ export function ReportSnapshot() {
             </div>
             <div className="wl-report-checks">
               {data.report.checks.map((check) => (
-                <Link key={check.id} href={`/checks/mori-strawberry?check=${check.id}`}>
+                <Link
+                  key={check.id}
+                  href={
+                    dataMode === 'live'
+                      ? '/checks/new'
+                      : `/checks/mori-strawberry?check=${check.id}`
+                  }
+                >
                   <span className={`wl-report-result ${check.result}`}>
                     {resultLabels[check.result]}
                   </span>
@@ -67,7 +76,10 @@ export function ReportSnapshot() {
                 <span>Unselected requirements stay visible in the full report.</span>
               </p>
             </div>
-            <Link className="wl-report-open" href="/checks/mori-strawberry/report">
+            <Link
+              className="wl-report-open"
+              href={dataMode === 'live' ? '/checks/new' : '/checks/mori-strawberry/report'}
+            >
               Open sample report
               <ArrowUpRight aria-hidden="true" size={16} />
             </Link>

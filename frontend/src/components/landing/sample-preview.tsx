@@ -6,7 +6,9 @@ import {
   BookOpenTextIcon as BookOpen,
   ScanIcon as ScanLine,
 } from '@phosphor-icons/react/ssr';
-import { repository } from '@/data/repository';
+import { dataMode } from '@/data/repository';
+import { createDemoRepository } from '@/data/demo-repository';
+const repository = createDemoRepository();
 import { useRepository } from '../use-repository';
 import { ArtworkViewer } from '../artwork-viewer';
 import { FindingList, resultLabels } from '../finding-list';
@@ -98,7 +100,9 @@ export function SamplePreview() {
             </div>
             <Link
               className="preview-review-link"
-              href={`/checks/mori-strawberry?check=${selected.id}`}
+              href={
+                dataMode === 'live' ? '/checks/new' : `/checks/mori-strawberry?check=${selected.id}`
+              }
             >
               Open full review
               <ArrowUpRight aria-hidden="true" size={16} />

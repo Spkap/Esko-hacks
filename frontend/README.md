@@ -33,7 +33,7 @@ NEXT_PUBLIC_DATA_MODE=demo
 | Mode | Behavior |
 | :--- | :--- |
 | `demo` | Bundled sample data and interactive local review actions. No account or AI key required. |
-| `live` | Explicit connection error. A live backend is not implemented. |
+| `live` | Actual uploads, analysis jobs, private file viewing, and reviewer decisions through the local backend. |
 
 ## Exercise the main flow
 
@@ -46,9 +46,9 @@ NEXT_PUBLIC_DATA_MODE=demo
 
 Sample runs use predetermined findings after a labeled simulation. A new run ID and its results remain available for the browser session. Acknowledging or dismissing a finding preserves its original result.
 
-Own-file inputs accept PDF, PNG, and JPEG files up to 20 MiB each for local previews. Arbitrary uploads do not produce compliance findings. OCR, AI inference, and live regulatory checks are not connected.
+In demo mode, own-file inputs accept PDF, PNG, and JPEG files up to 20 MiB each for local previews and never inherit prepared findings. In live mode, artwork uses these formats and references use JSON/XLSX/PDF; local native-text/OCR extraction and supported deterministic checks operate on the actual files. AI interpretation and qualified regulatory verification are not enabled.
 
-## Browser storage and reset
+## Demo browser storage and reset
 
 | Data | Storage | Lifetime |
 | :--- | :--- | :--- |
@@ -103,3 +103,15 @@ Source records, artifact hashes, rule assumptions, and expected results are in [
 A sample pass covers only its selected checks. It does not establish full market compliance or legal approval.
 
 Local planning and progress notes may exist under the Git-ignored `docs/` folder. They are optional and are not required to install or run the frontend.
+
+## Local live analysis
+
+Start the backend and worker using [backend setup](../backend/README.md), then set `NEXT_PUBLIC_DATA_MODE=live`, `WAVELENGTH_API_URL=http://127.0.0.1:8000`, and `WAVELENGTH_API_TOKEN` in `frontend/.env.local`. Restart Next.js after changing the mode. The token is server-only; never prefix it with `NEXT_PUBLIC_`. The same-origin, loopback-only `/api/backend` proxy attaches it to requests and private document links; non-loopback Host headers are rejected.
+
+This is a trusted, single-reviewer local workspace. It does not provide browser login or public multitenant authentication; do not expose this token-backed proxy publicly.
+
+Choose **New check**, upload a PDF/PNG/JPEG artwork and JSON/XLSX/PDF product specification, explicitly declare approval status, and start checks. Japan fruit beverage and United States breakfast cereal scopes are supported. Optional company/regulatory references accept JSON/XLSX/PDF. Files are limited to 20 MiB. The backend checks actual bytes and rejects unsupported content. Status polling stops after five minutes or on navigation; retry status or reopen the review to resume. Cancellation remains incomplete. Service failures never substitute sample answers. Corrected artwork can be uploaded from the review using the same reference revisions.
+
+Switch back to `NEXT_PUBLIC_DATA_MODE=demo` and restart to restore sample workflows. Demo reset is absent in live mode and does not delete backend reviews. The landing page remains an explicit illustrative demo.
+
+Run the real-stack browser check with `NEXT_PUBLIC_DATA_MODE=live PLAYWRIGHT_CHANNEL=chrome pnpm -C frontend exec playwright test tests/e2e/live.spec.ts` after starting the live stack. For a cross-language response contract check, first run the backend acceptance exercise, then `WAVELENGTH_CONTRACT_FIXTURE=/tmp/wavelength-live-contracts.json pnpm -C frontend test:contracts`. These use actual backend output, not the demo repository.

@@ -76,7 +76,13 @@ export function ReviewTable({ reviews }: { reviews: ReviewListItem[] }) {
               </td>
               <td>
                 <span className="mobile-row-label">Result</span>
-                <StatusBadge label={summarize(review.run.status, review.checks).label} />
+                <StatusBadge
+                  label={
+                    review.run.id.startsWith('unrun:')
+                      ? 'No analysis yet'
+                      : summarize(review.run.status, review.checks).label
+                  }
+                />
               </td>
               <td>
                 <span className="mobile-row-label">Updated</span>

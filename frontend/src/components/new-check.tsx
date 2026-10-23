@@ -16,6 +16,7 @@ import type { ArtworkVersion, ReferenceDocument } from '@/domain/types';
 import { Button } from './ui/button';
 import { SampleSetup } from './sample-setup';
 import { ArtworkViewer } from './artwork-viewer';
+import { RunProgress } from './run-progress';
 
 type Slot = 'artwork' | 'specification' | 'reference';
 const slots: Slot[] = ['artwork', 'specification', 'reference'];
@@ -25,12 +26,30 @@ const titles = {
   reference: 'Additional reference (optional)',
 };
 const accepted = ['application/pdf', 'image/png', 'image/jpeg'];
+const invalidFileMessage =
+  dataMode === 'demo'
+    ? 'Choose a non-empty PDF, PNG, or JPEG no larger than 20 MiB.'
+    : 'Choose a supported non-empty file no larger than 20 MiB.';
+const referenceTypes = [
+  'application/pdf',
+  'application/json',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+const validFile = (slot: Slot, file: File) =>
+  (slot === 'artwork' || dataMode !== 'live'
+    ? accepted.includes(file.type)
+    : referenceTypes.includes(file.type) || /\.(json|xlsx|pdf)$/i.test(file.name)) &&
+  file.size > 0 &&
+  file.size <= 20 * 1024 * 1024;
 const draftKey = 'veriforge-upload-draft-v1';
 export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
-  const [sampleId, setSampleId] = useState(initialSample);
+  const [sampleId, setSampleId] = useState(dataMode === 'demo' ? initialSample : '');
   const [name, setName] = useState('');
   const [files, setFiles] = useState<Partial<Record<Slot, File>>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [runId, setRunId] = useState('');
+  const [market, setMarket] = useState('Japan');
+  const [specApproval, setSpecApproval] = useState<ReferenceDocument['approvalStatus']>('unknown');
   const [busy, setBusy] = useState(false);
   const [preview, setPreview] = useState<ArtworkVersion>();
   const [reviewId, setReviewId] = useState('');
@@ -67,10 +86,7 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
     ownedUrls.current.forEach((url) => URL.revokeObjectURL(url));
     ownedUrls.current = [];
     setFiles((previous) => ({ ...previous, [slot]: file }));
-    const message =
-      file && (!accepted.includes(file.type) || file.size > 20 * 1024 * 1024 || !file.size)
-        ? 'Choose a non-empty PDF, PNG, or JPEG no larger than 20 MiB.'
-        : '';
+    const message = file && !validFile(slot, file) ? invalidFileMessage : '';
     setErrors((previous) => ({ ...previous, [slot]: message }));
   }
   function reset() {
@@ -82,6 +98,7 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
     setErrors({});
     setPreview(undefined);
     setReviewId('');
+    setRunId('');
     setRestored(false);
     setRole('company_policy');
     setApproval('unknown');
@@ -105,8 +122,7 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
       if (!file && slot !== 'reference')
         next[slot] =
           `Choose a ${slot === 'artwork' ? 'packaging artwork' : 'product specification'} file.`;
-      if (file && (!accepted.includes(file.type) || file.size > 20 * 1024 * 1024 || !file.size))
-        next[slot] = 'Choose a non-empty PDF, PNG, or JPEG no larger than 20 MiB.';
+      if (file && !validFile(slot, file)) next[slot] = invalidFileMessage;
     }
     setErrors(next);
     if (Object.keys(next).length) {
@@ -118,10 +134,34 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
     try {
       const review = await repository.createReview({
         productName: name.trim(),
-        market: 'Japan',
-        category: 'Fruit beverage',
+        market,
+        category: market === 'Japan' ? 'Fruit beverage' : 'Breakfast cereal',
       });
       const artwork = await repository.addArtwork(review.id, files.artwork!);
+      if (dataMode === 'live') {
+        const specification = await repository.addReference(
+          review.id,
+          files.specification!,
+          'product_specification',
+          specApproval,
+        );
+        const references = [specification.id];
+        if (files.reference)
+          references.push(
+            (await repository.addReference(review.id, files.reference, role, approval)).id,
+          );
+        const run = await repository.startRun({
+          reviewId: review.id,
+          artworkVersionId: artwork.id,
+          referenceIds: references,
+          ruleSetVersion: 'wavelength-core-v1',
+          selectedRuleIds: ['net-quantity', 'required-statements', 'physical-type-size'],
+          requestKey: crypto.randomUUID(),
+        });
+        setReviewId(review.id);
+        setRunId(run.id);
+        return;
+      }
       ownedUrls.current.push(artwork.url);
       if (artwork.fileType === 'application/pdf') {
         const pdfjs = await import('pdfjs-dist');
@@ -175,6 +215,7 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
       setBusy(false);
     }
   }
+  if (runId) return <RunProgress runId={runId} reviewId={reviewId} onStartAnother={reset} />;
   if (sampleId)
     return (
       <>
@@ -236,17 +277,21 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
           <div className="form-two-col">
             <div className="field">
               <label htmlFor="category">Category</label>
-              <select id="category" defaultValue="Fruit beverage">
+              <select
+                id="category"
+                value={market === 'Japan' ? 'Fruit beverage' : 'Breakfast cereal'}
+                disabled
+              >
                 <option>Fruit beverage</option>
-                <option disabled>Breakfast cereal — Planned</option>
+                <option>Breakfast cereal</option>
                 <option disabled>Other products — Planned</option>
               </select>
             </div>
             <div className="field">
               <label htmlFor="market">Target market</label>
-              <select id="market" defaultValue="Japan">
+              <select id="market" value={market} onChange={(e) => setMarket(e.target.value)}>
                 <option>Japan</option>
-                <option disabled>United States — Planned</option>
+                <option disabled={dataMode !== 'live'}>United States</option>
                 <option disabled>European Union — Planned</option>
               </select>
             </div>
@@ -255,7 +300,11 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
             <span className="step-index">02</span>
             <div>
               <h2>Artwork & references</h2>
-              <p className="small muted">PDF, PNG or JPEG · up to 20 MiB per file</p>
+              <p className="small muted">
+                {dataMode === 'live'
+                  ? 'Artwork: PDF, PNG, JPEG · References: JSON, XLSX, PDF · up to 20 MiB'
+                  : 'PDF, PNG or JPEG · up to 20 MiB per file'}
+              </p>
             </div>
           </div>
           {restored && (
@@ -272,7 +321,11 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
               <input
                 type="file"
                 id={slot}
-                accept="application/pdf,image/png,image/jpeg"
+                accept={
+                  slot === 'artwork' || dataMode !== 'live'
+                    ? 'application/pdf,image/png,image/jpeg'
+                    : '.json,.xlsx,.pdf'
+                }
                 onChange={(e) => choose(slot, e.target.files?.[0])}
                 aria-required={slot !== 'reference'}
                 aria-invalid={!!errors[slot]}
@@ -290,6 +343,20 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
               </p>
             </div>
           ))}
+          {dataMode === 'live' && (
+            <div className="field">
+              <label htmlFor="spec-approval">Specification approval status</label>
+              <select
+                id="spec-approval"
+                value={specApproval}
+                onChange={(e) => setSpecApproval(e.target.value as typeof specApproval)}
+              >
+                <option value="unknown">Unknown</option>
+                <option value="draft">Draft</option>
+                <option value="approved">Approved</option>
+              </select>
+            </div>
+          )}
           {files.reference && (
             <div className="form-two-col">
               <div className="field">
@@ -325,7 +392,15 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
           <div className="form-actions">
             <Button disabled={busy || !!preview} type="submit">
               <FileCheck2 aria-hidden="true" size={17} />
-              {busy ? 'Preparing preview…' : preview ? 'Preview ready' : 'Create file preview'}
+              {busy
+                ? dataMode === 'live'
+                  ? 'Uploading files…'
+                  : 'Preparing preview…'
+                : preview
+                  ? 'Preview ready'
+                  : dataMode === 'live'
+                    ? 'Upload and run checks'
+                    : 'Create file preview'}
             </Button>
             <Button variant="ghost" type="button" onClick={reset} disabled={busy}>
               <RotateCcw aria-hidden="true" size={15} />
@@ -333,50 +408,69 @@ export function NewCheck({ initialSample = '' }: { initialSample?: string }) {
             </Button>
           </div>
           <p className="small muted">
-            Your files stay in this browser session. Live analysis is not connected.
+            {dataMode === 'live'
+              ? 'Files are stored privately by the local analysis service. Results cover selected checks only.'
+              : 'Your files stay in this browser session. Live analysis is not connected.'}
           </p>
         </form>
-        <aside className="upload-aside">
-          <div className="sample-invite">
-            <span className="eyebrow">
-              <FlaskConical weight="duotone" aria-hidden="true" size={15} />
-              Ready-to-run examples
-            </span>
-            <h2>Meet MORI Strawberry.</h2>
-            <p>
-              Explore a packaging review with a missing statement, a matching quantity, and a
-              measurement that needs a human.
-            </p>
-            <Image
-              className="sample-artwork-thumb"
-              unoptimized
-              src="/demo/mori-v1.svg"
-              width={900}
-              height={620}
-              alt="MORI Strawberry sample packaging, front and back label"
-            />
-            <Button onClick={() => setSampleId('mori-strawberry')} disabled={busy}>
-              Start with sample files
-              <ArrowRight size={16} aria-hidden="true" />
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/checks/mori-strawberry">
-                Use sample
-                <ArrowRight aria-hidden="true" size={16} />
-              </Link>
-            </Button>
-            <p className="small">Fictional artwork · simulated findings</p>
-          </div>
-          <div className="upload-boundary">
-            <Info aria-hidden="true" size={18} />
-            <p>Uploads are preview-only. Explore the sample to see simulated findings.</p>
-          </div>
-          {dataMode !== 'demo' && (
-            <p className="form-error">
-              Live mode is not connected. File preview creation is unavailable.
-            </p>
-          )}
-        </aside>
+        {dataMode === 'demo' ? (
+          <aside className="upload-aside">
+            <div className="sample-invite">
+              <span className="eyebrow">
+                <FlaskConical weight="duotone" aria-hidden="true" size={15} />
+                Ready-to-run examples
+              </span>
+              <h2>Meet MORI Strawberry.</h2>
+              <p>
+                Explore a packaging review with a missing statement, a matching quantity, and a
+                measurement that needs a human.
+              </p>
+              <Image
+                className="sample-artwork-thumb"
+                unoptimized
+                src="/demo/mori-v1.svg"
+                width={900}
+                height={620}
+                alt="MORI Strawberry sample packaging, front and back label"
+              />
+              <Button onClick={() => setSampleId('mori-strawberry')} disabled={busy}>
+                Start with sample files
+                <ArrowRight size={16} aria-hidden="true" />
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/checks/mori-strawberry">
+                  Use sample
+                  <ArrowRight aria-hidden="true" size={16} />
+                </Link>
+              </Button>
+              <p className="small">Fictional artwork · simulated findings</p>
+            </div>
+            <div className="upload-boundary">
+              <Info aria-hidden="true" size={18} />
+              <p>Uploads are preview-only. Explore the sample to see simulated findings.</p>
+            </div>
+            {dataMode !== 'demo' && (
+              <p className="form-error">
+                Live mode is not connected. File preview creation is unavailable.
+              </p>
+            )}
+          </aside>
+        ) : (
+          <aside className="upload-aside">
+            <div className="panel report-overview">
+              <h2>Check actual artwork</h2>
+              <p>
+                Upload a complete packaging layout and a product specification. Declare whether the
+                specification is approved.
+              </p>
+              <p>Supported scopes: Japan fruit beverages and United States breakfast cereals.</p>
+              <p className="small muted">
+                Text checks cannot establish printed type size or legal approval. Unreadable and
+                uncertain evidence stays flagged for human review.
+              </p>
+            </div>
+          </aside>
+        )}
       </div>
       {preview && (
         <section id="upload-preview" tabIndex={-1} className="upload-result">

@@ -1,4 +1,5 @@
 'use client';
+import { AIExplanation } from './ai-explanation';
 import { useRef, useState } from 'react';
 import {
   BookOpenTextIcon as BookOpen,
@@ -81,6 +82,7 @@ export function EvidencePanel({
           Confirm whether this requirement applies.
         </p>
       )}
+      <AIExplanation check={check} />
       <div className="source-panel">
         <div className="source-title">
           <BookOpen aria-hidden="true" size={16} />
