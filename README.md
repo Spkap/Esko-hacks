@@ -106,11 +106,11 @@ The organizer's carton proof is compared with its draft content sheet. Unconfirm
 
 ```mermaid
 flowchart LR
-    A["Prepare artwork<br/>and references"] --> B["Choose a sample<br/>and target market"]
-    B --> C["Run the labeled<br/>sample simulation"]
+    A["Prepare artwork<br/>and references"] --> B["Select market<br/>and reference approval"]
+    B --> C["Extract files and run<br/>selected live checks"]
     C --> D["Inspect artwork<br/>and linked evidence"]
     D --> E["Acknowledge, dismiss<br/>with a reason, or reopen"]
-    D --> F["Compare corrected<br/>artwork V2"]
+    D --> F["Upload corrections<br/>or revised specifications"]
     F --> C
     E --> G["Read the report<br/>and its exclusions"]
     D --> G
@@ -129,7 +129,7 @@ The report identifies the artwork version, reference revisions, selected checks,
 
 | Interactive today | What you can do |
 | :--- | :--- |
-| **Find the right review** | Search six baseline examples, filter by market/result, and inspect artwork versions. |
+| **Find the right review** | Search saved live reviews or six explicit demo examples, filter by market/result, and inspect artwork versions. |
 | **Inspect artwork and evidence** | Navigate PDF pages, zoom/rotate, select findings and markers, and open linked references. |
 | **Record a review decision** | Acknowledge, dismiss with a reason, or reopen a finding without changing its assessment. |
 | **Recheck and hand off** | Run prepared scenarios, compare corrected V2, recover a run after reload, and read scoped reports. |
