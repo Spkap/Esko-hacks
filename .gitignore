@@ -56,6 +56,12 @@ __pycache__/
 /demo-output/
 .worktrees/
 .vercel/
+DESIGN.md
+Design.MD
+idea.md
+Idea.md
+IMPLEMENTATION_GUIDE.md
+Implementation_guide.md
 
 # Local agent instructions
 AGENTS.md
