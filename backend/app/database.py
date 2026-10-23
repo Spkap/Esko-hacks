@@ -8,7 +8,7 @@ class Base(DeclarativeBase):
 
 
 def database_url():
-    url = os.environ.get("DATABASE_URL", "postgresql+psycopg://localhost/wavelength")
+    url = os.environ.get("DATABASE_URL", "postgresql+psycopg://localhost/wavelength").strip().strip("\"'")
     if url.startswith(("postgres://", "postgresql://")):
         url = "postgresql+psycopg://" + url.split("://", 1)[1]
     return url

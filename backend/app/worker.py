@@ -214,7 +214,7 @@ def process_job(run_id, token):
             review = session.get(Review, row.review_id)
             run_data.update(market=review.market, category=review.category)
         evaluated = stage(run_id, token, "evaluate", dict(**extracted, run=run_data))
-        if os.environ.get("WAVELENGTH_AI_ENABLED") == "true":
+        if os.environ.get("WAVELENGTH_AI_ENABLED", "").strip().strip("\"'") == "true":
             evaluated = stage(run_id, token, "explain", evaluated)
         else:
             from app.verification.ai import explain_report
@@ -278,7 +278,7 @@ def main():
         if args.once:
             return
         if not job:
-            shutdown.wait(float(os.environ.get("WAVELENGTH_POLL_SECONDS", "1")))
+            shutdown.wait(float(os.environ.get("WAVELENGTH_POLL_SECONDS", "1").strip().strip("\"'")))
 
 
 if __name__ == "__main__":

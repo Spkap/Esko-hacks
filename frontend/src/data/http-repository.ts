@@ -114,7 +114,7 @@ export function createHttpRepository(
     approvalStatus?: string,
   ) {
     const endpoint = `/reviews/${encodeURIComponent(id)}/${kind === 'artwork' ? 'artworks' : 'references'}`;
-    if (process.env.NEXT_PUBLIC_UPLOAD_MODE !== 'blob')
+    if ((process.env.NEXT_PUBLIC_UPLOAD_MODE || '').trim().replace(/^['"]+|['"]+$/g, '') !== 'blob')
       return request(endpoint, schema, upload(file, role, approvalStatus));
     if (!file.size || file.size > 20 * 1024 * 1024)
       throw new RepositoryError(

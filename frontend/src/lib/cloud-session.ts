@@ -1,17 +1,18 @@
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import type { NextRequest } from 'next/server';
 const cookieName = '__Host-wavelength-session';
-export const cloudMode = () => process.env.WAVELENGTH_DEPLOYMENT === 'cloud';
+const setting = (value: string | undefined) => value?.trim().replace(/^['"]+|['"]+$/g, '');
+export const cloudMode = () => setting(process.env.WAVELENGTH_DEPLOYMENT) === 'cloud';
 function sign(value: string, secret: string) {
   return createHmac('sha256', secret).update(value).digest('base64url');
 }
 export function reviewerSession(request: NextRequest) {
   if (!cloudMode())
     return { token: process.env.WAVELENGTH_API_TOKEN || '', user: 'local-reviewer', cookie: '' };
-  const secret = process.env.WAVELENGTH_JWT_SECRET || '';
+  const secret = setting(process.env.WAVELENGTH_JWT_SECRET) || '';
   if (secret.length < 32) throw new Error('Workspace sessions are not configured.');
-  const issuer = process.env.WAVELENGTH_JWT_ISSUER || 'wavelength-local';
-  const audience = process.env.WAVELENGTH_JWT_AUDIENCE || 'wavelength-api';
+  const issuer = setting(process.env.WAVELENGTH_JWT_ISSUER) || 'wavelength-local';
+  const audience = setting(process.env.WAVELENGTH_JWT_AUDIENCE) || 'wavelength-api';
   const existing = request.cookies.get(cookieName)?.value;
   if (existing) {
     try {
@@ -54,13 +55,15 @@ export function trustedOrigin(request: NextRequest) {
   const hostname = host.startsWith('[') ? host.slice(0, host.indexOf(']') + 1) : host.split(':')[0];
   const allowed = cloudMode()
     ? [
-        process.env.VERCEL_URL,
-        process.env.VERCEL_PROJECT_PRODUCTION_URL,
-        ...(process.env.WAVELENGTH_ALLOWED_HOSTS || '').split(','),
-      ].filter(Boolean)
+        setting(process.env.VERCEL_URL),
+        setting(process.env.VERCEL_PROJECT_PRODUCTION_URL),
+        ...(setting(process.env.WAVELENGTH_ALLOWED_HOSTS) || '').split(','),
+      ]
+        .map((value) => value?.trim().toLowerCase())
+        .filter(Boolean)
     : ['localhost', '127.0.0.1', '[::1]'];
   return (
-    allowed.includes(hostname) &&
+    allowed.includes(hostname.trim().toLowerCase().replace(/\.$/, '')) &&
     (['GET', 'HEAD'].includes(request.method) ||
       request.headers.get('origin') ===
         `${cloudMode() ? 'https:' : request.nextUrl.protocol}//${host}`)

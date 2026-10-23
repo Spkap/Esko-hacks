@@ -168,12 +168,12 @@ async def save_upload(upload, kind):
 
 
 def cloud_storage():
-    return os.environ.get("WAVELENGTH_STORAGE_MODE") == "blob"
+    return os.environ.get("WAVELENGTH_STORAGE_MODE", "").strip().strip("\"'") == "blob"
 
 
 def download_blob(url, review_id=None, kind=None):
     parsed = urlparse(url)
-    host = os.environ.get("WAVELENGTH_BLOB_HOST", "")
+    host = os.environ.get("WAVELENGTH_BLOB_HOST", "").strip().strip("\"'")
     if (
         not host
         or parsed.scheme != "https"
@@ -186,7 +186,7 @@ def download_blob(url, review_id=None, kind=None):
         raise APIError(422, "invalid_file", "Unrecognized private storage object")
     if review_id and not parsed.path.startswith(f"/reviews/{review_id}/{kind}/"):
         raise APIError(404, "not_found", "Object does not belong to this review")
-    token = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
+    token = os.environ.get("BLOB_READ_WRITE_TOKEN", "").strip().strip("\"'")
     if not token:
         raise APIError(503, "storage_unavailable", "Private storage is not configured")
     try:

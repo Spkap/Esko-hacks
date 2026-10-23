@@ -6,8 +6,15 @@ from fastapi import Header
 from app.errors import APIError
 
 
+def _setting(name, default=""):
+    value = os.environ.get(name, default).strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+        value = value[1:-1]
+    return value
+
+
 def settings():
-    secret = os.environ.get("WAVELENGTH_JWT_SECRET", "")
+    secret = _setting("WAVELENGTH_JWT_SECRET")
     if len(secret.encode()) < 32 or len(set(secret)) < 12:
         raise RuntimeError(
             "WAVELENGTH_JWT_SECRET must be a strong secret of at least 32 bytes"
@@ -16,8 +23,8 @@ def settings():
         raise RuntimeError("Test authentication is not supported by this server")
     return (
         secret,
-        os.environ.get("WAVELENGTH_JWT_ISSUER", "wavelength-local"),
-        os.environ.get("WAVELENGTH_JWT_AUDIENCE", "wavelength-api"),
+        _setting("WAVELENGTH_JWT_ISSUER", "wavelength-local"),
+        _setting("WAVELENGTH_JWT_AUDIENCE", "wavelength-api"),
     )
 
 
