@@ -8,7 +8,8 @@ from fastapi import FastAPI, Depends, UploadFile, File, Form, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, FileResponse
 from starlette.exceptions import HTTPException
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
+from sqlalchemy.exc import SQLAlchemyError
 from app import auth
 from app.database import Session
 from app.errors import APIError
@@ -135,7 +136,13 @@ def owned_run(session, run_id, owner, lock=False):
 
 
 @app.get("/v1/health")
-def health():
+def health(session=Depends(db)):
+    try:
+        session.execute(text("SELECT 1"))
+    except SQLAlchemyError:
+        raise APIError(
+            503, "database_unavailable", "The database is unavailable", retryable=True
+        )
     return {
         "status": "ok",
         "mode": "live",
@@ -214,21 +221,24 @@ def list_reviews(
             else []
         )
         if run:
+            relevant_checks = [
+                c for c in checks if c["applicability"] != "not_applicable"
+            ]
             run_value = run_json(run)
             summary = (
                 run.status
                 if run.status != "completed"
                 else (
                     "issues"
-                    if any(c["result"] == "fail" for c in checks)
+                    if any(c["result"] == "fail" for c in relevant_checks)
                     else "incomplete"
                     if any(
                         c["applicability"] == "uncertain"
                         or c["result"] in ("needs_review", "not_checked")
-                        for c in checks
+                        for c in relevant_checks
                     )
                     else "passed"
-                    if any(c["applicability"] == "applicable" for c in checks)
+                    if any(c["applicability"] == "applicable" for c in relevant_checks)
                     else "no_applicable"
                 )
             )
@@ -291,7 +301,15 @@ def get_review(review_id: str, owner=Depends(auth.identity), session=Depends(db)
         review=review_json(row),
         artworkVersions=[file_json(f) for f in files if f.kind == "artwork"],
         references=[file_json(f) for f in files if f.kind == "reference"],
-        runs=[run_json(r) for r in session.scalars(select(Run).where(Run.review_id == row.id).order_by(Run.created_at.desc())).all()],
+        runs=[
+            run_json(r)
+            for r in session.scalars(
+                select(Run)
+                .where(Run.review_id == row.id)
+                .order_by(Run.created_at.desc())
+                .limit(100)
+            ).all()
+        ],
     )
 
 

@@ -1,12 +1,29 @@
 {
   "schemaVersion": "1",
   "product": {
-    "netQuantity": {"value": 250, "unit": "mL"},
+    "netQuantity": {
+      "value": 250,
+      "unit": "mL"
+    },
     "juicePercent": 2,
     "measurementBasis": "volume",
     "completePanels": true
   },
   "requiredStatements": [
-    {"id": "juice-statement", "text": "果汁2%", "title": "Juice declaration"}
+    {
+      "id": "juice-statement",
+      "text": "果汁2%",
+      "title": "Juice declaration",
+      "anyOf": [
+        "果汁2%",
+        "果汁5%未満"
+      ],
+      "appliesWhen": {
+        "juiceBelowPercent": 5,
+        "measurementBasis": "volume",
+        "market": "Japan",
+        "category": "Fruit beverage"
+      }
+    }
   ]
 }

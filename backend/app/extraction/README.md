@@ -27,8 +27,7 @@ readable whole-package coverage; current extractor asserts only this narrow nati
 `net-quantity`, `required-statements`, `physical-type-size`. It compares compatible
 mass or volume units without cross-dimension conversion. `oz` means avoirdupois
 mass and `fl oz` means US fluid ounces; ambiguous market units require review.
-Nutrition quantities can cause ambiguity; no label intent is guessed. The <5%
-juice helper classifies supplied volume-basis metadata only, not legal duty.
+Nutrition quantities can cause ambiguity; no label intent is guessed. Conditional requirements classify supplied volume-basis composition against an explicit policy threshold. Exactly 5% is outside a strict below-5% condition. Unknown basis requires review; no legal duty is inferred. Requirements can supply alternative accepted literal forms.
 
 Measured 2026-10-23: actual organizer dancingfish-carton.pdf yielded one native
 page, 2635 characters and 166 spans; human spot checks found 480g, honey (1%),
@@ -47,4 +46,4 @@ transient failures retry once, output is bounded and citations/rule/result are
 validated. Raw explanation text is untrusted and cannot change a check. Without
 a configured adapter it returns unavailable. No external endpoint or credentials are assumed; all three settings are required.
 
-The optional AI adapter is a separately tested extension point; the default worker pipeline performs deterministic checks only and does not invoke it. Provider selection and semantic evaluation remain pending.
+The worker includes an optional bounded explanation stage, disabled in the current zero-cost environment. It never changes deterministic outcomes. Protocol tests use controlled provider responses; live semantic quality and visual inference remain unverified.

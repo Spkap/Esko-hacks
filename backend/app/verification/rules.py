@@ -99,7 +99,8 @@ def evaluate_run(artwork, references, run):
                     "company_policy": "brand",
                     "regulatory_reference": "regulatory",
                 }.get(ref.get("role") if ref else None, "product_data"),
-                "applicability": applicability or ("applicable" if result in ("pass", "fail") else "uncertain"),
+                "applicability": applicability
+                or ("applicable" if result in ("pass", "fail") else "uncertain"),
                 "result": result,
                 "observed": observed,
                 "expected": expected,
@@ -195,47 +196,113 @@ def evaluate_run(artwork, references, run):
             for ref in sources:
                 for index, req in enumerate(ref["extraction"]["requirements"]):
                     alternatives = req.get("anyOf", [req["text"]])
-                    match = next((located for value in alternatives if (located := locate(value))), None)
-                    present = any(normalize(value) in normalize(text) for value in alternatives)
+                    match = next(
+                        (
+                            located
+                            for value in alternatives
+                            if (located := locate(value))
+                        ),
+                        None,
+                    )
+                    present = any(
+                        normalize(value) in normalize(text) for value in alternatives
+                    )
                     applicability = "applicable"
                     condition = req.get("appliesWhen")
                     if condition:
-                        products = [r for r in references if r.get("role") == "product_specification" and reliable_source(r)]
-                        spec = products[0]["extraction"].get("specification", {}) if len(products) == 1 else {}
+                        products = [
+                            r
+                            for r in references
+                            if r.get("role") == "product_specification"
+                            and reliable_source(r)
+                        ]
+                        spec = (
+                            products[0]["extraction"].get("specification", {})
+                            if len(products) == 1
+                            else {}
+                        )
                         applicability = "uncertain"
-                        context_matches = all(normalize(run.get(key, "")) == normalize(condition[key]) for key in ("market", "category") if key in condition)
-                        context_known = all(run.get(key) for key in ("market", "category") if key in condition)
+                        context_matches = all(
+                            normalize(run.get(key, "")) == normalize(condition[key])
+                            for key in ("market", "category")
+                            if key in condition
+                        )
+                        context_known = all(
+                            run.get(key)
+                            for key in ("market", "category")
+                            if key in condition
+                        )
                         if context_known and not context_matches:
                             applicability = "not_applicable"
                         elif context_known and context_matches:
                             if "juiceBelowPercent" in condition:
                                 # Supplied policy threshold; never an inferred regulatory obligation.
                                 value = spec.get("juicePercent")
-                                if spec.get("measurementBasis") == condition.get("measurementBasis") == "volume" and isinstance(value, (int, float)) and not isinstance(value, bool) and 0 <= value <= 100:
-                                    applicability = "applicable" if value < condition["juiceBelowPercent"] else "not_applicable"
+                                if (
+                                    spec.get("measurementBasis")
+                                    == condition.get("measurementBasis")
+                                    == "volume"
+                                    and isinstance(value, (int, float))
+                                    and not isinstance(value, bool)
+                                    and 0 <= value <= 100
+                                ):
+                                    applicability = (
+                                        "applicable"
+                                        if value < condition["juiceBelowPercent"]
+                                        else "not_applicable"
+                                    )
                             else:
                                 applicability = "applicable"
                     complete = (
-                        ref["extraction"].get("specification", {}).get("completePanels") is True
+                        ref["extraction"].get("specification", {}).get("completePanels")
+                        is True
                         and artwork.get("completeCoverage") is True
                         and artwork.get("readingStatus") == "read"
                     )
-                    result = "pass" if match else ("fail" if complete and not present else "needs_review")
-                    reason = ("An accepted literal disclosure was located." if match else
-                              "All accepted disclosures are absent from declared complete supplied native text panels; unseen panels remain outside scope." if complete else
-                              "Absence requires complete readable panel coverage; review manually.")
+                    result = (
+                        "pass"
+                        if match
+                        else ("fail" if complete and not present else "needs_review")
+                    )
+                    reason = (
+                        "An accepted literal disclosure was located."
+                        if match
+                        else "All accepted disclosures are absent from declared complete supplied native text panels; unseen panels remain outside scope."
+                        if complete
+                        else "Absence requires complete readable panel coverage; review manually."
+                    )
                     if applicability == "not_applicable":
-                        result, reason = "not_checked", "The supplied policy condition does not apply to this product composition or declared market/category."
+                        result, reason = (
+                            "not_checked",
+                            "The supplied policy condition does not apply to this product composition or declared market/category.",
+                        )
                     elif applicability == "uncertain":
-                        result, reason = "needs_review", "Policy applicability needs an unambiguous approved product specification, known measurement basis, and declared market/category."
+                        result, reason = (
+                            "needs_review",
+                            "Policy applicability needs an unambiguous approved product specification, known measurement basis, and declared market/category.",
+                        )
                     if not reliable_source(ref):
-                        result, applicability, reason = "needs_review", "uncertain", "The supplied requirement is draft, unapproved, partial, or conflicting."
+                        result, applicability, reason = (
+                            "needs_review",
+                            "uncertain",
+                            "The supplied requirement is draft, unapproved, partial, or conflicting.",
+                        )
                     add(
-                        rule, req.get("title", req["id"]), result,
-                        match[1]["text"] if match else "Not located in supplied readable text",
-                        " OR ".join(alternatives), reason, ref,
-                        f"$.requiredStatements[{index}]", str(req), match,
-                        applicability=applicability if result != "needs_review" else "uncertain",
+                        rule,
+                        req.get("title", req["id"]),
+                        result,
+                        match[1]["text"]
+                        if match
+                        else "Not located in supplied readable text",
+                        " OR ".join(alternatives),
+                        reason,
+                        ref,
+                        f"$.requiredStatements[{index}]",
+                        str(req),
+                        match,
+                        applicability=applicability
+                        if result != "needs_review"
+                        else "uncertain",
                     )
         elif rule == "physical-type-size":
             add(

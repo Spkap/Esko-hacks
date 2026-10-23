@@ -10,7 +10,7 @@
 
 **Tech stack:** Next.js, TypeScript, Tailwind CSS v4, shadcn/ui, Watermelon UI landing blocks, Zod, PDF.js, Vitest, Playwright. Backend: Python, FastAPI, PostgreSQL.
 
-**Product description:** [idea.md](idea.md). Keep it unchanged. M1–M4 frontend implementation and the M5–M6 seeded demo delivery are implemented; see `PROGRESS.md` for actual checks and remaining source limitations. M7–M10 are not started.
+**Product description:** [idea.md](idea.md). Keep it unchanged. M1–M4 frontend implementation and the M5–M6 seeded demo delivery are implemented; see `PROGRESS.md` for actual checks and remaining source limitations. M7–M10 now have a functioning local backend and live integration; see the 2026-10-23 entry in `PROGRESS.md` for verified scope and the remaining optional provider/qualified-review limits.
 
 ## Build order
 
@@ -307,7 +307,7 @@ Expected: exit code 0 for each command. Browser tests wait for visible results r
 
 ## Backend work: M7–M10
 
-**Read [Backend implementation](docs/plans/BACKEND.md) when starting M7–M10 or changing their API/processing requirements.** It defines storage, file reading, rule execution, live replacement, and their tests. Frontend tasks need only the shared data rules in this file.
+**Read [Backend implementation](plans/BACKEND.md) when starting M7–M10 or changing their API/processing requirements.** It defines storage, file reading, rule execution, live replacement, and their tests. Frontend tasks need only the shared data rules in this file.
 
 ## Agent handoff
 

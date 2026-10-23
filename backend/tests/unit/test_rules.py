@@ -88,3 +88,39 @@ def test_draft_reference_stays_linked_to_review_question():
     assert check["result"] == "needs_review"
     assert check["observed"] == "250 mL" and check["expected"] == "250 mL"
     assert check["evidence"]["sourceId"] == "r"
+
+
+def test_conditional_policy_threshold_alternatives_and_uncertainty():
+    artwork, refs, run = fixture("Net content 250 mL JUICE BELOW 5%")
+    run.update(market="Japan", category="Fruit beverage")
+    spec = refs[0]["extraction"]["specification"]
+    spec.update(juicePercent=2, measurementBasis="volume")
+    refs[0]["extraction"]["requirements"] = [
+        {
+            "id": "supplied-low-juice-policy",
+            "text": "JUICE 2%",
+            "anyOf": ["JUICE 2%", "JUICE BELOW 5%"],
+            "appliesWhen": {
+                "juiceBelowPercent": 5,
+                "measurementBasis": "volume",
+                "market": "Japan",
+                "category": "Fruit beverage",
+            },
+        }
+    ]
+
+    def disclosure():
+        return evaluate_run(artwork, refs, run)["checks"][1]
+
+    assert disclosure()["result"] == "pass"
+    spec["juicePercent"] = 5
+    assert disclosure()["applicability"] == "not_applicable"
+    assert disclosure()["result"] == "not_checked"
+    spec["juicePercent"] = 0
+    assert disclosure()["result"] == "pass"
+    del spec["measurementBasis"]
+    assert disclosure()["result"] == "needs_review"
+    run["market"] = "US"
+    assert disclosure()["applicability"] == "not_applicable"
+    refs[0]["approvalStatus"] = "draft"
+    assert disclosure()["result"] == "needs_review"

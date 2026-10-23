@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -17,6 +18,7 @@ from app.schemas import run_json, CheckOutput
 LEASE_SECONDS = 60
 MAX_ATTEMPTS = 3
 RUN_SECONDS = 300
+logger = logging.getLogger("wavelength.worker")
 
 
 def utc(value):
@@ -85,7 +87,14 @@ def stage(run_id, token, operation, payload):
         for k, v in os.environ.items()
         if not any(
             part in k.upper()
-            for part in ("SECRET", "TOKEN", "PASSWORD", "DATABASE_URL", "API_KEY", "AI_KEY")
+            for part in (
+                "SECRET",
+                "TOKEN",
+                "PASSWORD",
+                "DATABASE_URL",
+                "API_KEY",
+                "AI_KEY",
+            )
         )
     }
     if operation == "explain":
@@ -122,6 +131,16 @@ def stage(run_id, token, operation, payload):
         response = json.loads(stdout)
         if not response.get("ok"):
             raise RuntimeError(response.get("error", "Document processing failed"))
+        logger.info(
+            json.dumps(
+                {
+                    "runId": run_id,
+                    "stage": operation,
+                    "durationMs": round((time.monotonic() - started) * 1000),
+                    "status": "completed",
+                }
+            )
+        )
         return response["result"]
     finally:
         if process.poll() is None:
@@ -209,6 +228,7 @@ def process_job(run_id, token):
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = argparse.ArgumentParser()
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()

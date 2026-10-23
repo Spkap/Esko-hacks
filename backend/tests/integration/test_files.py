@@ -37,3 +37,16 @@ def test_reject_disguised_and_oversized_files(client):
             "requestId",
             "retryable",
         } <= response.json().keys()
+
+
+def test_history_remains_available_after_unrun_new_version(client):
+    from conftest import start
+
+    review = create(client)
+    first_artwork = artwork(client, review).json()
+    run = start(client, review, first_artwork).json()
+    artwork(client, review)
+    detail = client.get("/v1/reviews/" + review["id"], headers=headers()).json()
+    assert "latestRunId" not in detail["review"]
+    assert detail["runs"][0]["id"] == run["id"]
+    assert detail["runs"][0]["artworkVersionId"] == first_artwork["id"]

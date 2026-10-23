@@ -44,7 +44,7 @@ uv run --env-file .env uvicorn app.api.main:app --host 127.0.0.1 --port 8000
 uv run --env-file .env python -m app.worker
 ```
 
-The Next bridge rejects non-loopback Host headers and cross-origin mutations; it is not a deployable public login substitute. Database JWT secrets and the server token stay in ignored environment files. The current default processing path uses local extraction and deterministic rules; the optional explanation adapter is separately tested, disabled, and not connected to job evaluation. No external AI calls have been performed.
+The Next bridge rejects non-loopback Host headers and cross-origin mutations; it is not a deployable public login substitute. Database JWT secrets and the server token stay in ignored environment files. The default processing path uses local extraction and deterministic rules. The optional explanation stage is connected to the worker when `WAVELENGTH_AI_ENABLED=true`; the current environment leaves it disabled to honor the zero-cost requirement. No paid model generation has been performed.
 
 ## Complete local acceptance exercise
 
@@ -54,4 +54,33 @@ With API and worker running, execute `uv run --env-file .env python ../scripts/v
 
 `.env.example` includes an optional Fireworks endpoint and the available Nemotron 3.5 Lightning 30B A3B model. The key belongs only in ignored `.env` (mode 0600), never frontend environment variables. Authentication and model availability were verified using the read-only models endpoint.
 
-As checked on 2026-10-23, [serverless pricing](https://docs.fireworks.ai/serverless/pricing) lists $0.05/M input and $0.20/M output tokens for this model. This is a low-cost candidate, not an evaluated quality winner or a free service. Inference remains disabled until account free credits or an explicit paid budget is established. The explanation adapter is separate from the default worker; deterministic evidence checks work without a provider.
+As checked on 2026-10-23, [serverless pricing](https://docs.fireworks.ai/serverless/pricing) lists $0.05/M input and $0.20/M output tokens for this model. This is a low-cost candidate, not an evaluated quality winner or a free service. Inference remains disabled until account free credits or an explicit paid budget is established. The worker invokes the explanation adapter only when explicitly enabled; deterministic evidence checks work without a provider.
+
+## One-command local startup
+
+After configuring the backend environment and PostgreSQL once, run from the repository root:
+
+```sh
+python3 scripts/run-local.py --check
+python3 scripts/run-local.py --production
+# Or use the development frontend:
+python3 scripts/run-local.py
+```
+
+The launcher checks prerequisites and database connectivity, applies migrations, refreshes a server-only seven-day reviewer token, installs locked packages, and supervises API, worker, and frontend. Ctrl-C stops only the app processes it created. An unexpected service exit shuts down that stack and returns a failure. It refuses to replace services already using ports 8000/3000. PostgreSQL remains running. Restart the launcher to refresh an expired token.
+
+For an existing local PostgreSQL cluster, set `WAVELENGTH_LOCAL_PGDATA` to its absolute directory so the launcher can start it when offline. It never initializes or replaces an arbitrary database. This workspace uses ignored `backend/.data/postgres`, `backend/.data/uploads` and `backend/.data/tessdata` for durable local data. Preserve these folders when keeping reviews; they are not Git backups.
+
+## Structured reference format
+
+Upload JSON with `schemaVersion: "1"`, a `product` object, and `requiredStatements`. The [example](../reference-data/live-specification-example.json) includes product quantity, composition, and an explicit company-policy condition. Each requirement has `id`, `text`, optional `title`, optional `anyOf` accepted literal forms, and optional `appliesWhen`.
+
+`appliesWhen` supports exact `market`/`category` matching and `juiceBelowPercent` on the explicit `measurementBasis: "volume"`. A threshold of 5 means strictly below 5; exactly 5 is not applicable. Unknown composition/basis, multiple product specifications, draft/conflicting data, or uncertain reading require review. These are supplied policy conditions, not inferred legislation. Alternative disclosures are exact normalized text comparisons; image symbolism, assembled visibility, placement and physical type size remain manual review. A missing statement is a failure only for explicitly complete supplied panels whose native text coverage the extractor can verify.
+
+Within an existing review, upload a corrected artwork or expand **Update the specification or rerun current inputs**. Updated product specifications replace earlier product specifications only for the new run. **Analysis history** opens previous runs, including when a newer artwork has no run yet. Reports bind to the original file hashes and reference revisions.
+
+## Optional AI enrichment
+
+When explicitly enabled, the worker runs a separate explanation process after deterministic checking. Only the fixed comparison and cited excerpt are sent; credentials are excluded from document parsers. At most three checks per run, 6,000 UTF-8 bytes per comparison, 384 output tokens per call, a ten-second request timeout, one transient retry, and a bounded stage budget constrain requests. Permanent authorization failures are not retried. Missing sources, unsupported citations, malformed responses and changed rule/result values are rejected. Provider failure is visible as unavailable enrichment and never fabricates a successful comparison. The UI labels generated explanations as requiring reviewer verification. Model/prompt identifiers and status are saved with the immutable report.
+
+Current tests exercise this protocol with controlled responses, not a live model quality benchmark. The configured key authenticated against the read-only model catalog. Paid generation and model-based visual interpretation have not been evaluated; the application is functional using local OCR and deterministic comparisons without them.

@@ -115,3 +115,9 @@ Choose **New check**, upload a PDF/PNG/JPEG artwork and JSON/XLSX/PDF product sp
 Switch back to `NEXT_PUBLIC_DATA_MODE=demo` and restart to restore sample workflows. Demo reset is absent in live mode and does not delete backend reviews. The landing page remains an explicit illustrative demo.
 
 Run the real-stack browser check with `NEXT_PUBLIC_DATA_MODE=live PLAYWRIGHT_CHANNEL=chrome pnpm -C frontend exec playwright test tests/e2e/live.spec.ts` after starting the live stack. For a cross-language response contract check, first run the backend acceptance exercise, then `WAVELENGTH_CONTRACT_FIXTURE=/tmp/wavelength-live-contracts.json pnpm -C frontend test:contracts`. These use actual backend output, not the demo repository.
+
+## Complete local stack
+
+After initial [backend configuration](../backend/README.md), run `python3 scripts/run-local.py --production` from the repository root. This starts the API, worker and live frontend with refreshed server-only reviewer credentials. Use `python3 scripts/run-local.py --check` for prerequisite/database verification. The current workspace is configured for live mode; demo mode remains an explicit alternative.
+
+Existing reviews support corrected artworks, revised product specifications, reruns with fixed reference revisions, and analysis history. Frozen report links remain available after a newer upload. Optional AI explanations are labeled separately from deterministic evidence, and do not change results. They are disabled in the current zero-cost configuration.

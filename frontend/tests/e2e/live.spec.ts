@@ -92,4 +92,68 @@ test('live upload runs real extraction and preserves upload hash and rule versio
   await expect(page.getByRole('heading', { name: 'Review report', exact: true })).toBeVisible();
   await expect(page.getByText('actual-250ml.pdf', { exact: false })).toBeVisible();
   await expect(page.getByText('Issues found', { exact: true })).toBeVisible();
+  await page.goto(`/checks/${reviewId}`);
+  await page.getByText('Update the specification or rerun current inputs', { exact: true }).click();
+  await page.getByLabel('Updated product specification (optional)').setInputFiles({
+    name: 'revised-350ml.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(
+      JSON.stringify({
+        schemaVersion: '1',
+        product: { netQuantity: { value: 350, unit: 'mL' } },
+        requiredStatements: [],
+      }),
+    ),
+  });
+  await page.getByLabel('Updated specification approval status').selectOption('approved');
+  await page.getByRole('button', { name: 'Run selected inputs again' }).click();
+  await expect(page.getByTestId('selected-evidence')).toContainText('350 mL', { timeout: 120000 });
+  await expect(page.getByTestId('selected-evidence')).toContainText('Fail');
+  await expect(page.getByText('Analysis history', { exact: true })).toBeVisible();
+  const revised = await (await page.request.get(`/api/backend/v1/reviews/${reviewId}`)).json();
+  expect(revised.runs).toHaveLength(3);
+  expect(revised.runs[0].referenceIds).not.toContain(report.run.referenceIds[0]);
+  // Upload without starting a new job: frozen historical reports must still open.
+  const upload = await page.request.post(`/api/backend/v1/reviews/${reviewId}/artworks`, {
+    headers: { Origin: new URL(page.url()).origin },
+    multipart: {
+      file: {
+        name: 'unrun-third-version.pdf',
+        mimeType: 'application/pdf',
+        buffer: artworkPdf(350),
+      },
+    },
+  });
+  expect(upload.status()).toBe(201);
+  await page.goto(originalReportUrl);
+  await expect(page.getByText('actual-250ml.pdf', { exact: false })).toBeVisible();
+  await expect(page.getByText('Issues found', { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'Back to artwork review' }).click();
+  await expect(page.getByTestId('selected-evidence')).toContainText('250 mL');
+  const origin = new URL(page.url()).origin;
+  const queued = await page.request.post('/api/backend/v1/runs', {
+    headers: { Origin: origin },
+    data: {
+      reviewId,
+      artworkVersionId: report.run.artworkVersionId,
+      referenceIds: report.run.referenceIds,
+      ruleSetVersion: report.run.ruleSetVersion,
+      selectedRuleIds: report.run.selectedRuleIds,
+      requestKey: crypto.randomUUID(),
+    },
+  });
+  expect(queued.status()).toBe(202);
+  const queuedRun = await queued.json();
+  const cancelled = await page.request.post(`/api/backend/v1/runs/${queuedRun.id}/cancel`, {
+    headers: { Origin: origin },
+    data: {},
+  });
+  expect((await cancelled.json()).status).toBe('cancelled');
+  await page.goto(`/checks/${reviewId}?run=${queuedRun.id}`);
+  await page.getByRole('button', { name: 'Retry analysis with saved inputs' }).click();
+  await expect(page.getByTestId('assessment-summary')).toContainText('Issues found', {
+    timeout: 120000,
+  });
+  const recovered = await (await page.request.get(`/api/backend/v1/reviews/${reviewId}`)).json();
+  expect(recovered.review.latestRunId).not.toBe(queuedRun.id);
 });

@@ -88,7 +88,11 @@ def explain_check(check, provider=None):
     if not source_id:
         return {"status": "no_source", "promptVersion": PROMPT_VERSION}
     # Restrict provider input to the fixed comparison, excluding file paths and documents.
-    check = {k: check[k] for k in ("result", "ruleId", "observed", "expected", "reason", "evidence") if k in check}
+    check = {
+        k: check[k]
+        for k in ("result", "ruleId", "observed", "expected", "reason", "evidence")
+        if k in check
+    }
     if len(json.dumps(check, ensure_ascii=False).encode()) > 6000:
         return {"status": "input_limit", "promptVersion": PROMPT_VERSION}
     prompt = {
@@ -113,7 +117,7 @@ def explain_check(check, provider=None):
         except (TimeoutError, ConnectionError, OSError):
             if attempt:
                 return {"status": "provider_failed", "promptVersion": PROMPT_VERSION}
-        except (ValueError, TypeError, KeyError):
+        except (ValueError, TypeError, KeyError, IndexError, AttributeError):
             return {"status": "rejected", "promptVersion": PROMPT_VERSION}
 
 

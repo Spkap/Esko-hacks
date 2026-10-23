@@ -136,3 +136,48 @@ def test_atomic_report_immutable_and_decisions_isolated(client, monkeypatch):
         client.post(f"/v1/runs/{run_id}/cancel", headers=headers()).json()["status"]
         == "completed"
     )
+
+
+def test_dashboard_nonapplicable_checks_are_not_incomplete(client):
+    from app.models import Check
+
+    review = create(client)
+    art = artwork(client, review).json()
+    run = start(client, review, art).json()
+    check = dict(
+        id="not-applicable-check",
+        runId=run["id"],
+        ruleId="required-statements",
+        ruleVersion="wavelength-core-v1",
+        title="Conditional company policy",
+        kind="brand",
+        applicability="not_applicable",
+        result="not_checked",
+        observed="5%",
+        expected="Below 5%",
+        suggestedCorrection="No correction for this condition.",
+        reason="Strict threshold does not apply.",
+        evidence=dict(
+            artworkVersionId=art["id"],
+            page=1,
+            inspectedPanels="Supplied panels",
+            sourceId="",
+            sourceLocation="",
+            excerpt="",
+        ),
+    )
+    with Session.begin() as session:
+        session.get(Run, run["id"]).status = "completed"
+        session.add(Check(id=check["id"], run_id=run["id"], payload=check))
+    assert (
+        len(
+            client.get("/v1/reviews?result=no_applicable", headers=headers()).json()[
+                "items"
+            ]
+        )
+        == 1
+    )
+    assert (
+        client.get("/v1/reviews?result=incomplete", headers=headers()).json()["items"]
+        == []
+    )

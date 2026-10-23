@@ -49,21 +49,43 @@ def extract_reference(path: Path, file_type: str) -> dict:
             ):
                 raise ValueError("Required statements need id and text")
             alternatives = req.get("anyOf", [req["text"]])
-            if not isinstance(alternatives, list) or not 1 <= len(alternatives) <= 20 or not all(isinstance(v, str) and v.strip() and len(v) <= 2000 for v in alternatives):
+            if (
+                not isinstance(alternatives, list)
+                or not 1 <= len(alternatives) <= 20
+                or not all(
+                    isinstance(v, str) and v.strip() and len(v) <= 2000
+                    for v in alternatives
+                )
+            ):
                 raise ValueError("anyOf requires 1 to 20 nonempty disclosure strings")
             condition = req.get("appliesWhen")
             if condition is not None:
-                if not isinstance(condition, dict) or not condition or set(condition) - {"juiceBelowPercent", "measurementBasis", "market", "category"}:
+                if (
+                    not isinstance(condition, dict)
+                    or not condition
+                    or set(condition)
+                    - {"juiceBelowPercent", "measurementBasis", "market", "category"}
+                ):
                     raise ValueError("Unsupported requirement condition")
-                if any(not isinstance(condition[k], str) or not condition[k].strip() for k in ("market", "category", "measurementBasis") if k in condition):
+                if any(
+                    not isinstance(condition[k], str) or not condition[k].strip()
+                    for k in ("market", "category", "measurementBasis")
+                    if k in condition
+                ):
                     raise ValueError("Invalid policy context")
                 if "juiceBelowPercent" in condition:
                     value = condition["juiceBelowPercent"]
-                    if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 <= value <= 100 or condition.get("measurementBasis") != "volume":
-                        raise ValueError("Juice threshold requires a volume basis and percent from 0 to 100")
+                    if (
+                        isinstance(value, bool)
+                        or not isinstance(value, (int, float))
+                        or not 0 <= value <= 100
+                        or condition.get("measurementBasis") != "volume"
+                    ):
+                        raise ValueError(
+                            "Juice threshold requires a volume basis and percent from 0 to 100"
+                        )
                 elif "measurementBasis" in condition:
                     raise ValueError("Measurement basis requires a juice threshold")
-
 
         def flatten(value, location="$", depth=0):
             if depth > 20:

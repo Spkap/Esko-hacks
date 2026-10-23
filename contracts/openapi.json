@@ -640,6 +640,71 @@
   },
   "components": {
     "schemas": {
+      "AIExplanation": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "disabled",
+              "unavailable",
+              "no_source",
+              "input_limit",
+              "budget_exhausted",
+              "explained",
+              "provider_failed",
+              "rejected"
+            ],
+            "title": "Status"
+          },
+          "promptVersion": {
+            "type": "string",
+            "title": "Promptversion"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanation"
+          },
+          "sourceIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sourceids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "promptVersion"
+        ],
+        "title": "AIExplanation"
+      },
       "ArtworkOutput": {
         "properties": {
           "id": {
@@ -812,6 +877,16 @@
           },
           "evidence": {
             "$ref": "#/components/schemas/Evidence"
+          },
+          "aiExplanation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AIExplanation"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -915,6 +990,13 @@
             },
             "type": "array",
             "title": "References"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/RunOutput"
+            },
+            "type": "array",
+            "title": "Runs"
           }
         },
         "additionalProperties": false,

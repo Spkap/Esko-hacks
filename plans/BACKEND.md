@@ -4,7 +4,7 @@
 
 **Goal:** Replace simulated results with real file reading and checks while preserving the frontend.
 
-**Architecture:** FastAPI saves files and creates jobs. A separate worker reads files, checks a fixed rule set, and saves a report. The frontend uses the same data interface defined in [the main plan](../../IMPLEMENTATION_GUIDE.md#shared-data-rules).
+**Architecture:** FastAPI saves files and creates jobs. A separate worker reads files, checks a fixed rule set, and saves a report. The frontend uses the same data interface defined in [the main plan](../IMPLEMENTATION_GUIDE.md#shared-data-rules).
 
 **Tech stack:** Python, FastAPI, Pydantic, PostgreSQL, SQLAlchemy, Alembic, pytest; a server-side AI provider selected by measured sample performance.
 
@@ -27,11 +27,11 @@
 
 ## M7: Store reviews, files, and jobs
 
-- [ ] Define Pydantic request/response models matching the main plan; export `contracts/openapi.json`. Check round-trips against the frontend’s Zod schemas in `frontend/tests/contracts/repository.test.ts`.
-- [ ] Create database tables and an Alembic migration. Save file bytes outside public web folders before creating an analysis job; store the file hash and revision.
-- [ ] Implement the endpoints below, private file retrieval, and structured errors. Use real multipart uploads, not caller-supplied file paths.
-- [ ] Implement one database-backed worker and the job behavior below.
-- [ ] Add `backend/tests/integration/test_files.py`, `test_ownership.py`, and `test_jobs.py`.
+- [x] Define Pydantic request/response models matching the main plan; export `contracts/openapi.json`. Check round-trips against the frontend’s Zod schemas in `frontend/tests/contracts/repository.test.ts`.
+- [x] Create database tables and an Alembic migration. Save file bytes outside public web folders before creating an analysis job; store the file hash and revision.
+- [x] Implement the endpoints below, private file retrieval, and structured errors. Use real multipart uploads, not caller-supplied file paths.
+- [x] Implement one database-backed worker and the job behavior below.
+- [x] Add `backend/tests/integration/test_files.py`, `test_ownership.py`, and `test_jobs.py`.
 
 | Method and path | Returns |
 |---|---|
@@ -74,10 +74,10 @@ A completed job may contain failed checks. A cancelled job remains incomplete ev
 
 ## M8: Read actual files
 
-- [ ] Implement PDF/image reading in `backend/app/extraction/documents.py`. Preserve page size, crop, rotation, text, and coordinates. Prefer usable native text; use OCR/vision when required.
-- [ ] Implement JSON/XLSX product-reference reading in `backend/app/extraction/references.py`. Preserve units, sheet/cell locations, approval status, and conflicting values.
-- [ ] Choose the PDF/OCR library after checking license, deployment compatibility, and results on the sample files. Save the choice and measured failures with the test results.
-- [ ] Add `backend/tests/integration/test_extraction.py` covering text PDFs, scans, Japanese text, rotated pages, incomplete artwork, malformed/password-protected files, and conflicting spreadsheets.
+- [x] Implement PDF/image reading in `backend/app/extraction/documents.py`. Preserve page size, crop, rotation, text, and coordinates. Prefer usable native text; use OCR/vision when required.
+- [x] Implement JSON/XLSX product-reference reading in `backend/app/extraction/references.py`. Preserve units, sheet/cell locations, approval status, and conflicting values.
+- [x] Choose the PDF/OCR library after checking license, deployment compatibility, and results on the sample files. Save the choice and measured failures with the test results.
+- [x] Add `backend/tests/integration/test_extraction.py` covering text PDFs, scans, Japanese text, rotated pages, incomplete artwork, malformed/password-protected files, and conflicting spreadsheets.
 
 Compare extracted values and regions with human-labeled examples. Unreadable text stays unknown. Partial artwork cannot prove a statement is absent from the whole package. Screenshot pixels cannot establish printed font size without physical scale.
 
@@ -85,10 +85,10 @@ Compare extracted values and regions with human-labeled examples. Unreadable tex
 
 ## M9: Run checks and explain them
 
-- [ ] Implement applicability and exact comparisons in `backend/app/verification/rules.py`: supported category/market, composition, units, required content, approved-value agreement.
-- [ ] Add `backend/tests/unit/test_rules.py`: compatible/incompatible units, 0%, below 5%, exactly 5%, unknown measurement basis, uncertain applicability, draft/conflicting specifications, incomplete panels.
+- [x] Implement applicability and exact comparisons in `backend/app/verification/rules.py`: supported category/market, composition, units, required content, approved-value agreement.
+- [x] Add `backend/tests/unit/test_rules.py`: compatible/incompatible units, 0%, below 5%, exactly 5%, unknown measurement basis, uncertain applicability, draft/conflicting specifications, incomplete panels.
 - [ ] Implement visual observations and explanations through one configurable provider in `backend/app/verification/ai.py`. Use code for exact comparisons; use AI for interpretation and explanation.
-- [ ] Add `backend/tests/evals/test_explanations.py`: missing/false citations, unsupported rules, unreadable text, hostile document instructions, provider errors, and contradictory claims.
+- [x] Add `backend/tests/evals/test_explanations.py`: missing/false citations, unsupported rules, unreadable text, hostile document instructions, provider errors, and contradictory claims.
 
 Every result must contain applicability, result, observed/expected values, supporting source/location, artwork evidence, correction, and an uncertainty reason when needed. Missing text uses inspected panels without an invented region.
 
@@ -98,11 +98,11 @@ Validate AI output before saving it. It may cite only supplied source IDs and ca
 
 ## M10: Connect the backend
 
-- [ ] Implement all shared operations in `frontend/src/data/http-repository.ts`. Validate responses and map errors to visible retry/recovery states.
-- [ ] Upload actual file bytes, start the job, and poll status from one second up to five-second intervals. Stop on completion/cancellation/failure or navigation away; ignore responses for an old selected run. Offer recovery when the five-minute budget expires.
-- [ ] Run the same data-interface tests against demo and HTTP implementations. Use HTTP test mocks for timeout, malformed response, unauthorized access, and server failures.
-- [ ] Add `frontend/tests/e2e/live.spec.ts` using the real API, worker, database, and files. Assert that the report refers to the actual upload hash and current document/rule versions.
-- [ ] Remove sample answers from the live path. Retain samples in explicit demo mode and regression tests. Verify switching back to demo.
+- [x] Implement all shared operations in `frontend/src/data/http-repository.ts`. Validate responses and map errors to visible retry/recovery states.
+- [x] Upload actual file bytes, start the job, and poll status from one second up to five-second intervals. Stop on completion/cancellation/failure or navigation away; ignore responses for an old selected run. Offer recovery when the five-minute budget expires.
+- [x] Run the same data-interface tests against demo and HTTP implementations. Use HTTP test mocks for timeout, malformed response, unauthorized access, and server failures.
+- [x] Add `frontend/tests/e2e/live.spec.ts` using the real API, worker, database, and files. Assert that the report refers to the actual upload hash and current document/rule versions.
+- [x] Remove sample answers from the live path. Retain samples in explicit demo mode and regression tests. Verify switching back to demo.
 
 **Checkpoint:** A new supported upload produces actual results; a provider/backend failure remains a failure. Tests cover duplicate starts, stale responses, cancellation after partial passes, worker restart, and cross-user file/report access. The M6 frontend demo still passes.
 
@@ -127,3 +127,9 @@ M9 adds `uv run pytest tests/evals`. M10 adds `pnpm -C frontend test:contracts` 
 Before public live deployment, verify real authentication, private file access, parser isolation/resource limits, server-only credentials, and no sensitive document text in general logs. Record run IDs, stage times, failures, attempts, and model cost where available.
 
 Load PDF pages on demand and release render tasks/object URLs. Limit list pages to 25 reviews; index owner/date and job state/lease fields. Keep rule/source versions fixed per run. Add infrastructure only when measured load requires it.
+
+## Verified local prototype status — 2026-10-23
+
+M7 storage/jobs, M8 local extraction, deterministic M9 comparisons and M10 live integration are implemented and verified against a real local database, API, separate worker and browser. Conditional supplied policy requirements cover exact threshold boundaries, alternative disclosures and unknown applicability. See `backend/README.md` and the current progress ledger for scope.
+
+The remaining unchecked M9 item is deliberate and explicit: explanation enrichment is now connected and protocol-tested, but model-based visual inference and live model quality/cost evaluation have not run. The user's zero-cost constraint remains in effect; the Fireworks key authenticates and the selected low-cost model is configured, but generation is disabled until free credits or a paid limit are confirmed. Local OCR and deterministic review remain fully usable. Physical typography, assembled placement and authoritative legal conclusions remain qualified-review tasks rather than fabricated automatic passes.

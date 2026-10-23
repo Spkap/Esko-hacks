@@ -178,7 +178,16 @@ class Evidence(Model):
 
 
 class AIExplanation(Model):
-    status: Literal["disabled", "unavailable", "no_source", "input_limit", "budget_exhausted", "explained", "provider_failed", "rejected"]
+    status: Literal[
+        "disabled",
+        "unavailable",
+        "no_source",
+        "input_limit",
+        "budget_exhausted",
+        "explained",
+        "provider_failed",
+        "rejected",
+    ]
     promptVersion: str
     model: str | None = None
     explanation: str | None = None

@@ -25,6 +25,7 @@ export function RunProgress({
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
   const [cancelling, setCancelling] = useState(false);
+  const [restarting, setRestarting] = useState(false);
   useEffect(() => {
     let active = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -75,6 +76,33 @@ export function RunProgress({
         </p>
       )}
       <div className="button-row">
+        {run && ['failed', 'cancelled'].includes(run.status) && (
+          <Button
+            disabled={restarting}
+            onClick={async () => {
+              setRestarting(true);
+              setError('');
+              try {
+                await repository.startRun({
+                  reviewId: run.reviewId,
+                  artworkVersionId: run.artworkVersionId,
+                  referenceIds: run.referenceIds,
+                  selectedRuleIds: run.selectedRuleIds,
+                  ruleSetVersion: run.ruleSetVersion,
+                  requestKey: crypto.randomUUID(),
+                });
+                router.replace(`/checks/${reviewId}`);
+                done.current?.();
+              } catch (cause) {
+                setError(cause instanceof Error ? cause.message : 'Could not restart analysis.');
+                setRestarting(false);
+              }
+            }}
+          >
+            {restarting ? 'Restarting…' : 'Retry analysis with saved inputs'}
+          </Button>
+        )}
+
         {error && (
           <Button
             onClick={() => {

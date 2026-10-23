@@ -41,7 +41,7 @@ See the complete path from a missing statement to corrected artwork, then inspec
 | [1:39 · Read the report](https://youtu.be/ASl5XMgqJk4?t=99) | Results, version context, and requirements outside scope. |
 | [1:54 · Review organizer material](https://youtu.be/ASl5XMgqJk4?t=114) | Dancing Fish carton proof and draft-source review questions. |
 
-> **Two explicit modes:** the video shows the seeded demo. The new local **live** mode reads actual PDF/PNG/JPEG artwork and JSON/XLSX/PDF references, runs supported deterministic checks, and saves versioned results in PostgreSQL. AI interpretation and qualified regulatory verification remain future work. Demo mode still needs no backend or key.
+> **Two explicit modes:** the video shows the seeded demo. The new local **live** mode reads actual PDF/PNG/JPEG artwork and JSON/XLSX/PDF references, runs supported deterministic checks, and saves versioned results in PostgreSQL. Optional AI explanations are integrated but disabled in the zero-cost configuration; qualified regulatory verification remains manual. Demo mode still needs no backend or key.
 
 ## Why we built it
 
@@ -135,7 +135,7 @@ The report identifies the artwork version, reference revisions, selected checks,
 | **Recheck and hand off** | Run prepared scenarios, compare corrected V2, recover a run after reload, and read scoped reports. |
 | **Explore your own files** | Preview PDF, PNG, or JPEG files up to 20 MiB each; uploaded files never inherit sample findings. |
 
-**Live mode now available:** private multipart uploads, native PDF text and local OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Public accounts and evaluated AI interpretation are not implemented.
+**Live mode now available:** private multipart uploads, native PDF text and local OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, specification revisions, analysis history, conditional policy text, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Public accounts and evaluated AI interpretation are not implemented.
 
 ### Three runnable scenarios
 
@@ -162,11 +162,17 @@ Open [the landing page](http://127.0.0.1:3000) or [the review workspace](http://
 
 ### Enable actual local analysis
 
-Follow the [backend setup](backend/README.md) to configure PostgreSQL, apply migrations, issue a local reviewer token, and start the API plus worker. Set `NEXT_PUBLIC_DATA_MODE=live`, `WAVELENGTH_API_URL`, and server-only `WAVELENGTH_API_TOKEN` in `frontend/.env.local`, then restart Next.js.
+Follow the [backend setup](backend/README.md) to configure PostgreSQL and `backend/.env` once. Then start the complete local stack from this repository root:
+
+```sh
+python3 scripts/run-local.py --production
+```
+
+The launcher applies migrations, refreshes server-only credentials, builds the frontend, and starts API, worker, and UI. `--check` verifies prerequisites; omitting `--production` uses development mode. Open http://127.0.0.1:3000/checks/new.
 
 Upload real artwork and a specification, declare the source's approval status, and run checks. Use the [structured specification example](reference-data/live-specification-example.json) for unambiguous product values and required statements. Exact labeled spreadsheet quantity rows also retain their sheet/cell source locations. Draft, conflicting, or unreadable evidence stays uncertain.
 
-This bridge intentionally accepts loopback hosts only; it is a local single-reviewer workspace, not public multitenant authentication. An optional explanation-provider adapter exists but is not part of the default worker pipeline and has not been evaluated with paid inference.
+This bridge intentionally accepts loopback hosts only; it is a local single-reviewer workspace, not public multitenant authentication. The worker supports optional bounded AI explanations; they remain disabled until free credits or a paid limit are confirmed. The full local workflow works without a provider.
 
 ### Try the complete demo
 
