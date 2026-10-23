@@ -4,15 +4,44 @@
     "web": {
       "root": "frontend",
       "framework": "nextjs",
-      "runtime": "nodejs24.x",
       "installCommand": "npx --yes pnpm@11.25.0 install --frozen-lockfile",
       "buildCommand": "npx --yes pnpm@11.25.0 build",
-      "bindings": [{"type": "service", "service": "api", "format": "url", "env": "WAVELENGTH_API_URL"}]
+      "bindings": [
+        {
+          "type": "service",
+          "service": "api",
+          "format": "url",
+          "env": "WAVELENGTH_API_URL"
+        }
+      ]
     },
-    "api": {"root": "backend", "framework": "fastapi", "entrypoint": "main:app", "runtime": "python3.12"}
+    "api": {
+      "root": "backend",
+      "framework": "fastapi",
+      "entrypoint": "main:app"
+    }
   },
-  "rewrites": [{"source": "/(.*)", "destination": {"service": "web"}}],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "web"
+      }
+    }
+  ],
   "daemons": {
-    "worker": {"root": "backend", "entrypoint": "Dockerfile.worker", "instances": {"iad1": 1}, "resources": {"requests": {"memory": "2Gi"}}, "terminationGracePeriodSeconds": 30}
+    "worker": {
+      "root": "backend",
+      "entrypoint": "Dockerfile.worker",
+      "instances": {
+        "iad1": 1
+      },
+      "resources": {
+        "requests": {
+          "memory": "2Gi"
+        }
+      },
+      "terminationGracePeriodSeconds": 30
+    }
   }
 }
