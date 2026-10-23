@@ -74,3 +74,9 @@ Desktop.ini
 *~
 *.swp
 *.swo
+
+# Compressed archives and distribution packages
+*.zip
+*.tar.gz
+*.tgz
+*.rar
