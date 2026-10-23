@@ -1,15 +1,18 @@
 """One-shot parser sandbox: no credentials intentionally needed by extraction/rules."""
 
 import json
-import resource
 import sys
 from pathlib import Path
 
+if sys.platform != "win32":
+    import resource
+
 
 def main():
-    resource.setrlimit(resource.RLIMIT_CPU, (90, 95))
+    if sys.platform != "win32":
+        resource.setrlimit(resource.RLIMIT_CPU, (90, 95))
     # macOS RLIMIT_AS is unsupported; Linux deployments enforce the address-space cap.
-    if sys.platform != "darwin":
+    if sys.platform not in ("darwin", "win32"):
         resource.setrlimit(resource.RLIMIT_AS, (1536 * 1024**2, 1536 * 1024**2))
     payload = json.load(sys.stdin)
     operation = sys.argv[1]
