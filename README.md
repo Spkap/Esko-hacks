@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/-TE1nZH6VSI"><strong>Watch the Video Demo</strong></a> &bull; <a href="https://youtu.be/-TE1nZH6VSI">https://youtu.be/-TE1nZH6VSI</a>
+  <a href="https://youtu.be/-TE1nZH6VSI"><strong>Watch the Video Demo</strong></a>
 </p>
 
 ## Why we built it
