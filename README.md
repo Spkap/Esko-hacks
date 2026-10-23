@@ -11,6 +11,10 @@
   Artwork, reference evidence, and reviewer decisions—connected in one workspace.
 </p>
 
+<p align="center">
+  <a href="https://youtu.be/-TE1nZH6VSI"><strong>Watch the Video Demo</strong></a> &bull; <a href="https://youtu.be/-TE1nZH6VSI">https://youtu.be/-TE1nZH6VSI</a>
+</p>
+
 ## Why we built it
 
 A finished design still has to agree with the product specification, the intended market, and the brand's requirements. A missing statement or an unsupported claim can be easy to overlook when the evidence lives in another document.
@@ -158,6 +162,8 @@ Upload real artwork and a specification, declare the source's approval status, a
 This bridge intentionally accepts loopback hosts only; it is a local single-reviewer workspace, not public multitenant authentication. The worker supports optional bounded AI explanations; they remain disabled until free credits or a paid limit are confirmed. The full local workflow works without a provider.
 
 ### Try the complete demo
+
+Watch the video walkthrough on YouTube: [https://youtu.be/-TE1nZH6VSI](https://youtu.be/-TE1nZH6VSI)
 
 1. Open **New check → Start with sample files**.
 2. Choose **MORI Strawberry** and select **Run simulated check**.
