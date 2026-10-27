@@ -12,35 +12,14 @@
 </p>
 
 <p align="center">
-  <a href="https://wavelength-packaging.vercel.app"><strong>Open the live app ↗</strong></a> ·
-  <a href="https://youtu.be/-TE1nZH6VSI"><strong>Watch the demo ↗</strong></a> ·
-  <a href="#a-review-in-practice">Follow a review</a> ·
-  <a href="#run-locally">Run locally</a> ·
-  <a href="#what-works-today">Explore the scope</a>
+  <a href="https://youtu.be/-TE1nZH6VSI"><strong>Watch the Video Demo</strong></a>
 </p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16-111827?logo=nextdotjs&logoColor=white" alt="Next.js 16">
-  <img src="https://img.shields.io/badge/React-19-111827?logo=react&logoColor=61DAFB" alt="React 19">
-  <img src="https://img.shields.io/badge/TypeScript-5-111827?logo=typescript&logoColor=3178C6" alt="TypeScript 5">
-  <img src="https://img.shields.io/badge/Status-Hackathon_prototype-B32642" alt="Hackathon prototype">
-</p>
-
-## Watch it in action
-
-[![Watch the Wavelength demo: packaging artwork, evidence, and the path to a corrected review](frontend/evidence/halo-first-viewport-1440.png)](https://youtu.be/-TE1nZH6VSI)
-
-**[Watch the Wavelength demo on YouTube →](https://youtu.be/-TE1nZH6VSI)**
-
-Follow a packaging review from artwork and supporting evidence to findings, reviewer decisions, and corrected artwork.
-
-> **Two ways to explore:** the prepared demo scenarios need no account, backend, or AI key. The live workflow accepts real PDF/PNG/JPEG artwork and JSON/XLSX/PDF references, extracts supported content (including OCR where needed), runs deterministic checks, and saves versioned results. Uploads are private and workspaces use browser-specific guest sessions. AI inference and live regulatory-data retrieval are not enabled; reviewers must verify uncertain or legal requirements.
 
 ## Why we built it
 
-A small packaging mistake can become costly once it reaches print. Reviewers often have to switch between artwork, product specifications, and supporting documents to confirm that quantities match, required statements are present, and claims have evidence.
+A finished design still has to agree with the product specification, the intended market, and the brand's requirements. A missing statement or an unsupported claim can be easy to overlook when the evidence lives in another document.
 
-Wavelength brings those materials into one review workspace. Teams compare artwork with supplied specifications and references for a selected market, then inspect findings beside the relevant page, observed and expected values, source evidence, and suggested next steps. Reports preserve reviewer decisions and make unresolved or out-of-scope checks visible.
+Wavelength gives packaging designers, brand teams, and quality reviewers a shared review desk: the artwork on one side, the finding and its evidence on the other. Each concern has a source and a next step; each report says what was actually reviewed.
 
 | Review principle | How it appears in the product |
 | :--- | :--- |
@@ -72,26 +51,20 @@ The distinction matters: resolving a review task and demonstrating that artwork 
 
 Search by product, filter by market or assessment, and open the relevant artwork version. Status summaries filter the review library itself.
 
-![Wavelength dashboard with review totals, search, filters, and artwork versions](frontend/evidence/phosphor-dashboard-1440.png)
-
 ### Artwork beside the evidence
 
 Select a finding to connect its explanation with the relevant page and artwork region. Missing content is tied to the inspected panels. Follow the reference, inspect the suggested next step, and record a decision.
 
-![Wavelength artwork review with selected findings and reference evidence](frontend/evidence/phosphor-review-1440.png)
-
 <details>
-<summary><strong>See the corrected artwork and mobile organizer review</strong></summary>
+<summary><strong>Correction and organizer examples</strong></summary>
 
 #### Corrected MORI V2
 
-![Corrected MORI artwork with selected checks passed and the added statement highlighted](frontend/evidence/m5-corrected-review-1440.png)
+The corrected sample includes the missing statement. Selected text and quantity checks pass; physical size and placement remain unverified.
 
 #### Dancing Fish on mobile
 
 The organizer's carton proof is compared with its draft content sheet. Unconfirmed allergen wording and a vegan claim remain review questions.
-
-<img src="frontend/evidence/m5-organizer-review-390.png" alt="Mobile review of the organizer's Dancing Fish carton with evidence-linked review questions" width="390">
 
 </details>
 
@@ -118,9 +91,9 @@ flowchart LR
 
 The report identifies the artwork version, reference revisions, selected checks, reviewer decisions, and requirements outside the review. Acknowledging or dismissing a finding never changes its original assessment.
 
-## What works today
+## Review capabilities
 
-| Interactive today | What you can do |
+| Capability | What you can do |
 | :--- | :--- |
 | **Find the right review** | Search saved live reviews or six explicit demo examples, filter by market/result, and inspect artwork versions. |
 | **Inspect artwork and evidence** | Navigate PDF pages, zoom/rotate, select findings and markers, and open linked references. |
@@ -128,7 +101,7 @@ The report identifies the artwork version, reference revisions, selected checks,
 | **Recheck and hand off** | Run prepared scenarios, compare corrected V2, recover a run after reload, and read scoped reports. |
 | **Explore your own files** | Preview PDF, PNG, or JPEG files up to 20 MiB each; uploaded files never inherit sample findings. |
 
-**Live mode now available:** private uploads, native PDF text and OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, specification revisions, analysis history, conditional policy text, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Persistent accounts, AI inference, and live regulatory-data retrieval are not implemented.
+**Live analysis:** private multipart uploads, native PDF text and local OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, specification revisions, analysis history, conditional policy text, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Public accounts and evaluated AI interpretation are not implemented.
 
 ### Three runnable scenarios
 
@@ -138,7 +111,7 @@ The report identifies the artwork version, reference revisions, selected checks,
 | **MORI Strawberry · corrected V2** | Separate corrected artwork | Selected text/quantity checks pass; broader checks remain outside scope. |
 | **Dancing Fish Berry Crunch** | Organizer-supplied carton proof and draft/reconstructed workbook | Allergen advisory wording, vegan claim, and quantity comparison with draft-source uncertainty. |
 
-Sample findings demonstrate the workflow. They do not establish legal approval. Source status and interpretation limits are documented in the [reference-data notes](reference-data/README.md).
+Sample findings demonstrate the workflow. They do not establish legal approval. Source status and interpretation limits are documented in the reference-data notes.
 
 ## Run locally
 
@@ -151,23 +124,46 @@ pnpm -C frontend install --frozen-lockfile
 pnpm -C frontend dev
 ```
 
-Open [the landing page](http://127.0.0.1:3000) or [the review workspace](http://127.0.0.1:3000/dashboard).
+Open `127.0.0.1:3000` for the landing page or `127.0.0.1:3000/dashboard` for the review workspace.
 
 ### Enable actual local analysis
 
-Follow the [backend setup](backend/README.md) to configure PostgreSQL and `backend/.env` once. Then start the complete local stack from this repository root:
+The backend requires Python 3.11+, uv, PostgreSQL, and Tesseract with the OCR languages needed by your artwork. Windows supports local processing with subprocess timeouts; Unix systems also apply CPU/address-space resource limits.
+
+Create a PostgreSQL database named `wavelength`. Copy `backend/.env.example` to `backend/.env` and configure:
+
+| Variable | Purpose |
+| :--- | :--- |
+| `DATABASE_URL` | PostgreSQL connection string in the form `postgresql+psycopg://USER:PASSWORD@127.0.0.1:5432/wavelength`. |
+| `WAVELENGTH_STORAGE_DIR` | Private directory for uploaded artwork and reference files. |
+| `WAVELENGTH_JWT_SECRET` | Random signing secret; generate with `openssl rand -hex 32`. |
+| `WAVELENGTH_JWT_ISSUER` | Token issuer, such as `wavelength-local`. |
+| `WAVELENGTH_JWT_AUDIENCE` | API audience, such as `wavelength-api`. |
+| `WAVELENGTH_AI_ENABLED` | Keep `false` for local deterministic analysis without a model provider. |
+
+Keep credentials in ignored environment files. Install the locked backend dependencies:
+
+```sh
+cd backend
+uv sync --frozen
+cd ..
+```
+
+Then start the complete local stack from the repository root:
 
 ```sh
 python3 scripts/run-local.py --production
 ```
 
-The launcher applies migrations, refreshes server-only credentials, builds the frontend, and starts API, worker, and UI. `--check` verifies prerequisites; omitting `--production` uses development mode. Open http://127.0.0.1:3000/checks/new.
+The launcher applies migrations, refreshes server-only credentials, builds the frontend, and starts API, worker, and UI. `--check` verifies prerequisites; omitting `--production` uses development mode. Open `127.0.0.1:3000/checks/new`.
 
-Upload real artwork and a specification, declare the source's approval status, and run checks. Use the [structured specification example](reference-data/live-specification-example.json) for unambiguous product values and required statements. Exact labeled spreadsheet quantity rows also retain their sheet/cell source locations. Draft, conflicting, or unreadable evidence stays uncertain.
+Upload real artwork and a specification, declare the source's approval status, and run checks. Use `reference-data/live-specification-example.json` for unambiguous product values and required statements. Exact labeled spreadsheet quantity rows also retain their sheet/cell source locations. Draft, conflicting, or unreadable evidence stays uncertain.
 
 This bridge intentionally accepts loopback hosts only; it is a local single-reviewer workspace, not public multitenant authentication. The worker supports optional bounded AI explanations; they remain disabled until free credits or a paid limit are confirmed. The full local workflow works without a provider.
 
 ### Try the complete demo
+
+Watch the video walkthrough on YouTube: [https://youtu.be/-TE1nZH6VSI](https://youtu.be/-TE1nZH6VSI)
 
 1. Open **New check → Start with sample files**.
 2. Choose **MORI Strawberry** and select **Run simulated check**.
@@ -188,26 +184,43 @@ Stop the development server before building. After pulling dependency changes, r
 
 ## How it is built
 
-The screens use one repository interface with separate demo and live implementations. Local development uses a loopback-only bridge; the deployed app creates a browser-specific guest session and keeps its JWT on the server.
+The screens use one repository interface with separate demo and live implementations. Live mode uses a loopback-only, single-reviewer Next.js bridge; its bearer token remains on the server.
 
 ```mermaid
 flowchart TD
-    UI["Next.js review interface"] --> R["Review repository interface"]
-    R --> D["Demo: bundled examples + browser storage"]
-    R --> H["Live: validated HTTP repository"]
-    H --> B["Server bridge + guest session"]
-    B --> API["JWT-authenticated FastAPI"]
-    API --> DB["PostgreSQL: versions, jobs, decisions"]
-    API --> F["Private file storage + SHA-256"]
-    DB --> W["Leased worker + bounded parser processes"]
-    W --> E["Native text / OCR / JSON / XLSX"]
-    E --> C["Deterministic supported comparisons"]
-    C --> DB
+    UI["Next.js / React review workspace"] --> R["Review repository interface"]
+    R --> D["Demo: bundled samples and browser storage"]
+    R --> H["Live HTTP repository"]
+    H --> B["Loopback-only Next.js server bridge<br/>Server-held bearer token"]
+    B --> API["FastAPI API<br/>JWT validation and upload validation"]
+    API --> DB[("PostgreSQL<br/>Reviews, revisions, jobs, reports and decisions")]
+    API --> F[("Private file storage<br/>Immutable revisions and SHA-256 hashes")]
+    W["Background worker<br/>Renewable job leases and cancellation"] -->|Claim queued jobs| DB
+    W -->|Read uploaded files| F
+    W --> E["Bounded extraction processes<br/>PDF text, Tesseract OCR, JSON and XLSX"]
+    E --> C["Deterministic rule engine<br/>Quantity, required statements and policy conditions"]
+    C --> W
+    W -.-> AI["Optional AI explanations<br/>Disabled by default; no assessment changes"]
+    W -->|Commit findings and immutable reports| DB
 ```
+
+**Backend:** FastAPI and Pydantic serve the API; SQLAlchemy, psycopg, and Alembic handle PostgreSQL persistence and migrations. PDF extraction uses pypdf and pypdfium2, image processing uses Pillow and Tesseract, and spreadsheet references use openpyxl.
+
+### Backend processing and evidence
+
+1. **Upload and version inputs.** Artwork accepts PDF, PNG, or JPEG files up to 20 MiB; references accept JSON, XLSX, or PDF. Private files receive immutable revision IDs and SHA-256 hashes.
+2. **Queue a review.** Each run captures the selected artwork, reference revisions, and rule-set version. PostgreSQL row locks let workers claim jobs without a separate queue service.
+3. **Extract and compare.** Separate processes read native PDF text or local OCR and preserve reference excerpts, page locations, and spreadsheet cells. Supported rules compare declared quantity, required statements, and explicit supplied policy conditions.
+4. **Preserve uncertainty.** Draft, conflicting, unreadable, or incomplete evidence requires review. Physical type size, placement, visual symbolism, and full regulatory verification remain manual.
+5. **Save a traceable report.** Results commit atomically while the worker owns its lease. Corrected artwork and revised specifications create new run snapshots; earlier reports remain unchanged. Reviewer decisions append audit records without changing the original assessment.
+
+Jobs use renewable 60-second leases, at most three attempts, and a five-minute total budget. Cancellation and lease ownership are checked during processing. Validation and extraction have timeouts, with CPU limits and a Linux memory cap for parser processes.
+
+Optional AI enrichment explains existing comparisons using cited excerpts. It cannot change rule outcomes, and invalid citations or provider failures do not replace deterministic results. Local extraction and checks work with AI disabled.
 
 **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Phosphor icons, and local Manrope/Noto Sans JP fonts. **Data validation:** Zod. **Checks:** Vitest and Playwright.
 
-In demo mode, uploads remain browser-local previews and require re-selection after reload. In live mode, uploaded bytes are stored privately and bound to immutable file revisions. Service failures never substitute sample answers. The repository default is `NEXT_PUBLIC_DATA_MODE=demo`; configure the backend and server-only token to enable local live mode.
+In demo mode, uploads remain browser-local previews and require re-selection after reload. In live mode, actual bytes are stored privately by the backend and bound to immutable file revisions. Service failures never substitute sample answers. The repository default is `NEXT_PUBLIC_DATA_MODE=demo`; configure the backend and server-only token to enable live mode.
 
 <details>
 <summary><strong>Development checks and repository map</strong></summary>
@@ -222,35 +235,23 @@ pnpm -C frontend exec playwright install chromium
 pnpm -C frontend test:e2e
 ```
 
-For browser checks against a production build, use `PLAYWRIGHT_PRODUCTION=1`; use `PLAYWRIGHT_CHANNEL=chrome` to select an installed Chrome browser. See the [frontend README](frontend/README.md) for environment and storage details.
+For browser checks against a production build, use `PLAYWRIGHT_PRODUCTION=1`; use `PLAYWRIGHT_CHANNEL=chrome` to select an installed Chrome browser. See the frontend README for environment and storage details.
 
 | Path | Purpose |
 | :--- | :--- |
-| [`frontend/src/app/`](frontend/src/app/) | Landing, dashboard, setup, artwork review, and report routes. |
-| [`frontend/src/components/`](frontend/src/components/) | Shared interface, document viewer, findings, and evidence panels. |
-| [`frontend/src/data/`](frontend/src/data/) | Repository interface selection and sample implementation. |
-| [`frontend/src/demo/`](frontend/src/demo/) | Scenario definitions, fixtures, and asset hashes. |
-| [`frontend/public/demo/`](frontend/public/demo/) | Bundled artwork and reference documents. |
-| [`reference-data/`](reference-data/) | Source provenance, rule assumptions, and expected sample results. |
-| [`frontend/tests/`](frontend/tests/) | Unit and browser checks. |
-| [`demo-output/`](demo-output/) | Editable video script, capture workflow, and rendering pipeline. |
+| `frontend/src/app/` | Landing, dashboard, setup, artwork review, and report routes. |
+| `frontend/src/components/` | Shared interface, document viewer, findings, and evidence panels. |
+| `frontend/src/data/` | Repository interface selection and sample implementation. |
+| `frontend/src/demo/` | Scenario definitions, fixtures, and asset hashes. |
+| `frontend/public/demo/` | Bundled artwork and reference documents. |
+| `reference-data/` | Source provenance, rule assumptions, and expected sample results. |
+| `frontend/tests/` | Unit and browser checks. |
+| `backend/app/` | API, authentication, private storage, extraction, rule engine, and worker. |
+| `backend/migrations/` | Database migrations. |
+| `backend/tests/` | Backend unit, integration, and evaluation checks. |
 
 </details>
-
-## What comes next
-
-The product vision is AI-assisted packaging review across market requirements, product accuracy, and brand guidelines. The live path now connects the review experience to extraction and traceable comparisons. The next step is to broaden supported interpretation without hiding uncertainty.
-
-| Current boundary | Next step |
-| :--- | :--- |
-| Deterministic supported checks | Evaluate an optional AI interpretation provider against labeled examples before enabling it. |
-| Explicit supplied-reference comparisons | Expand qualified, versioned regulatory sources and product applicability. |
-| Browser-specific guest workspaces | Add persistent accounts and team access when the prototype needs long-lived identities. |
-| Digital previews with uncertain physical scale | Establish trustworthy dimensions before evaluating printed-size requirements. |
-
-The review should always show when a source is draft, a requirement is uncertain, or a check was left out.
 
 ---
 
 <p align="center"><strong>Connect the artwork. Inspect the evidence. Make the next decision clear.</strong></p>
-<p align="center"><a href="https://wavelength-packaging.vercel.app">Open the live app</a> · <a href="https://youtu.be/-TE1nZH6VSI">Watch the demo</a> · <a href="#run-locally">Try the samples</a> · <a href="reference-data/README.md">Read the source notes</a></p>

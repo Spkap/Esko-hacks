@@ -1,1 +1,0 @@
-Run the simulated check. This prototype prepares predetermined findings, so the review experience is repeatable. Live extraction and AI analysis are future work.
