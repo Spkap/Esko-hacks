@@ -101,7 +101,7 @@ The report identifies the artwork version, reference revisions, selected checks,
 | **Recheck and hand off** | Run prepared scenarios, compare corrected V2, recover a run after reload, and read scoped reports. |
 | **Explore your own files** | Preview PDF, PNG, or JPEG files up to 20 MiB each; uploaded files never inherit sample findings. |
 
-**Live analysis:** private multipart uploads, native PDF text and local OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, specification revisions, analysis history, conditional policy text, and persisted reports. The prepared sample progress sequence remains simulated only in demo mode. Public accounts and evaluated AI interpretation are not implemented.
+**Live analysis:** private multipart uploads, native PDF text and local OCR, reference-cell provenance, exact quantity and required-statement comparisons, database-backed jobs, cancellation, corrected versions, specification revisions, analysis history, conditional policy text, and persisted reports. Optional Fireworks AI explanations can describe the fixed findings when configured; they do not decide pass/fail results. The prepared sample progress sequence remains simulated only in demo mode. Public accounts and model-based visual interpretation are not implemented.
 
 ### Three runnable scenarios
 

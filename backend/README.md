@@ -44,7 +44,7 @@ uv run --env-file .env uvicorn app.api.main:app --host 127.0.0.1 --port 8000
 uv run --env-file .env python -m app.worker
 ```
 
-The Next bridge rejects non-loopback Host headers and cross-origin mutations; it is not a deployable public login substitute. Database JWT secrets and the server token stay in ignored environment files. The default processing path uses local extraction and deterministic rules. The optional explanation stage is connected to the worker when `WAVELENGTH_AI_ENABLED=true`; the current environment leaves it disabled to honor the zero-cost requirement. No paid model generation has been performed.
+The Next bridge rejects non-loopback Host headers and cross-origin mutations; it is not a deployable public login substitute. Database JWT secrets and the server token stay in ignored environment files. The processing path uses local extraction and deterministic rules. Set `WAVELENGTH_AI_ENABLED=true` with the server-only Fireworks URL, model, and key to add model-generated explanations to new runs. Explanations preserve the comparison result and require reviewer verification.
 
 ## Complete local acceptance exercise
 
@@ -54,7 +54,7 @@ With API and worker running, execute `uv run --env-file .env python ../scripts/v
 
 `.env.example` includes an optional Fireworks endpoint and the available Nemotron 3.5 Lightning 30B A3B model. The key belongs only in ignored `.env` (mode 0600), never frontend environment variables. Authentication and model availability were verified using the read-only models endpoint.
 
-As checked on 2026-10-23, [serverless pricing](https://docs.fireworks.ai/serverless/pricing) lists $0.05/M input and $0.20/M output tokens for this model. This is a low-cost candidate, not an evaluated quality winner or a free service. Inference remains disabled until account free credits or an explicit paid budget is established. The worker invokes the explanation adapter only when explicitly enabled; deterministic evidence checks work without a provider.
+As checked on 2026-10-27, [serverless pricing](https://docs.fireworks.ai/serverless/pricing) lists $0.05/M input and $0.20/M output tokens for this model. Provider calls use account credits and are not guaranteed to be free. The worker invokes the explanation adapter only when explicitly enabled; deterministic evidence checks work without a provider. A real local PDF/specification review has completed with a saved Fireworks explanation for its quantity mismatch.
 
 ## One-command local startup
 
@@ -83,4 +83,4 @@ Within an existing review, upload a corrected artwork or expand **Update the spe
 
 When explicitly enabled, the worker runs a separate explanation process after deterministic checking. Only the fixed comparison and cited excerpt are sent; credentials are excluded from document parsers. At most three checks per run, 6,000 UTF-8 bytes per comparison, 384 output tokens per call, a ten-second request timeout, one transient retry, and a bounded stage budget constrain requests. Permanent authorization failures are not retried. Missing sources, unsupported citations, malformed responses and changed rule/result values are rejected. Provider failure is visible as unavailable enrichment and never fabricates a successful comparison. The UI labels generated explanations as requiring reviewer verification. Model/prompt identifiers and status are saved with the immutable report.
 
-Current tests exercise this protocol with controlled responses, not a live model quality benchmark. The configured key authenticated against the read-only model catalog. Paid generation and model-based visual interpretation have not been evaluated; the application is functional using local OCR and deterministic comparisons without them.
+Protocol tests use controlled responses. A live Fireworks smoke check verified provider generation, worker persistence, and display of a cited explanation in the local review UI. This is not a model quality benchmark: explanations can still require correction, and model-based visual interpretation is not implemented. The application also works with local OCR and deterministic comparisons when enrichment is disabled.
