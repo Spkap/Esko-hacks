@@ -47,6 +47,7 @@ export function ReviewTable({ reviews }: { reviews: ReviewListItem[] }) {
                   >
                     {review.productImage ? (
                       <Image
+                        unoptimized
                         src={review.productImage.src}
                         alt={review.productImage.alt}
                         width={56}

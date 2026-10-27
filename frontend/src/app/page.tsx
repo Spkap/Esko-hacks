@@ -69,6 +69,7 @@ export default function Home() {
           </div>
           <figure className="wl-hero-media">
             <Image
+              unoptimized
               className="wl-product-image"
               src="/brand/mori-studio.png"
               width={1536}
