@@ -11,7 +11,7 @@ test('unconnected live mode shows retryable errors and never a demo report', asy
       await page.goto(path);
       const errorPanel = page
         .getByRole('alert')
-        .filter({ hasText: 'Live analysis is not connected' });
+        .filter({ hasText: 'Local reviewer credentials are not configured.' });
       await expect(errorPanel).toBeVisible();
       await page.getByRole('button', { name: 'Try again' }).click();
       await expect(errorPanel).toBeVisible();

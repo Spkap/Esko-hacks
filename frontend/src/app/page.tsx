@@ -327,8 +327,9 @@ export default function Home() {
                 <div>
                   <h3>Room for your own artwork</h3>
                   <p>
-                    Preview PDF, PNG, or JPEG files with product references. Live analysis is not
-                    connected; your uploads stay preview-only.
+                    {process.env.NEXT_PUBLIC_DATA_MODE?.trim().replace(/^['"]+|['"]+$/g, '') === 'live'
+                      ? 'Upload PDF, PNG, or JPEG artwork with product references. Run document extraction and evidence-backed checks, with AI explanations when enabled.'
+                      : 'Preview PDF, PNG, or JPEG files with product references. Live analysis is not connected; your uploads stay preview-only.'}
                   </p>
                 </div>
                 <FileUp aria-hidden="true" size={20} />

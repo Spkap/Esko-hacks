@@ -73,6 +73,15 @@ test('live upload runs real extraction and preserves upload hash and rule versio
   expect(
     report.checks.find((check: { ruleId: string }) => check.ruleId === 'net-quantity').result,
   ).toBe('fail');
+  if (process.env.WAVELENGTH_EXPECT_AI === 'true') {
+    expect(
+      report.checks.find((check: { ruleId: string }) => check.ruleId === 'net-quantity')
+        .aiExplanation.status,
+    ).toBe('explained');
+    await expect(
+      page.getByRole('heading', { name: 'AI explanation · reviewer verification required' }),
+    ).toBeVisible();
+  }
   const storedFile = await page.request.get(`/api/backend${detail.artworkVersions[0].url}`);
   expect(storedFile.status()).toBe(200);
   expect(
@@ -109,9 +118,11 @@ test('live upload runs real extraction and preserves upload hash and rule versio
     buffer: artworkPdf(300),
   });
   await page.getByRole('button', { name: 'Upload new version and recheck' }).click();
+  // The old report already contains 300 mL as its expected value. Wait for V2
+  // before asserting its result, including the optional provider stage.
+  await expect(page.locator('.review-heading')).toContainText('Artwork V2', { timeout: 120000 });
   await expect(page.getByTestId('selected-evidence')).toContainText('300 mL', { timeout: 120000 });
   await expect(page.getByTestId('selected-evidence')).toContainText('Pass');
-  await expect(page.locator('.review-heading')).toContainText('Artwork V2');
   await expect(page.locator('canvas')).toHaveAttribute('data-rendered', 'true', { timeout: 30000 });
   await page.screenshot({ path: 'evidence/live-corrected-review-1440.png', fullPage: true });
   const correctedDetail = await (
